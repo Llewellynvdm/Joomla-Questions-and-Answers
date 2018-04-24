@@ -1,0 +1,51 @@
+/*--------------------------------------------------------------------------------------------------------|  www.vdm.io  |------/
+    __      __       _     _____                 _                                  _     __  __      _   _               _
+    \ \    / /      | |   |  __ \               | |                                | |   |  \/  |    | | | |             | |
+     \ \  / /_ _ ___| |_  | |  | | _____   _____| | ___  _ __  _ __ ___   ___ _ __ | |_  | \  / | ___| |_| |__   ___   __| |
+      \ \/ / _` / __| __| | |  | |/ _ \ \ / / _ \ |/ _ \| '_ \| '_ ` _ \ / _ \ '_ \| __| | |\/| |/ _ \ __| '_ \ / _ \ / _` |
+       \  / (_| \__ \ |_  | |__| |  __/\ V /  __/ | (_) | |_) | | | | | |  __/ | | | |_  | |  | |  __/ |_| | | | (_) | (_| |
+        \/ \__,_|___/\__| |_____/ \___| \_/ \___|_|\___/| .__/|_| |_| |_|\___|_| |_|\__| |_|  |_|\___|\__|_| |_|\___/ \__,_|
+                                                        | |                                                                 
+                                                        |_| 				
+/-------------------------------------------------------------------------------------------------------------------------------/
+
+	@version		1.0.x
+	@build			24th April, 2018
+	@created		30th January, 2017
+	@package		Questions and Answers
+	@subpackage		A4.print.css
+	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
+	@copyright		Copyright (C) 2015. All Rights Reserved
+	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
+	
+	Questions &amp; Answers 
+                                                             
+/-----------------------------------------------------------------------------------------------------------------------------*/
+
+body {
+    background: rgb(204,204,204); 
+}
+page[size="A4"] {
+    background: white;
+    width: 20cm;
+    height: 25cm;
+    display: block;
+    margin: 0 auto;
+    margin-bottom: 0.5cm;
+    box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
+    padding: 15px;
+}
+
+page[size="A4"] table tr td {
+    font-size: 8pt !important;
+}
+
+@media print {
+    .no-print, .no-print *{ 
+        display: none !important; 
+    }
+    body, page[size="A4"] {
+        margin: 0;
+        box-shadow: 0;
+    }
+}

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<access component="com_questionsanswers">
+	<section name="component">
+		<action name="core.admin" title="JACTION_ADMIN" description="JACTION_ADMIN_COMPONENT_DESC" />
+		<action name="core.options" title="JACTION_OPTIONS" description="JACTION_OPTIONS_COMPONENT_DESC" />
+		<action name="core.manage" title="JACTION_MANAGE" description="JACTION_MANAGE_COMPONENT_DESC" />
+		<action name="core.export" title="COM_QUESTIONSANSWERS_EXPORT_DATA" description="COM_QUESTIONSANSWERS_EXPORT_DATA_DESC" />
+		<action name="core.import" title="COM_QUESTIONSANSWERS_IMPORT_DATA" description="COM_QUESTIONSANSWERS_IMPORT_DATA_DESC" />
+		<action name="core.batch" title="COM_QUESTIONSANSWERS_USE_BATCH" description="COM_QUESTIONSANSWERS_USE_BATCH_DESC" />
+		<action name="core.version" title="COM_QUESTIONSANSWERS_EDIT_VERSIONS" description="COM_QUESTIONSANSWERS_EDIT_VERSIONS_DESC" />
+		<action name="core.create" title="JACTION_CREATE" description="JACTION_CREATE_COMPONENT_DESC" />
+		<action name="core.delete" title="JACTION_DELETE" description="JACTION_DELETE_COMPONENT_DESC" />
+		<action name="core.edit" title="JACTION_EDIT" description="JACTION_EDIT_COMPONENT_DESC" />
+		<action name="core.edit.state" title="JACTION_EDITSTATE" description="JACTION_ACCESS_EDITSTATE_DESC" />
+		<action name="core.edit.own" title="JACTION_EDITOWN" description="JACTION_EDITOWN_COMPONENT_DESC" />
+		<action name="core.edit.created_by" title="COM_QUESTIONSANSWERS_EDIT_CREATED_BY" description="COM_QUESTIONSANSWERS_EDIT_CREATED_BY_DESC" />
+		<action name="core.edit.created" title="COM_QUESTIONSANSWERS_EDIT_CREATED_DATE" description="COM_QUESTIONSANSWERS_EDIT_CREATED_DATE_DESC" />
+		<action name="help_document.access" title="COM_QUESTIONSANSWERS_HELP_DOCUMENTS_ACCESS" description="COM_QUESTIONSANSWERS_HELP_DOCUMENTS_ACCESS_DESC" />
+		<action name="help_document.batch" title="COM_QUESTIONSANSWERS_HELP_DOCUMENTS_BATCH_USE" description="COM_QUESTIONSANSWERS_HELP_DOCUMENTS_BATCH_USE_DESC" />
+		<action name="help_document.create" title="COM_QUESTIONSANSWERS_HELP_DOCUMENTS_CREATE" description="COM_QUESTIONSANSWERS_HELP_DOCUMENTS_CREATE_DESC" />
+		<action name="help_document.dashboard_list" title="COM_QUESTIONSANSWERS_HELP_DOCUMENTS_DASHBOARD_LIST" description="COM_QUESTIONSANSWERS_HELP_DOCUMENTS_DASHBOARD_LIST_DESC" />
+		<action name="help_document.delete" title="COM_QUESTIONSANSWERS_HELP_DOCUMENTS_DELETE" description="COM_QUESTIONSANSWERS_HELP_DOCUMENTS_DELETE_DESC" />
+		<action name="help_document.edit" title="COM_QUESTIONSANSWERS_HELP_DOCUMENTS_EDIT" description="COM_QUESTIONSANSWERS_HELP_DOCUMENTS_EDIT_DESC" />
+		<action name="help_document.edit.own" title="COM_QUESTIONSANSWERS_HELP_DOCUMENTS_EDIT_OWN" description="COM_QUESTIONSANSWERS_HELP_DOCUMENTS_EDIT_OWN_DESC" />
+		<action name="help_document.edit.state" title="COM_QUESTIONSANSWERS_HELP_DOCUMENTS_EDIT_STATE" description="COM_QUESTIONSANSWERS_HELP_DOCUMENTS_EDIT_STATE_DESC" />
+		<action name="help_document.version" title="COM_QUESTIONSANSWERS_HELP_DOCUMENTS_EDIT_VERSION" description="COM_QUESTIONSANSWERS_HELP_DOCUMENTS_EDIT_VERSION_DESC" />
+		<action name="help_document.export" title="COM_QUESTIONSANSWERS_HELP_DOCUMENTS_EXPORT" description="COM_QUESTIONSANSWERS_HELP_DOCUMENTS_EXPORT_DESC" />
+		<action name="help_document.import" title="COM_QUESTIONSANSWERS_HELP_DOCUMENTS_IMPORT" description="COM_QUESTIONSANSWERS_HELP_DOCUMENTS_IMPORT_DESC" />
+		<action name="help_document.submenu" title="COM_QUESTIONSANSWERS_HELP_DOCUMENTS_SUBMENU" description="COM_QUESTIONSANSWERS_HELP_DOCUMENTS_SUBMENU_DESC" />
+		<action name="question_and_answer.access" title="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_ACCESS" description="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_ACCESS_DESC" />
+		<action name="question_and_answer.batch" title="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_BATCH_USE" description="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_BATCH_USE_DESC" />
+		<action name="question_and_answer.create" title="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_CREATE" description="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_CREATE_DESC" />
+		<action name="question_and_answer.dashboard_add" title="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_DASHBOARD_ADD" description="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_DASHBOARD_ADD_DESC" />
+		<action name="question_and_answer.dashboard_list" title="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_DASHBOARD_LIST" description="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_DASHBOARD_LIST_DESC" />
+		<action name="question_and_answer.delete" title="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_DELETE" description="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_DELETE_DESC" />
+		<action name="question_and_answer.edit" title="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_EDIT" description="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_EDIT_DESC" />
+		<action name="question_and_answer.edit.answer" title="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_EDIT_ANSWER" description="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_EDIT_ANSWER_DESC" />
+		<action name="question_and_answer.edit.answer_documents" title="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_EDIT_ANSWER_DOCUMENTS" description="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_EDIT_ANSWER_DOCUMENTS_DESC" />
+		<action name="question_and_answer.edit.catid" title="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_EDIT_CATID" description="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_EDIT_CATID_DESC" />
+		<action name="question_and_answer.edit.created_by" title="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_EDIT_CREATED_BY" description="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_EDIT_CREATED_BY_DESC" />
+		<action name="question_and_answer.edit.created" title="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_EDIT_CREATED_DATE" description="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_EDIT_CREATED_DATE_DESC" />
+		<action name="question_and_answer.edit.main_image_uploader" title="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_EDIT_MAIN_IMAGE_UPLOADER" description="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_EDIT_MAIN_IMAGE_UPLOADER_DESC" />
+		<action name="question_and_answer.edit.own" title="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_EDIT_OWN" description="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_EDIT_OWN_DESC" />
+		<action name="question_and_answer.edit.question" title="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_EDIT_QUESTION" description="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_EDIT_QUESTION_DESC" />
+		<action name="question_and_answer.edit.state" title="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_EDIT_STATE" description="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_EDIT_STATE_DESC" />
+		<action name="question_and_answer.version" title="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_EDIT_VERSION" description="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_EDIT_VERSION_DESC" />
+		<action name="question_and_answer.export" title="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_EXPORT" description="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_EXPORT_DESC" />
+		<action name="question_and_answer.import" title="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_IMPORT" description="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_IMPORT_DESC" />
+		<action name="question_and_answer.submenu" title="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_SUBMENU" description="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_SUBMENU_DESC" />
+	</section>
+	<section name="question_and_answer">
+		<action name="question_and_answer.edit" title="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_EDIT" description="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_EDIT_DESC" />
+		<action name="question_and_answer.edit.own" title="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_EDIT_OWN" description="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_EDIT_OWN_DESC" />
+		<action name="question_and_answer.edit.state" title="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_EDIT_STATE" description="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_EDIT_STATE_DESC" />
+		<action name="question_and_answer.edit.created_by" title="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_EDIT_CREATED_BY" description="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_EDIT_CREATED_BY_DESC" />
+		<action name="question_and_answer.edit.created" title="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_EDIT_CREATED_DATE" description="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_EDIT_CREATED_DATE_DESC" />
+		<action name="question_and_answer.create" title="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_CREATE" description="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_CREATE_DESC" />
+		<action name="question_and_answer.delete" title="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_DELETE" description="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_DELETE_DESC" />
+		<action name="question_and_answer.access" title="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_ACCESS" description="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_ACCESS_DESC" />
+		<action name="question_and_answer.edit.question" title="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_EDIT_QUESTION" description="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_EDIT_QUESTION_DESC" />
+		<action name="question_and_answer.edit.answer" title="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_EDIT_ANSWER" description="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_EDIT_ANSWER_DESC" />
+		<action name="question_and_answer.edit.catid" title="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_EDIT_CATID" description="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_EDIT_CATID_DESC" />
+		<action name="question_and_answer.edit.answer_documents" title="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_EDIT_ANSWER_DOCUMENTS" description="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_EDIT_ANSWER_DOCUMENTS_DESC" />
+		<action name="question_and_answer.edit.main_image_uploader" title="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_EDIT_MAIN_IMAGE_UPLOADER" description="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_EDIT_MAIN_IMAGE_UPLOADER_DESC" />
+		<action name="question_and_answer.version" title="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_EDIT_VERSION" description="COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS_EDIT_VERSION_DESC" />
+	</section>
+	<section name="help_document">
+		<action name="help_document.edit" title="COM_QUESTIONSANSWERS_HELP_DOCUMENTS_EDIT" description="COM_QUESTIONSANSWERS_HELP_DOCUMENTS_EDIT_DESC" />
+		<action name="help_document.edit.own" title="COM_QUESTIONSANSWERS_HELP_DOCUMENTS_EDIT_OWN" description="COM_QUESTIONSANSWERS_HELP_DOCUMENTS_EDIT_OWN_DESC" />
+		<action name="help_document.edit.state" title="COM_QUESTIONSANSWERS_HELP_DOCUMENTS_EDIT_STATE" description="COM_QUESTIONSANSWERS_HELP_DOCUMENTS_EDIT_STATE_DESC" />
+		<action name="help_document.create" title="COM_QUESTIONSANSWERS_HELP_DOCUMENTS_CREATE" description="COM_QUESTIONSANSWERS_HELP_DOCUMENTS_CREATE_DESC" />
+		<action name="help_document.delete" title="COM_QUESTIONSANSWERS_HELP_DOCUMENTS_DELETE" description="COM_QUESTIONSANSWERS_HELP_DOCUMENTS_DELETE_DESC" />
+		<action name="help_document.access" title="COM_QUESTIONSANSWERS_HELP_DOCUMENTS_ACCESS" description="COM_QUESTIONSANSWERS_HELP_DOCUMENTS_ACCESS_DESC" />
+		<action name="help_document.version" title="COM_QUESTIONSANSWERS_HELP_DOCUMENTS_EDIT_VERSION" description="COM_QUESTIONSANSWERS_HELP_DOCUMENTS_EDIT_VERSION_DESC" />
+	</section>
+	<section name="category.questions_and_answers">
+		<action name="core.create" title="JACTION_CREATE" description="JACTION_CREATE_COMPONENT_DESC" />
+		<action name="core.delete" title="JACTION_DELETE" description="COM_CATEGORIES_ACCESS_DELETE_DESC" />
+		<action name="core.edit" title="JACTION_EDIT" description="COM_CATEGORIES_ACCESS_EDIT_DESC" />
+		<action name="core.edit.state" title="JACTION_EDITSTATE" description="COM_CATEGORIES_ACCESS_EDITSTATE_DESC" />
+		<action name="core.edit.own" title="JACTION_EDITOWN" description="COM_CATEGORIES_ACCESS_EDITOWN_DESC" />
+	</section>
+</access>

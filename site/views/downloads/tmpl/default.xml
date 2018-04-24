@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<metadata>
+	<layout title="COM_QUESTIONSANSWERS_MENU_DOWNLOADS_TITLE" option="COM_QUESTIONSANSWERS_MENU_DOWNLOADS_OPTION">
+		<message>
+			<![CDATA[COM_QUESTIONSANSWERS_MENU_DOWNLOADS_DESC]]>
+		</message>
+	</layout>
+	<!-- Add fields to the request variables for the layout. -->
+	<fields name="request">
+		<fieldset name="request"
+			addrulepath="/administrator/components/com_questionsanswers/models/rules"
+			addfieldpath="/administrator/components/com_questionsanswers/models/fields">
+			
+		<!-- Downloads_request_catid Field. Type: Category. (joomla) -->
+		<field
+			type="category"
+			name="catid"
+			label="COM_QUESTIONSANSWERS_CONFIG_DOWNLOADS_REQUEST_CATID_LABEL"
+			extension="com_questionsanswers.questions_and_answers"
+			description="COM_QUESTIONSANSWERS_CONFIG_DOWNLOADS_REQUEST_CATID_DESCRIPTION"
+			class="inputbox"
+		/>
+		</fieldset>
+	</fields>
+</metadata>

@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			24th April, 2018
+	@build			5th May, 2018
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		publishing.php

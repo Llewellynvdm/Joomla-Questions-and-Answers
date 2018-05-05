@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			24th April, 2018
+	@build			5th May, 2018
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		help_document.php
@@ -326,23 +326,23 @@ class QuestionsanswersTableHelp_document extends JTable
 	}
 
 	/**
-	 * Generate a valid alias from title / date.
-	 * Remains public to be able to check for duplicated alias before saving
-	 *
-	 * @return  string
-	 */
+	* Generate a valid alias from title / date.
+	* Remains public to be able to check for duplicated alias before saving
+	*
+	* @return  string
+	*/
 	public function generateAlias()
 	{
 		if (empty($this->alias))
 		{
-			$this->alias = $this->name;
+			$this->alias = $this->title;
 		}
 
 		$this->alias = JApplication::stringURLSafe($this->alias);
 
 		if (trim(str_replace('-', '', $this->alias)) == '')
 		{
-			$this->alias = JFactory::getDate()->format("Y-m-d-H-i-s");
+			$this->alias = JFactory::getDate()->format('Y-m-d-H-i-s');
 		}
 
 		return $this->alias;

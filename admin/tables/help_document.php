@@ -6,30 +6,27 @@
       \ \/ / _` / __| __| | |  | |/ _ \ \ / / _ \ |/ _ \| '_ \| '_ ` _ \ / _ \ '_ \| __| | |\/| |/ _ \ __| '_ \ / _ \ / _` |
        \  / (_| \__ \ |_  | |__| |  __/\ V /  __/ | (_) | |_) | | | | | |  __/ | | | |_  | |  | |  __/ |_| | | | (_) | (_| |
         \/ \__,_|___/\__| |_____/ \___| \_/ \___|_|\___/| .__/|_| |_| |_|\___|_| |_|\__| |_|  |_|\___|\__|_| |_|\___/ \__,_|
-                                                        | |                                                                 
-                                                        |_| 				
+                                                        | |
+                                                        |_|
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			5th May, 2018
+	@build			27th December, 2018
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		help_document.php
-	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
+	@author			Llewellyn van der Merwe <https://www.vdm.io/>
 	@copyright		Copyright (C) 2015. All Rights Reserved
-	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
-	
-	Questions &amp; Answers 
-                                                             
+	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html
+
+	Questions &amp; Answers
+
 /-----------------------------------------------------------------------------------------------------------------------------*/
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
 use Joomla\Registry\Registry;
-
-// import Joomla table library
-jimport('joomla.database.table');
 
 /**
  * Help_documents Table class
@@ -54,7 +51,7 @@ class QuestionsanswersTableHelp_document extends JTable
 		parent::__construct('#__questionsanswers_help_document', 'id', $db);
 
 		// Adding History Options
-		JTableObserverContenthistory::createObserver($this, array('typeAlias' => 'com_questionsanswers.help_document')); 
+		JTableObserverContenthistory::createObserver($this, array('typeAlias' => 'com_questionsanswers.help_document'));
 	}	
  
 	public function bind($array, $ignore = '')
@@ -237,7 +234,7 @@ class QuestionsanswersTableHelp_document extends JTable
 		{
 			// asset alread set so use saved rules
 			$assetId = (int) $db->loadResult();
-			return JAccess::getAssetRules($assetId);
+			return JAccess::getAssetRules($assetId); // (TODO) instead of keeping inherited Allowed it becomes Allowed.
 		}
 		// try again
 		elseif ($try)
@@ -326,11 +323,11 @@ class QuestionsanswersTableHelp_document extends JTable
 	}
 
 	/**
-	* Generate a valid alias from title / date.
-	* Remains public to be able to check for duplicated alias before saving
-	*
-	* @return  string
-	*/
+	 * Generate a valid alias from title / date.
+	 * Remains public to be able to check for duplicated alias before saving
+	 *
+	 * @return  string
+	 */
 	public function generateAlias()
 	{
 		if (empty($this->alias))

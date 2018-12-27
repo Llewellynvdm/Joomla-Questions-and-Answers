@@ -6,21 +6,21 @@
       \ \/ / _` / __| __| | |  | |/ _ \ \ / / _ \ |/ _ \| '_ \| '_ ` _ \ / _ \ '_ \| __| | |\/| |/ _ \ __| '_ \ / _ \ / _` |
        \  / (_| \__ \ |_  | |__| |  __/\ V /  __/ | (_) | |_) | | | | | |  __/ | | | |_  | |  | |  __/ |_| | | | (_) | (_| |
         \/ \__,_|___/\__| |_____/ \___| \_/ \___|_|\___/| .__/|_| |_| |_|\___|_| |_|\__| |_|  |_|\___|\__|_| |_|\___/ \__,_|
-                                                        | |                                                                 
-                                                        |_| 				
+                                                        | |
+                                                        |_|
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			5th May, 2018
+	@build			27th December, 2018
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		questionsanswers.php
-	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
+	@author			Llewellyn van der Merwe <https://www.vdm.io/>
 	@copyright		Copyright (C) 2015. All Rights Reserved
-	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
-	
-	Questions &amp; Answers 
-                                                             
+	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html
+
+	Questions &amp; Answers
+
 /-----------------------------------------------------------------------------------------------------------------------------*/
 
 // No direct access to this file
@@ -39,7 +39,7 @@ abstract class QuestionsanswersHelper
 	{
 		// the Session keeps track of all data related to the current session of this user
 		self::loadSession();
-	}  
+	}
 
 	/**
 	* 	the globals
@@ -77,6 +77,10 @@ abstract class QuestionsanswersHelper
 	**/
 	public static function set($key, $value)
 	{
+		if (!isset(self::$session) || !self::checkObject(self::$session))
+		{
+			self::$session = JFactory::getSession();
+		}
 		// set to local memory to speed up program
 		self::$localSession[$key] = $value;
 		// load to session for later use
@@ -88,6 +92,10 @@ abstract class QuestionsanswersHelper
 	**/
 	public static function get($key, $default = null)
 	{
+		if (!isset(self::$session) || !self::checkObject(self::$session))
+		{
+			self::$session = JFactory::getSession();
+		}
 		// check if in local memory
 		if (!isset(self::$localSession[$key]))
 		{
@@ -258,18 +266,23 @@ abstract class QuestionsanswersHelper
 
 
 	/**
-	*	Get the file path or url
+	* Get the file path or url
 	* 
-	*	@param  string   $type              The (url/path) type to return
-	*	@param  string   $target            The Params Target name (if set)
-	*	@param  string   $default           The default path if not set in Params (fallback path)
-	*	@param  bool     $createIfNotSet    The switch to create the folder if not found
+	* @param  string   $type              The (url/path) type to return
+	* @param  string   $target            The Params Target name (if set)
+	* @param  string   $default           The default path if not set in Params (fallback path)
+	* @param  bool     $createIfNotSet    The switch to create the folder if not found
 	*
-	*	@return  string    On success the path or url is returned based on the type requested
+	* @return  string    On success the path or url is returned based on the type requested
 	* 
 	*/
-	public static function getFolderPath($type = 'path', $target = 'folderpath', $default = JPATH_SITE . '/images/', $createIfNotSet = true)
+	public static function getFolderPath($type = 'path', $target = 'folderpath', $default = '', $createIfNotSet = true)
 	{
+		// make sure to always have a string/path
+		if(!self::checkString($default))
+		{
+			$default = JPATH_SITE . '/images/';
+		}
 		// get the global settings
 		if (!self::checkObject(self::$params))
 		{
@@ -311,8 +324,13 @@ abstract class QuestionsanswersHelper
 	* @return  string    On success the path or url is returned based on the type requested
 	*
 	*/
-	public static function getFilePath($type = 'path', $target = 'filepath', $fileType = null, $key = '', $default = JPATH_SITE . '/images/', $createIfNotSet = true)
+	public static function getFilePath($type = 'path', $target = 'filepath', $fileType = null, $key = '', $default = '', $createIfNotSet = true)
 	{
+		// make sure to always have a string/path
+		if(!self::checkString($default))
+		{
+			$default = JPATH_SITE . '/images/';
+		}
 		// get the global settings
 		if (!self::checkObject(self::$params))
 		{
@@ -478,6 +496,30 @@ abstract class QuestionsanswersHelper
 	}
 
 	/**
+	 * set the date as 2004/05 (for charts)
+	 */
+	public static function setYearMonth($date)
+	{
+		if (!self::isValidTimeStamp($date))
+		{
+			$date = strtotime($date);
+		}
+		return date('Y/m', $date);
+	}
+
+	/**
+	 * set the date as 2004/05/03 (for charts)
+	 */
+	public static function setYearMonthDay($date)
+	{
+		if (!self::isValidTimeStamp($date))
+		{
+			$date = strtotime($date);
+		}
+		return date('Y/m/d', $date);
+	}
+
+	/**
 	 *	Check if string is a valid time stamp
 	 */
 	public static function isValidTimeStamp($timestamp)
@@ -514,26 +556,53 @@ abstract class QuestionsanswersHelper
 	}
 
 
+	/**
+	 * The Dynamic Data Array
+	 *
+	 * @var     array
+	 */
 	protected static $dynamicData = array();
 
+	/**
+	 * Set the Dynamic Data
+	 *
+	 * @param   string   $data             The data to update
+	 * @param   array   $placeholders      The placeholders to use to update data
+	 *
+	 * @return string   of updated data
+	 *
+	 */
 	public static function setDynamicData($data, $placeholders)
 	{
-		$keyMD5 = md5($data.json_encode($placeholders));
-		if (!isset(self::$dynamicData[$keyMD5]))
+		// make sure data is a string & placeholders is an array
+		if (self::checkString($data) && self::checkArray($placeholders))
 		{
-			if (self::checkArray($placeholders))
+			// store in memory in case it is build multiple times
+			$keyMD5 = md5($data.json_encode($placeholders));
+			if (!isset(self::$dynamicData[$keyMD5]))
 			{
+				// remove all values that are not strings (just to be safe)
+				$placeholders = array_filter($placeholders, function ($val){ if (self::checkArray($val) || self::checkObject($val)) { return false; } return true; });
+				// model (basic) based on logic
 				self::setTheIF($data, $placeholders);
+				// update the string and store in memory
 				self::$dynamicData[$keyMD5] = str_replace(array_keys($placeholders), array_values($placeholders), $data);
 			}
-			else
-			{
-				self::$dynamicData[$keyMD5] = $data;
-			}
+			// return updated string
+			return self::$dynamicData[$keyMD5];
 		}
-		return self::$dynamicData[$keyMD5];
+		return $data;
 	}
 
+	/**
+	 * Set the IF statements
+	 *
+	 * @param   string   $string           The string to update
+	 * @param   array   $placeholders      The placeholders to use to update string
+	 *
+	 * @return void
+	 *
+	 */
 	protected static function setTheIF(&$string, $placeholders)
 	{		
 		// only normal if endif
@@ -578,6 +647,15 @@ abstract class QuestionsanswersHelper
 		}
 	}
 
+	/**
+	 * Set the remainder IF
+	 *
+	 * @param   array   $match            The match search
+	 * @param   array   $placeholders     The placeholders to use to match
+	 *
+	 * @return string of remainder
+	 *
+	 */
 	protected static function remainderIF(&$match, &$placeholders)
 	{	
 		// default we keep nothing
@@ -608,7 +686,7 @@ abstract class QuestionsanswersHelper
 		{
 			$keep = addcslashes($match[$length - 1], '$');
 		}
-		return $keep;	
+		return $keep;
 	}
 
 	public static function hasEditAccess($recordId, $userId = null, $to = 'question_and_answer')
@@ -1693,7 +1771,7 @@ abstract class QuestionsanswersHelper
 		return 'application/octet-stream';
 	}
 	/**
-	*	Load the Component xml manifest.
+	* Load the Component xml manifest.
 	**/
 	public static function manifest()
 	{
@@ -1702,12 +1780,12 @@ abstract class QuestionsanswersHelper
 	}
 
 	/**
-	*	Joomla version object
+	* Joomla version object
 	**/	
 	protected static $JVersion;
 
 	/**
-	*	set/get Joomla version
+	* set/get Joomla version
 	**/
 	public static function jVersion()
 	{
@@ -1720,7 +1798,7 @@ abstract class QuestionsanswersHelper
 	}
 
 	/**
-	*	Load the Contributors details.
+	* Load the Contributors details.
 	**/
 	public static function getContributors()
 	{
@@ -1758,8 +1836,8 @@ abstract class QuestionsanswersHelper
 	}
 
 	/**
-	*	Load the Component Help URLs.
-	**/
+	 *	Load the Component Help URLs.
+	 **/
 	public static function getHelpUrl($view)
 	{
 		$user	= JFactory::getUser();
@@ -1796,15 +1874,15 @@ abstract class QuestionsanswersHelper
 						// set joomla article
 						case 1:
 							return self::loadArticleLink($help->article);
-						break;
+							break;
 						// set help text
 						case 2:
 							return self::loadHelpTextLink($help->id);
-						break;
+							break;
 						// set Link
 						case 3:
 							return $help->url;
-						break;
+							break;
 					}
 				}
 			}
@@ -1813,16 +1891,16 @@ abstract class QuestionsanswersHelper
 	}
 
 	/**
-	*	Get the Article Link.
-	**/
+	 *	Get the Article Link.
+	 **/
 	protected static function loadArticleLink($id)
 	{
 		return JURI::root().'index.php?option=com_content&view=article&id='.$id.'&tmpl=component&layout=modal';
 	}
 
 	/**
-	*	Get the Help Text Link.
-	**/
+	 *	Get the Help Text Link.
+	 **/
 	protected static function loadHelpTextLink($id)
 	{
 		$token = JSession::getFormToken();
@@ -1830,7 +1908,7 @@ abstract class QuestionsanswersHelper
 	}
 
 	/**
-	*	Configure the Linkbar.
+	* Configure the Linkbar.
 	**/
 	public static function addSubmenu($submenu)
 	{
@@ -1847,11 +1925,11 @@ abstract class QuestionsanswersHelper
 		{
 			JHtmlSidebar::addEntry(JText::_('COM_QUESTIONSANSWERS_SUBMENU_HELP_DOCUMENTS'), 'index.php?option=com_questionsanswers&view=help_documents', $submenu === 'help_documents');
 		}
-	} 
+	}
 
 	/**
-	* 	UIKIT Component Classes
-	**/
+	 *  UIKIT Component Classes
+	 **/
 	public static $uk_components = array(
 			'data-uk-grid' => array(
 				'grid' ),
@@ -1905,15 +1983,15 @@ abstract class QuestionsanswersHelper
 			'upload-drop' => array(
 				'upload', 'form-file' )
 			);
-	
+
 	/**
-	* 	Add UIKIT Components
-	**/
+	 *  Add UIKIT Components
+	 **/
 	public static $uikit = false;
 
 	/**
-	* 	Get UIKIT Components
-	**/
+	 *  Get UIKIT Components
+	 **/
 	public static function getUikitComp($content,$classes = array())
 	{
 		if (strpos($content,'class="uk-') !== false)
@@ -1943,13 +2021,13 @@ abstract class QuestionsanswersHelper
 				}
 				return $temp;
 			}
-		}	
+		}
 		if (self::checkArray($classes))
 		{
 			return $classes;
 		}
 		return false;
-	} 
+	}
 
 	/**
 	 * Prepares the xml document
@@ -1979,19 +2057,19 @@ abstract class QuestionsanswersHelper
 		{
 			$subjectTab = 'Sheet1';
 		}
-		
-		// make sure the file is loaded		
+
+		// make sure the file is loaded
 		JLoader::import('PHPExcel', JPATH_COMPONENT_ADMINISTRATOR . '/helpers');
-		
+
 		// Create new PHPExcel object
 		$objPHPExcel = new PHPExcel();
-		
+
 		// Set document properties
 		$objPHPExcel->getProperties()->setCreator($creator)
-									 ->setCompany('Vast Development Method')
-									 ->setLastModifiedBy($modified)
-									 ->setTitle($title)
-									 ->setSubject($subjectTab);
+			->setCompany('Vast Development Method')
+			->setLastModifiedBy($modified)
+			->setTitle($title)
+			->setSubject($subjectTab);
 		if (!$description)
 		{
 			$objPHPExcel->getProperties()->setDescription($description);
@@ -2004,7 +2082,7 @@ abstract class QuestionsanswersHelper
 		{
 			$objPHPExcel->getProperties()->setCategory($category);
 		}
-		
+
 		// Some styles
 		$headerStyles = array(
 			'font'  => array(
@@ -2026,7 +2104,7 @@ abstract class QuestionsanswersHelper
 				'size'  => 11,
 				'name'  => 'Verdana'
 		));
-		
+
 		// Add some data
 		if (self::checkArray($rows))
 		{
@@ -2053,43 +2131,43 @@ abstract class QuestionsanswersHelper
 		{
 			return false;
 		}
-		
+
 		// Rename worksheet
 		$objPHPExcel->getActiveSheet()->setTitle($subjectTab);
-		
+
 		// Set active sheet index to the first sheet, so Excel opens this as the first sheet
 		$objPHPExcel->setActiveSheetIndex(0);
-		
+
 		// Redirect output to a client's web browser (Excel5)
 		header('Content-Type: application/vnd.ms-excel');
 		header('Content-Disposition: attachment;filename="'.$fileName.'.xls"');
 		header('Cache-Control: max-age=0');
 		// If you're serving to IE 9, then the following may be needed
 		header('Cache-Control: max-age=1');
-		
+
 		// If you're serving to IE over SSL, then the following may be needed
 		header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
 		header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT'); // always modified
 		header ('Cache-Control: cache, must-revalidate'); // HTTP/1.1
 		header ('Pragma: public'); // HTTP/1.0
-		
+
 		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
 		$objWriter->save('php://output');
 		jexit();
 	}
-	
+
 	/**
-	* Get CSV Headers
-	*/
+	 * Get CSV Headers
+	 */
 	public static function getFileHeaders($dataType)
-	{		
-		// make sure these files are loaded		
+	{
+		// make sure these files are loaded
 		JLoader::import('PHPExcel', JPATH_COMPONENT_ADMINISTRATOR . '/helpers');
 		JLoader::import('ChunkReadFilter', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/PHPExcel/Reader');
 		// get session object
-		$session	= JFactory::getSession();
-		$package	= $session->get('package', null);
-		$package	= json_decode($package, true);
+		$session = JFactory::getSession();
+		$package = $session->get('package', null);
+		$package = json_decode($package, true);
 		// set the headers
 		if(isset($package['dir']))
 		{
@@ -2267,16 +2345,16 @@ abstract class QuestionsanswersHelper
 					{
 						if ($external)
 						{
-							if ($name = self::getVar(null, $val, $id, $name, '=', $table))
+							if ($_name = self::getVar(null, $val, $id, $name, '=', $table))
 							{
-								$names[] = $name;
+								$names[] = $_name;
 							}
 						}
 						else
 						{
-							if ($name = self::getVar($table, $val, $id, $name))
+							if ($_name = self::getVar($table, $val, $id, $name))
 							{
-								$names[] = $name;
+								$names[] = $_name;
 							}
 						}
 					}
@@ -2332,183 +2410,149 @@ abstract class QuestionsanswersHelper
 	}
 
 	/**
-	*	Get the actions permissions
+	* Get the action permissions
+	*
+	* @param  string   $view        The related view name
+	* @param  int      $record      The item to act upon
+	* @param  string   $views       The related list view name
+	* @param  mixed    $target      Only get this permission (like edit, create, delete)
+	* @param  string   $component   The target component
+	*
+	* @return  object   The JObject of permission/authorised actions
+	* 
 	**/
-	public static function getActions($view,&$record = null,$views = null)
+	public static function getActions($view, &$record = null, $views = null, $target = null, $component = 'questionsanswers')
 	{
-		jimport('joomla.access.access');
-
-		$user	= JFactory::getUser();
-		$result	= new JObject;
-		$view	= self::safeString($view);
+		// get the user object
+		$user = JFactory::getUser();
+		// load the JObject
+		$result = new JObject;
+		// make view name safe (just incase)
+		$view = self::safeString($view);
 		if (self::checkString($views))
 		{
 			$views = self::safeString($views);
  		}
 		// get all actions from component
-		$actions = JAccess::getActions('com_questionsanswers', 'component');
-		// set acctions only set in component settiongs
-		$componentActions = array('core.admin','core.manage','core.options','core.export');
+		$actions = JAccess::getActionsFromFile(
+			JPATH_ADMINISTRATOR . '/components/com_' . $component . '/access.xml',
+			"/access/section[@name='component']/"
+		);
+		// if non found then return empty JObject
+		if (empty($actions))
+		{
+			return $result;
+		}
+		// get created by if not found
+		if (self::checkObject($record) && !isset($record->created_by) && isset($record->id))
+		{
+			$record->created_by = self::getVar($view, $record->id, 'id', 'created_by', '=', $component);
+		}
+		// set actions only set in component settings
+		$componentActions = array('core.admin', 'core.manage', 'core.options', 'core.export');
+		// check if we have a target
+		$checkTarget = false;
+		if ($target)
+		{
+			// convert to an array
+			if (self::checkString($target))
+			{
+				$target = array($target);
+			}
+			// check if we are good to go
+			if (self::checkArray($target))
+			{
+				$checkTarget = true;
+			}
+		}
 		// loop the actions and set the permissions
 		foreach ($actions as $action)
 		{
-			// set to use component default
-			$fallback= true;
-			if (self::checkObject($record) && isset($record->id) && $record->id > 0 && !in_array($action->name,$componentActions))
+			// check target action filter
+			if ($checkTarget && self::filterActions($view, $action->name, $target))
 			{
+				continue;
+			}
+			// set to use component default
+			$fallback = true;
+			// reset permission per/action
+			$permission = false;
+			$catpermission = false;
+			// set area
+			$area = 'comp';
+			// check if the record has an ID and the action is item related (not a component action)
+			if (self::checkObject($record) && isset($record->id) && $record->id > 0 && !in_array($action->name, $componentActions) &&
+				(strpos($action->name, 'core.') !== false || strpos($action->name, $view . '.') !== false))
+			{
+				// we are in item
+				$area = 'item';
 				// The record has been set. Check the record permissions.
-				$permission = $user->authorise($action->name, 'com_questionsanswers.'.$view.'.' . (int) $record->id);
-				if (!$permission) // TODO removed && !is_null($permission)
+				$permission = $user->authorise($action->name, 'com_' . $component . '.' . $view . '.' . (int) $record->id);
+				// if no permission found, check edit own
+				if (!$permission)
 				{
-					if ($action->name == 'core.edit' || $action->name == $view.'.edit')
+					// With edit, if the created_by matches current user then dig deeper.
+					if (($action->name === 'core.edit' || $action->name === $view . '.edit') && $record->created_by > 0 && ($record->created_by == $user->id))
 					{
-						if ($user->authorise('core.edit.own', 'com_questionsanswers.'.$view.'.' . (int) $record->id))
+						// the correct target
+						$coreCheck = (array) explode('.', $action->name);
+						// check that we have both local and global access
+						if ($user->authorise($coreCheck[0] . '.edit.own', 'com_' . $component . '.' . $view . '.' . (int) $record->id) &&
+							$user->authorise($coreCheck[0]  . '.edit.own', 'com_' . $component))
 						{
-							// If the owner matches 'me' then allow.
-							if (isset($record->created_by) && $record->created_by > 0 && ($record->created_by == $user->id))
-							{
-								$result->set($action->name, true);
-								// set not to use component default
-								$fallback= false;
-							}
-							else
-							{
-								$result->set($action->name, false);
-								// set not to use component default
-								$fallback= false;
-							}
+							// allow edit
+							$result->set($action->name, true);
+							// set not to use global default
+							// because we already validated it
+							$fallback = false;
 						}
-						elseif ($user->authorise($view.'edit.own', 'com_questionsanswers.'.$view.'.' . (int) $record->id))
+						else
 						{
-							// If the owner matches 'me' then allow.
-							if (isset($record->created_by) && $record->created_by > 0 && ($record->created_by == $user->id))
-							{
-								$result->set($action->name, true);
-								// set not to use component default
-								$fallback= false;
-							}
-							else
-							{
-								$result->set($action->name, false);
-								// set not to use component default
-								$fallback= false;
-							}
-						}
-						elseif ($user->authorise('core.edit.own', 'com_questionsanswers'))
-						{
-							// If the owner matches 'me' then allow.
-							if (isset($record->created_by) && $record->created_by > 0 && ($record->created_by == $user->id))
-							{
-								$result->set($action->name, true);
-								// set not to use component default
-								$fallback= false;
-							}
-							else
-							{
-								$result->set($action->name, false);
-								// set not to use component default
-								$fallback= false;
-							}
-						}
-						elseif ($user->authorise($view.'edit.own', 'com_questionsanswers'))
-						{
-							// If the owner matches 'me' then allow.
-							if (isset($record->created_by) && $record->created_by > 0 && ($record->created_by == $user->id))
-							{
-								$result->set($action->name, true);
-								// set not to use component default
-								$fallback= false;
-							}
-							else
-							{
-								$result->set($action->name, false);
-								// set not to use component default
-								$fallback= false;
-							}
+							// do not allow edit
+							$result->set($action->name, false);
+							$fallback = false;
 						}
 					}
 				}
 				elseif (self::checkString($views) && isset($record->catid) && $record->catid > 0)
 				{
+					// we are in item
+					$area = 'category';
+					// set the core check
+					$coreCheck = explode('.', $action->name);
+					$core = $coreCheck[0];
 					// make sure we use the core. action check for the categories
-					if (strpos($action->name,$view) !== false && strpos($action->name,'core.') === false ) {
-						$coreCheck		= explode('.',$action->name);
-						$coreCheck[0]	= 'core';
-						$categoryCheck	= implode('.',$coreCheck);
+					if (strpos($action->name, $view) !== false && strpos($action->name, 'core.') === false )
+					{
+						$coreCheck[0] = 'core';
+						$categoryCheck = implode('.', $coreCheck);
 					}
 					else
 					{
 						$categoryCheck = $action->name;
 					}
 					// The record has a category. Check the category permissions.
-					$catpermission = $user->authorise($categoryCheck, 'com_questionsanswers.'.$views.'.category.' . (int) $record->catid);
+					$catpermission = $user->authorise($categoryCheck, 'com_' . $component . '.' . $views . '.category.' . (int) $record->catid);
 					if (!$catpermission && !is_null($catpermission))
 					{
-						if ($action->name == 'core.edit' || $action->name == $view.'.edit')
+						// With edit, if the created_by matches current user then dig deeper.
+						if (($action->name === 'core.edit' || $action->name === $view . '.edit') && $record->created_by > 0 && ($record->created_by == $user->id))
 						{
-							if ($user->authorise('core.edit.own', 'com_questionsanswers.'.$views.'.category.' . (int) $record->catid))
+							// check that we have both local and global access
+							if ($user->authorise('core.edit.own', 'com_' . $component . '.' . $views . '.category.' . (int) $record->catid) &&
+								$user->authorise($core . '.edit.own', 'com_' . $component))
 							{
-								// If the owner matches 'me' then allow.
-								if (isset($record->created_by) && $record->created_by > 0 && ($record->created_by == $user->id))
-								{
-									$result->set($action->name, true);
-									// set not to use component default
-									$fallback= false;
-								}
-								else
-								{
-									$result->set($action->name, false);
-									// set not to use component default
-									$fallback= false;
-								}
+								// allow edit
+								$result->set($action->name, true);
+								// set not to use global default
+								// because we already validated it
+								$fallback = false;
 							}
-							elseif ($user->authorise($view.'edit.own', 'com_questionsanswers.'.$views.'.category.' . (int) $record->catid))
+							else
 							{
-								// If the owner matches 'me' then allow.
-								if (isset($record->created_by) && $record->created_by > 0 && ($record->created_by == $user->id))
-								{
-									$result->set($action->name, true);
-									// set not to use component default
-									$fallback= false;
-								}
-								else
-								{
-									$result->set($action->name, false);
-									// set not to use component default
-									$fallback= false;
-								}
-							}
-							elseif ($user->authorise('core.edit.own', 'com_questionsanswers'))
-							{
-								// If the owner matches 'me' then allow.
-								if (isset($record->created_by) && $record->created_by > 0 && ($record->created_by == $user->id))
-								{
-									$result->set($action->name, true);
-									// set not to use component default
-									$fallback= false;
-								}
-								else
-								{
-									$result->set($action->name, false);
-									// set not to use component default
-									$fallback= false;
-								}
-							}
-							elseif ($user->authorise($view.'edit.own', 'com_questionsanswers'))
-							{
-								// If the owner matches 'me' then allow.
-								if (isset($record->created_by) && $record->created_by > 0 && ($record->created_by == $user->id))
-								{
-									$result->set($action->name, true);
-									// set not to use component default
-									$fallback= false;
-								}
-								else
-								{
-									$result->set($action->name, false);
-									// set not to use component default
-									$fallback= false;
-								}
+								// do not allow edit
+								$result->set($action->name, false);
+								$fallback = false;
 							}
 						}
 					}
@@ -2517,14 +2561,49 @@ abstract class QuestionsanswersHelper
 			// if allowed then fallback on component global settings
 			if ($fallback)
 			{
-				$result->set($action->name, $user->authorise($action->name, 'com_questionsanswers'));
+				// if item/category blocks access then don't fall back on global
+				if ((($area === 'item') && !$permission) || (($area === 'category') && !$catpermission))
+				{
+					// do not allow
+					$result->set($action->name, false);
+				}
+				// Finally remember the global settings have the final say. (even if item allow)
+				// The local item permissions can block, but it can't open and override of global permissions.
+				// Since items are created by users and global permissions is set by system admin.
+				else
+				{
+					$result->set($action->name, $user->authorise($action->name, 'com_' . $component));
+				}
 			}
 		}
 		return $result;
 	}
 
 	/**
-	*	Get any component's model
+	* Filter the action permissions
+	*
+	* @param  string   $action   The action to check
+	* @param  array    $targets  The array of target actions
+	*
+	* @return  boolean   true if action should be filtered out
+	* 
+	**/
+	protected static function filterActions(&$view, &$action, &$targets)
+	{
+		foreach ($targets as $target)
+		{
+			if (strpos($action, $view . '.' . $target) !== false ||
+				strpos($action, 'core.' . $target) !== false)
+			{
+				return false;
+				break;
+			}
+		}
+		return true;
+	}
+
+	/**
+	* Get any component's model
 	**/
 	public static function getModel($name, $path = JPATH_COMPONENT_ADMINISTRATOR, $component = 'Questionsanswers', $config = array())
 	{
@@ -2568,9 +2647,9 @@ abstract class QuestionsanswersHelper
 	}
 
 	/**
-	*	Add to asset Table
+	* Add to asset Table
 	*/
-	public static function setAsset($id,$table)
+	public static function setAsset($id, $table, $inherit = true)
 	{
 		$parent = JTable::getInstance('Asset');
 		$parent->loadByName('com_questionsanswers');
@@ -2602,7 +2681,7 @@ abstract class QuestionsanswersHelper
 			$asset->name      = $name;
 			$asset->title     = $title;
 			// get the default asset rules
-			$rules = self::getDefaultAssetRules('com_questionsanswers',$table);
+			$rules = self::getDefaultAssetRules('com_questionsanswers', $table, $inherit);
 			if ($rules instanceof JAccessRules)
 			{
 				$asset->rules = (string) $rules;
@@ -2630,55 +2709,62 @@ abstract class QuestionsanswersHelper
 	}
 
 	/**
-	 *	Gets the default asset Rules for a component/view.
+	 * Gets the default asset Rules for a component/view.
 	 */
-	protected static function getDefaultAssetRules($component,$view)
+	protected static function getDefaultAssetRules($component, $view, $inherit = true)
 	{
-		// Need to find the asset id by the name of the component.
-		$db = JFactory::getDbo();
-		$query = $db->getQuery(true)
-			->select($db->quoteName('id'))
-			->from($db->quoteName('#__assets'))
-			->where($db->quoteName('name') . ' = ' . $db->quote($component));
-		$db->setQuery($query);
-		$db->execute();
-		if ($db->loadRowList())
+		// if new or inherited
+		$assetId = 0;
+		// Only get the actual item rules if not inheriting
+		if (!$inherit)
 		{
-			// asset alread set so use saved rules
-			$assetId = (int) $db->loadResult();
-			$result =  JAccess::getAssetRules($assetId);
-			if ($result instanceof JAccessRules)
+			// Need to find the asset id by the name of the component.
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true)
+				->select($db->quoteName('id'))
+				->from($db->quoteName('#__assets'))
+				->where($db->quoteName('name') . ' = ' . $db->quote($component));
+			$db->setQuery($query);
+			$db->execute();
+			// check that there is a value
+			if ($db->getNumRows())
 			{
-				$_result = (string) $result;
-				$_result = json_decode($_result);
-				foreach ($_result as $name => &$rule)
-				{
-					$v = explode('.', $name);
-					if ($view !== $v[0])
-					{
-						// remove since it is not part of this view
-						unset($_result->$name);
-					}
-					else
-					{
-						// clear the value since we inherit
-						$rule = array();
-					}
-				}
-				// check if there are any view values remaining
-				if (count($_result))
-				{
-					$_result = json_encode($_result);
-					$_result = array($_result);
-					// Instantiate and return the JAccessRules object for the asset rules.
-					$rules = new JAccessRules($_result);
-
-					return $rules;
-				}
-				return $result;
+				// asset already set so use saved rules
+				$assetId = (int) $db->loadResult();
 			}
 		}
-		return JAccess::getAssetRules(0);
+		// get asset rules
+		$result =  JAccess::getAssetRules($assetId);
+		if ($result instanceof JAccessRules)
+		{
+			$_result = (string) $result;
+			$_result = json_decode($_result);
+			foreach ($_result as $name => &$rule)
+			{
+				$v = explode('.', $name);
+				if ($view !== $v[0])
+				{
+					// remove since it is not part of this view
+					unset($_result->$name);
+				}
+				elseif ($inherit)
+				{
+					// clear the value since we inherit
+					$rule = array();
+				}
+			}
+			// check if there are any view values remaining
+			if (count($_result))
+			{
+				$_result = json_encode($_result);
+				$_result = array($_result);
+				// Instantiate and return the JAccessRules object for the asset rules.
+				$rules = new JAccessRules($_result);
+				// return filtered rules
+				return $rules;
+			}
+		}
+		return $result;
 	}
 
 	/**
@@ -2773,6 +2859,46 @@ abstract class QuestionsanswersHelper
 	}
 
 	/**
+	 * get the field object
+	 *
+	 * @param   array      $attributes   The array of attributes
+	 * @param   string     $default      The default of the field
+	 * @param   array      $options      The options to apply to the XML element
+	 *
+	 * @return  object
+	 *
+	 */
+	public static function getFieldObject(&$attributes, $default = '', $options = null)
+	{
+		// make sure we have attributes and a type value
+		if (self::checkArray($attributes) && isset($attributes['type']))
+		{
+			// make sure the form helper class is loaded
+			if (!method_exists('JFormHelper', 'loadFieldType'))
+			{
+				jimport('joomla.form.form');
+			}
+			// get field type
+			$field = JFormHelper::loadFieldType($attributes['type'],true);
+			// start field xml
+			$XML = new SimpleXMLElement('<field/>');
+			// load the attributes
+			self::xmlAddAttributes($XML, $attributes);
+			// check if we have options
+			if (self::checkArray($options))
+			{
+				// load the options
+				self::xmlAddOptions($XML, $options);
+			}
+			// setup the field
+			$field->setup($XML, $default);
+			// return the field object
+			return $field;
+		}
+		return false;
+	}
+
+	/**
 	 * Render Bool Button
 	 *
 	 * @param   array   $args   All the args for the button
@@ -2790,8 +2916,6 @@ abstract class QuestionsanswersHelper
 		$args = func_get_args();
 		// check if there is additional button class
 		$additional = isset($args[1]) ? (string) $args[1] : ''; // not used at this time
-		// start the xml
-		$buttonXML = new SimpleXMLElement('<field/>');
 		// button attributes
 		$buttonAttributes = array(
 			'type' => 'radio',
@@ -2800,30 +2924,20 @@ abstract class QuestionsanswersHelper
 			'class' => 'btn-group',
 			'filter' => 'INT',
 			'default' => isset($args[2]) ? (int) $args[2] : 0);
-		// load the haskey attributes
-		self::xmlAddAttributes($buttonXML, $buttonAttributes);
 		// set the button options
 		$buttonOptions = array(
 			'1' => isset($args[3]) ? self::htmlEscape($args[3]) : 'JYES',
 			'0' => isset($args[4]) ? self::htmlEscape($args[4]) : 'JNO');
-		// load the button options
-		self::xmlAddOptions($buttonXML, $buttonOptions);
-
-		// get the radio element
-		$button = JFormHelper::loadFieldType('radio');
-
-		// run
-		$button->setup($buttonXML, $buttonAttributes['default']);
-
-		return $button->input;
+		// return the input
+		return self::getFieldObject($buttonAttributes, $buttonAttributes['default'], $buttonOptions)->input;
 	}
 
 	/**
-	*	Check if have an json string
+	* Check if have an json string
 	*
-	*	@input	string   The json string to check
+	* @input	string   The json string to check
 	*
-	*	@returns bool true on success
+	* @returns bool true on success
 	**/
 	public static function checkJson($string)
 	{
@@ -2836,11 +2950,11 @@ abstract class QuestionsanswersHelper
 	}
 
 	/**
-	*	Check if have an object with a length
+	* Check if have an object with a length
 	*
-	*	@input	object   The object to check
+	* @input	object   The object to check
 	*
-	*	@returns bool true on success
+	* @returns bool true on success
 	**/
 	public static function checkObject($object)
 	{
@@ -2852,15 +2966,15 @@ abstract class QuestionsanswersHelper
 	}
 
 	/**
-	*	Check if have an array with a length
+	* Check if have an array with a length
 	*
-	*	@input	array   The array to check
+	* @input	array   The array to check
 	*
-	*	@returns bool true on success
+	* @returns bool/int  number of items in array on success
 	**/
 	public static function checkArray($array, $removeEmptyString = false)
 	{
-		if (isset($array) && is_array($array) && count($array) > 0)
+		if (isset($array) && is_array($array) && ($nr = count((array)$array)) > 0)
 		{
 			// also make sure the empty strings are removed
 			if ($removeEmptyString)
@@ -2874,17 +2988,17 @@ abstract class QuestionsanswersHelper
 				}
 				return self::checkArray($array, false);
 			}
-			return true;
+			return $nr;
 		}
 		return false;
 	}
 
 	/**
-	*	Check if have a string with a length
+	* Check if have a string with a length
 	*
-	*	@input	string   The string to check
+	* @input	string   The string to check
 	*
-	*	@returns bool true on success
+	* @returns bool true on success
 	**/
 	public static function checkString($string)
 	{
@@ -2896,10 +3010,10 @@ abstract class QuestionsanswersHelper
 	}
 
 	/**
-	*	Check if we are connected
-	*	Thanks https://stackoverflow.com/a/4860432/1429677
+	* Check if we are connected
+	* Thanks https://stackoverflow.com/a/4860432/1429677
 	*
-	*	@returns bool true on success
+	* @returns bool true on success
 	**/
 	public static function isConnected()
 	{
@@ -2921,11 +3035,11 @@ abstract class QuestionsanswersHelper
 	}
 
 	/**
-	*	Merge an array of array's
+	* Merge an array of array's
 	*
-	*	@input	array   The arrays you would like to merge
+	* @input	array   The arrays you would like to merge
 	*
-	*	@returns array on success
+	* @returns array on success
 	**/
 	public static function mergeArrays($arrays)
 	{
@@ -2951,11 +3065,11 @@ abstract class QuestionsanswersHelper
 	}
 
 	/**
-	*	Shorten a string
+	* Shorten a string
 	*
-	*	@input	string   The you would like to shorten
+	* @input	string   The you would like to shorten
 	*
-	*	@returns string on success
+	* @returns string on success
 	**/
 	public static function shorten($string, $length = 40, $addTip = true)
 	{
@@ -2963,7 +3077,7 @@ abstract class QuestionsanswersHelper
 		{
 			$initial = strlen($string);
 			$words = preg_split('/([\s\n\r]+)/', $string, null, PREG_SPLIT_DELIM_CAPTURE);
-			$words_count = count($words);
+			$words_count = count((array)$words);
 
 			$word_length = 0;
 			$last_word = 0;
@@ -2992,13 +3106,13 @@ abstract class QuestionsanswersHelper
 	}
 
 	/**
-	*	Making strings safe (various ways)
+	* Making strings safe (various ways)
 	*
-	*	@input	string   The you would like to make safe
+	* @input	string   The you would like to make safe
 	*
-	*	@returns string on success
+	* @returns string on success
 	**/
-	public static function safeString($string, $type = 'L', $spacer = '_', $replaceNumbers = true)
+	public static function safeString($string, $type = 'L', $spacer = '_', $replaceNumbers = true, $keepOnlyCharacters = true)
 	{
 		if ($replaceNumbers === true)
 		{
@@ -3027,7 +3141,16 @@ abstract class QuestionsanswersHelper
 			$string = trim($string);
 			$string = preg_replace('/'.$spacer.'+/', ' ', $string);
 			$string = preg_replace('/\s+/', ' ', $string);
-			$string = preg_replace("/[^A-Za-z ]/", '', $string);
+			// remove all and keep only characters
+			if ($keepOnlyCharacters)
+			{
+				$string = preg_replace("/[^A-Za-z ]/", '', $string);
+			}
+			// keep both numbers and characters
+			else
+			{
+				$string = preg_replace("/[^A-Za-z0-9 ]/", '', $string);
+			}
 			// select final adaptations
 			if ($type === 'L' || $type === 'strtolower')
 			{
@@ -3127,11 +3250,11 @@ abstract class QuestionsanswersHelper
 	}
 
 	/**
-	*	Convert an integer into an English word string
-	*	Thanks to Tom Nicholson <http://php.net/manual/en/function.strval.php#41988>
+	* Convert an integer into an English word string
+	* Thanks to Tom Nicholson <http://php.net/manual/en/function.strval.php#41988>
 	*
-	*	@input	an int
-	*	@returns a string
+	* @input	an int
+	* @returns a string
 	**/
 	public static function numberToString($x)
 	{
@@ -3218,9 +3341,9 @@ abstract class QuestionsanswersHelper
 	}
 
 	/**
-	*	Random Key
+	* Random Key
 	*
-	*	@returns a string
+	* @returns a string
 	**/
 	public static function randomkey($size)
 	{

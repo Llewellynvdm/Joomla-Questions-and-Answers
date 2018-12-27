@@ -17,6 +17,7 @@
 			name="catid"
 			label="COM_QUESTIONSANSWERS_CONFIG_CATEGORY_REQUEST_CATID_LABEL"
 			extension="com_questionsanswers.questions_and_answers"
+			default=""
 			description="COM_QUESTIONSANSWERS_CONFIG_CATEGORY_REQUEST_CATID_DESCRIPTION"
 			class="inputbox"
 		/>

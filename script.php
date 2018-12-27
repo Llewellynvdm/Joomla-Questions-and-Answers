@@ -6,29 +6,27 @@
       \ \/ / _` / __| __| | |  | |/ _ \ \ / / _ \ |/ _ \| '_ \| '_ ` _ \ / _ \ '_ \| __| | |\/| |/ _ \ __| '_ \ / _ \ / _` |
        \  / (_| \__ \ |_  | |__| |  __/\ V /  __/ | (_) | |_) | | | | | |  __/ | | | |_  | |  | |  __/ |_| | | | (_) | (_| |
         \/ \__,_|___/\__| |_____/ \___| \_/ \___|_|\___/| .__/|_| |_| |_|\___|_| |_|\__| |_|  |_|\___|\__|_| |_|\___/ \__,_|
-                                                        | |                                                                 
-                                                        |_| 				
+                                                        | |
+                                                        |_|
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			5th May, 2018
+	@build			27th December, 2018
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		script.php
-	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
+	@author			Llewellyn van der Merwe <https://www.vdm.io/>
 	@copyright		Copyright (C) 2015. All Rights Reserved
-	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
-	
-	Questions &amp; Answers 
-                                                             
+	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html
+
+	Questions &amp; Answers
+
 /-----------------------------------------------------------------------------------------------------------------------------*/
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
 JHTML::_('behavior.modal');
-jimport('joomla.installer.installer');
-jimport('joomla.installer.helper');
 
 /**
  * Script File of Questionsanswers Component
@@ -83,7 +81,7 @@ class com_questionsanswersInstallerScript
 			$db->setQuery($query);
 			// Execute the query to remove Question_and_answer items
 			$question_and_answer_done = $db->execute();
-			if ($question_and_answer_done);
+			if ($question_and_answer_done)
 			{
 				// If succesfully remove Question_and_answer add queued success message.
 				$app->enqueueMessage(JText::_('The (com_questionsanswers.question_and_answer) type alias was removed from the <b>#__content_type</b> table'));
@@ -98,7 +96,7 @@ class com_questionsanswersInstallerScript
 			$db->setQuery($query);
 			// Execute the query to remove Question_and_answer items
 			$question_and_answer_done = $db->execute();
-			if ($question_and_answer_done);
+			if ($question_and_answer_done)
 			{
 				// If succesfully remove Question_and_answer add queued success message.
 				$app->enqueueMessage(JText::_('The (com_questionsanswers.question_and_answer) type alias was removed from the <b>#__contentitem_tag_map</b> table'));
@@ -113,7 +111,7 @@ class com_questionsanswersInstallerScript
 			$db->setQuery($query);
 			// Execute the query to remove Question_and_answer items
 			$question_and_answer_done = $db->execute();
-			if ($question_and_answer_done);
+			if ($question_and_answer_done)
 			{
 				// If succesfully remove Question_and_answer add queued success message.
 				$app->enqueueMessage(JText::_('The (com_questionsanswers.question_and_answer) type alias was removed from the <b>#__ucm_content</b> table'));
@@ -169,7 +167,7 @@ class com_questionsanswersInstallerScript
 			$db->setQuery($query);
 			// Execute the query to remove Question_and_answer catid items
 			$question_and_answer_catid_done = $db->execute();
-			if ($question_and_answer_catid_done);
+			if ($question_and_answer_catid_done)
 			{
 				// If succesfully remove Question_and_answer catid add queued success message.
 				$app->enqueueMessage(JText::_('The (com_questionsanswers.questions_and_answers.category) type alias was removed from the <b>#__content_type</b> table'));
@@ -184,7 +182,7 @@ class com_questionsanswersInstallerScript
 			$db->setQuery($query);
 			// Execute the query to remove Question_and_answer catid items
 			$question_and_answer_catid_done = $db->execute();
-			if ($question_and_answer_catid_done);
+			if ($question_and_answer_catid_done)
 			{
 				// If succesfully remove Question_and_answer catid add queued success message.
 				$app->enqueueMessage(JText::_('The (com_questionsanswers.questions_and_answers.category) type alias was removed from the <b>#__contentitem_tag_map</b> table'));
@@ -199,7 +197,7 @@ class com_questionsanswersInstallerScript
 			$db->setQuery($query);
 			// Execute the query to remove Question_and_answer catid items
 			$question_and_answer_catid_done = $db->execute();
-			if ($question_and_answer_catid_done);
+			if ($question_and_answer_catid_done)
 			{
 				// If succesfully remove Question_and_answer catid add queued success message.
 				$app->enqueueMessage(JText::_('The (com_questionsanswers.questions_and_answers.category) type alias was removed from the <b>#__ucm_content</b> table'));
@@ -255,7 +253,7 @@ class com_questionsanswersInstallerScript
 			$db->setQuery($query);
 			// Execute the query to remove Help_document items
 			$help_document_done = $db->execute();
-			if ($help_document_done);
+			if ($help_document_done)
 			{
 				// If succesfully remove Help_document add queued success message.
 				$app->enqueueMessage(JText::_('The (com_questionsanswers.help_document) type alias was removed from the <b>#__content_type</b> table'));
@@ -270,7 +268,7 @@ class com_questionsanswersInstallerScript
 			$db->setQuery($query);
 			// Execute the query to remove Help_document items
 			$help_document_done = $db->execute();
-			if ($help_document_done);
+			if ($help_document_done)
 			{
 				// If succesfully remove Help_document add queued success message.
 				$app->enqueueMessage(JText::_('The (com_questionsanswers.help_document) type alias was removed from the <b>#__contentitem_tag_map</b> table'));
@@ -285,7 +283,7 @@ class com_questionsanswersInstallerScript
 			$db->setQuery($query);
 			// Execute the query to remove Help_document items
 			$help_document_done = $db->execute();
-			if ($help_document_done);
+			if ($help_document_done)
 			{
 				// If succesfully remove Help_document add queued success message.
 				$app->enqueueMessage(JText::_('The (com_questionsanswers.help_document) type alias was removed from the <b>#__ucm_content</b> table'));
@@ -329,7 +327,7 @@ class com_questionsanswersInstallerScript
 		$query->where($questionsanswers_condition);
 		$db->setQuery($query);
 		$help_document_done = $db->execute();
-		if ($help_document_done);
+		if ($help_document_done)
 		{
 			// If succesfully remove questionsanswers add queued success message.
 			$app->enqueueMessage(JText::_('All related items was removed from the <b>#__assets</b> table'));

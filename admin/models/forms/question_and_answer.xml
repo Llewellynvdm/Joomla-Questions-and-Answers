@@ -110,6 +110,7 @@
 			label="COM_QUESTIONSANSWERS_QUESTION_AND_ANSWER_QUESTION_LABEL"
 			rows="2"
 			cols="5"
+			default=""
 			description="COM_QUESTIONSANSWERS_QUESTION_AND_ANSWER_QUESTION_DESCRIPTION"
 			class="text_area span12"
 			filter="STRING"
@@ -121,6 +122,7 @@
 			type="editor"
 			name="answer"
 			label="COM_QUESTIONSANSWERS_QUESTION_AND_ANSWER_ANSWER_LABEL"
+			default=""
 			width="100%"
 			height="500"
 			buttons="false"
@@ -134,6 +136,7 @@
 			name="catid"
 			label="COM_QUESTIONSANSWERS_QUESTION_AND_ANSWER_CATID_LABEL"
 			extension="com_questionsanswers.questions_and_answers"
+			default=""
 			description="COM_QUESTIONSANSWERS_QUESTION_AND_ANSWER_CATID_DESCRIPTION"
 			class="inputbox"
 		/>

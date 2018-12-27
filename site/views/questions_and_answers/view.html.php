@@ -6,28 +6,25 @@
       \ \/ / _` / __| __| | |  | |/ _ \ \ / / _ \ |/ _ \| '_ \| '_ ` _ \ / _ \ '_ \| __| | |\/| |/ _ \ __| '_ \ / _ \ / _` |
        \  / (_| \__ \ |_  | |__| |  __/\ V /  __/ | (_) | |_) | | | | | |  __/ | | | |_  | |  | |  __/ |_| | | | (_) | (_| |
         \/ \__,_|___/\__| |_____/ \___| \_/ \___|_|\___/| .__/|_| |_| |_|\___|_| |_|\__| |_|  |_|\___|\__|_| |_|\___/ \__,_|
-                                                        | |                                                                 
-                                                        |_| 				
+                                                        | |
+                                                        |_|
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			5th May, 2018
+	@build			27th December, 2018
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		view.html.php
-	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
+	@author			Llewellyn van der Merwe <https://www.vdm.io/>
 	@copyright		Copyright (C) 2015. All Rights Reserved
-	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
-	
-	Questions &amp; Answers 
-                                                             
+	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html
+
+	Questions &amp; Answers
+
 /-----------------------------------------------------------------------------------------------------------------------------*/
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
-
-// import Joomla view library
-jimport('joomla.application.component.view');
 
 /**
  * Questionsanswers View class for the Questions_and_answers
@@ -136,7 +133,7 @@ class QuestionsanswersViewQuestions_and_answers extends JViewLegacy
 		// Load the header checker class.
 		require_once( JPATH_COMPONENT_SITE.'/helpers/headercheck.php' );
 		// Initialize the header checker.
-		$HeaderCheck = new questionsanswersHeaderCheck; 
+		$HeaderCheck = new questionsanswersHeaderCheck;
 
 		// Load uikit options.
 		$uikit = $this->params->get('uikit_load');
@@ -188,13 +185,13 @@ class QuestionsanswersViewQuestions_and_answers extends JViewLegacy
 					}
 				}
 			}
-		}  
+		}
 
 		// Add the CSS for Footable
 		$this->document->addStyleSheet('https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css');
 		$this->document->addStyleSheet(JURI::root() .'media/com_questionsanswers/footable-v3/css/footable.standalone.min.css', (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css');
 		// Add the JavaScript for Footable (adding all funtions)
-		$this->document->addScript(JURI::root() .'media/com_questionsanswers/footable-v3/js/footable.min.js', (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/javascript'); 
+		$this->document->addScript(JURI::root() .'media/com_questionsanswers/footable-v3/js/footable.min.js', (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/javascript');
 		// load the meta description
 		if ($this->params->get('menu-meta_description'))
 		{
@@ -209,7 +206,7 @@ class QuestionsanswersViewQuestions_and_answers extends JViewLegacy
 		if ($this->params->get('robots'))
 		{
 			$this->document->setMetadata('robots', $this->params->get('robots'));
-		} 
+		}
 		// check if main category name can be found
 		if ($catid = $this->app->input->get('catid', null))
 		{
@@ -250,7 +247,7 @@ class QuestionsanswersViewQuestions_and_answers extends JViewLegacy
 		// add var key
 		$this->document->addScriptDeclaration("var vastDevMod = '".$vastDevMod."';");
 		// add the document default css file
-		$this->document->addStyleSheet(JURI::root(true) .'/components/com_questionsanswers/assets/css/questions_and_answers.css', (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css'); 
+		$this->document->addStyleSheet(JURI::root(true) .'/components/com_questionsanswers/assets/css/questions_and_answers.css', (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css');
 	}
 
 	/**

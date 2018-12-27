@@ -6,44 +6,53 @@
       \ \/ / _` / __| __| | |  | |/ _ \ \ / / _ \ |/ _ \| '_ \| '_ ` _ \ / _ \ '_ \| __| | |\/| |/ _ \ __| '_ \ / _ \ / _` |
        \  / (_| \__ \ |_  | |__| |  __/\ V /  __/ | (_) | |_) | | | | | |  __/ | | | |_  | |  | |  __/ |_| | | | (_) | (_| |
         \/ \__,_|___/\__| |_____/ \___| \_/ \___|_|\___/| .__/|_| |_| |_|\___|_| |_|\__| |_|  |_|\___|\__|_| |_|\___/ \__,_|
-                                                        | |                                                                 
-                                                        |_| 				
+                                                        | |
+                                                        |_|
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			5th May, 2018
+	@build			27th December, 2018
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		questions_and_answers.php
-	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
+	@author			Llewellyn van der Merwe <https://www.vdm.io/>
 	@copyright		Copyright (C) 2015. All Rights Reserved
-	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
-	
-	Questions &amp; Answers 
-                                                             
+	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html
+
+	Questions &amp; Answers
+
 /-----------------------------------------------------------------------------------------------------------------------------*/
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
-
-// import Joomla controlleradmin library
-jimport('joomla.application.component.controlleradmin');
 
 /**
  * Questions_and_answers Controller
  */
 class QuestionsanswersControllerQuestions_and_answers extends JControllerAdmin
 {
-	protected $text_prefix = 'COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS';
 	/**
-	 * Proxy for getModel.
-	 * @since	2.5
+	 * The prefix to use with controller messages.
+	 *
+	 * @var    string
+	 * @since  1.6
 	 */
-	public function getModel($name = 'Question_and_answer', $prefix = 'QuestionsanswersModel', $config = array())
+	protected $text_prefix = 'COM_QUESTIONSANSWERS_QUESTIONS_AND_ANSWERS';
+
+	/**
+	 * Method to get a model object, loading it if required.
+	 *
+	 * @param   string  $name    The model name. Optional.
+	 * @param   string  $prefix  The class prefix. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
+	 *
+	 * @return  JModelLegacy  The model.
+	 *
+	 * @since   1.6
+	 */
+	public function getModel($name = 'Question_and_answer', $prefix = 'QuestionsanswersModel', $config = array('ignore_request' => true))
 	{
-		$model = parent::getModel($name, $prefix, array('ignore_request' => true));
-		
-		return $model;
+		return parent::getModel($name, $prefix, $config);
 	}
 
 	public function exportData()
@@ -107,5 +116,5 @@ class QuestionsanswersControllerQuestions_and_answers extends JControllerAdmin
 		$message = JText::_('COM_QUESTIONSANSWERS_IMPORT_FAILED');
 		$this->setRedirect(JRoute::_('index.php?option=com_questionsanswers&view=questions_and_answers', false), $message, 'error');
 		return;
-	}  
+	}
 }

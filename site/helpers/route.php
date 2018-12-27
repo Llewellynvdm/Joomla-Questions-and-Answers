@@ -6,29 +6,25 @@
       \ \/ / _` / __| __| | |  | |/ _ \ \ / / _ \ |/ _ \| '_ \| '_ ` _ \ / _ \ '_ \| __| | |\/| |/ _ \ __| '_ \ / _ \ / _` |
        \  / (_| \__ \ |_  | |__| |  __/\ V /  __/ | (_) | |_) | | | | | |  __/ | | | |_  | |  | |  __/ |_| | | | (_) | (_| |
         \/ \__,_|___/\__| |_____/ \___| \_/ \___|_|\___/| .__/|_| |_| |_|\___|_| |_|\__| |_|  |_|\___|\__|_| |_|\___/ \__,_|
-                                                        | |                                                                 
-                                                        |_| 				
+                                                        | |
+                                                        |_|
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			5th May, 2018
+	@build			27th December, 2018
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		route.php
-	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
+	@author			Llewellyn van der Merwe <https://www.vdm.io/>
 	@copyright		Copyright (C) 2015. All Rights Reserved
-	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
-	
-	Questions &amp; Answers 
-                                                             
+	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html
+
+	Questions &amp; Answers
+
 /-----------------------------------------------------------------------------------------------------------------------------*/
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
-
-// Component Helper
-jimport('joomla.application.component.helper');
-jimport('joomla.application.categories');
 
 /**
  * Questionsanswers Route Helper
@@ -38,8 +34,8 @@ abstract class QuestionsanswersHelperRoute
 	protected static $lookup;
 
 	/**
-	* @param int The route of the Questions_and_answers
-	*/
+	 * @param int The route of the Questions_and_answers
+	 */
 	public static function getQuestions_and_answersRoute($id = 0, $catid = 0)
 	{
 		if ($id > 0)
@@ -54,8 +50,10 @@ abstract class QuestionsanswersHelperRoute
 		else
 		{
 			// Initialize the needel array.
-			$needles = array();
-			//Create the link but don't add the id.
+			$needles = array(
+				'questions_and_answers'  => array()
+			);
+			// Create the link but don't add the id.
 			$link = 'index.php?option=com_questionsanswers&view=questions_and_answers';
 		}
 		if ($catid > 1)
@@ -79,8 +77,8 @@ abstract class QuestionsanswersHelperRoute
 	}
 
 	/**
-	* @param int The route of the Category
-	*/
+	 * @param int The route of the Category
+	 */
 	public static function getCategoryRoute($id = 0)
 	{
 		if ($id > 0)
@@ -95,8 +93,10 @@ abstract class QuestionsanswersHelperRoute
 		else
 		{
 			// Initialize the needel array.
-			$needles = array();
-			//Create the link but don't add the id.
+			$needles = array(
+				'category'  => array()
+			);
+			// Create the link but don't add the id.
 			$link = 'index.php?option=com_questionsanswers&view=category';
 		}
 
@@ -109,8 +109,8 @@ abstract class QuestionsanswersHelperRoute
 	}
 
 	/**
-	* @param int The route of the Downloads
-	*/
+	 * @param int The route of the Downloads
+	 */
 	public static function getDownloadsRoute($id = 0, $catid = 0)
 	{
 		if ($id > 0)
@@ -125,8 +125,10 @@ abstract class QuestionsanswersHelperRoute
 		else
 		{
 			// Initialize the needel array.
-			$needles = array();
-			//Create the link but don't add the id.
+			$needles = array(
+				'downloads'  => array()
+			);
+			// Create the link but don't add the id.
 			$link = 'index.php?option=com_questionsanswers&view=downloads';
 		}
 		if ($catid > 1)
@@ -234,8 +236,8 @@ abstract class QuestionsanswersHelperRoute
 			}
 		}
 		return $link;
-	}	
-	
+	}
+
 	protected static function _findItem($needles = null,$type = null)
 	{
 		$app      = JFactory::getApplication();
@@ -283,6 +285,10 @@ abstract class QuestionsanswersHelperRoute
 							self::$lookup[$language][$view][$item->query['id']] = $item->id;
 						}
 					}
+					else
+					{
+						self::$lookup[$language][$view][0] = $item->id;
+					}
 				}
 			}
 		}
@@ -293,17 +299,24 @@ abstract class QuestionsanswersHelperRoute
 			{
 				if (isset(self::$lookup[$language][$view]))
 				{
-					foreach ($ids as $id)
+					if (QuestionsanswersHelper::checkArray($ids))
 					{
-						if (isset(self::$lookup[$language][$view][(int) $id]))
+						foreach ($ids as $id)
 						{
-							return self::$lookup[$language][$view][(int) $id];
+							if (isset(self::$lookup[$language][$view][(int) $id]))
+							{
+								return self::$lookup[$language][$view][(int) $id];
+							}
 						}
+					}
+					elseif (isset(self::$lookup[$language][$view][0]))
+					{
+						return self::$lookup[$language][$view][0];
 					}
 				}
 			}
 		}
-		
+
 		if ($type)
 		{
 			// Check if the global menu item has been set.

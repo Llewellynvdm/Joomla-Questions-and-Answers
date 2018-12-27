@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS `#__questionsanswers_question_and_answer` (
 	KEY `idx_modifiedby` (`modified_by`),
 	KEY `idx_state` (`published`),
 	KEY `idx_catid` (`catid`)
-) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `#__questionsanswers_help_document` (
 	`id` INT(11) NOT NULL AUTO_INCREMENT,
@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS `#__questionsanswers_help_document` (
 	KEY `idx_article` (`article`),
 	KEY `idx_target` (`target`),
 	KEY `idx_alias` (`alias`)
-) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
 
 
 

@@ -141,7 +141,8 @@
 			description="COM_QUESTIONSANSWERS_CONFIG_DOCUMENT_FORMATS_DESCRIPTION"
 			class="list_class"
 			multiple="true"
-			filter="ARRAY">
+			filter="ARRAY"
+			default="">
 			<!-- Option Set. -->
 			<option value="doc">
 				COM_QUESTIONSANSWERS_CONFIG_DOC</option>
@@ -180,7 +181,8 @@
 			description="COM_QUESTIONSANSWERS_CONFIG_IMAGE_FORMATS_DESCRIPTION"
 			class="list_class"
 			multiple="true"
-			filter="ARRAY">
+			filter="ARRAY"
+			default="">
 			<!-- Option Set. -->
 			<option value="jpg">
 				COM_QUESTIONSANSWERS_CONFIG_JPG</option>

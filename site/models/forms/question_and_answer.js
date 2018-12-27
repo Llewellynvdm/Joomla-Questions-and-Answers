@@ -5,21 +5,21 @@
       \ \/ / _` / __| __| | |  | |/ _ \ \ / / _ \ |/ _ \| '_ \| '_ ` _ \ / _ \ '_ \| __| | |\/| |/ _ \ __| '_ \ / _ \ / _` |
        \  / (_| \__ \ |_  | |__| |  __/\ V /  __/ | (_) | |_) | | | | | |  __/ | | | |_  | |  | |  __/ |_| | | | (_) | (_| |
         \/ \__,_|___/\__| |_____/ \___| \_/ \___|_|\___/| .__/|_| |_| |_|\___|_| |_|\__| |_|  |_|\___|\__|_| |_|\___/ \__,_|
-                                                        | |                                                                 
-                                                        |_| 				
+                                                        | |
+                                                        |_|
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			5th May, 2018
+	@build			27th December, 2018
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		question_and_answer.js
-	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
+	@author			Llewellyn van der Merwe <https://www.vdm.io/>
 	@copyright		Copyright (C) 2015. All Rights Reserved
-	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
-	
-	Questions &amp; Answers 
-                                                             
+	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html
+
+	Questions &amp; Answers
+
 /-----------------------------------------------------------------------------------------------------------------------------*/
 
 
@@ -97,8 +97,12 @@ function setFile(filename, fileFormat, target, type){
 	return true;
 }
 
-function removeFileCheck(clearServer, target, type){
-	UIkit.modal.confirm('Are you sure you want to delete this '+target+'?', function(){ removeFile(clearServer, target, 1, type);	});
+function removeFileCheck(clearServer, target, type, uiVer){
+	if (3 == uiVer) {
+		UIkit.modal.confirm('Are you sure you want to delete this '+target+'?').then(function(){ removeFile(clearServer, target, 1, type); });
+	} else {
+		UIkit2.modal.confirm('Are you sure you want to delete this '+target+'?', function(){ removeFile(clearServer, target, 1, type); });
+	}
 }
 
 function removeFile(clearServer, target, flush, type){
@@ -135,16 +139,16 @@ function removeFile(clearServer, target, flush, type){
 }
 
 function removeFile_server(currentFileName, target, flush, type){
-	var getUrl = JRouter("index.php?option=com_questionsanswers&task=ajax.removeFile&format=json&vdm="+vastDevMod);
+	var getUrl = JRouter("index.php?option=com_questionsanswers&task=ajax.removeFile&format=json&raw=true&vdm="+vastDevMod);
 	if(token.length > 0 && target.length > 0 && type.length > 0){
 		var request = 'token='+token+'&filename='+currentFileName+'&target='+target+'&flush='+flush+'&type='+type;
 	}
 	return jQuery.ajax({
 		type: 'GET',
 		url: getUrl,
-		dataType: 'jsonp',
+		dataType: 'json',
 		data: request,
-		jsonp: 'callback'
+		jsonp: false
 	});
 }
 function isJsonString(str) {

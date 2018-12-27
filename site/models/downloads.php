@@ -6,28 +6,25 @@
       \ \/ / _` / __| __| | |  | |/ _ \ \ / / _ \ |/ _ \| '_ \| '_ ` _ \ / _ \ '_ \| __| | |\/| |/ _ \ __| '_ \ / _ \ / _` |
        \  / (_| \__ \ |_  | |__| |  __/\ V /  __/ | (_) | |_) | | | | | |  __/ | | | |_  | |  | |  __/ |_| | | | (_) | (_| |
         \/ \__,_|___/\__| |_____/ \___| \_/ \___|_|\___/| .__/|_| |_| |_|\___|_| |_|\__| |_|  |_|\___|\__|_| |_|\___/ \__,_|
-                                                        | |                                                                 
-                                                        |_| 				
+                                                        | |
+                                                        |_|
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			5th May, 2018
+	@build			27th December, 2018
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		downloads.php
-	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
+	@author			Llewellyn van der Merwe <https://www.vdm.io/>
 	@copyright		Copyright (C) 2015. All Rights Reserved
-	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
-	
-	Questions &amp; Answers 
-                                                             
+	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html
+
+	Questions &amp; Answers
+
 /-----------------------------------------------------------------------------------------------------------------------------*/
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
-
-// import the Joomla modellist library
-jimport('joomla.application.component.modellist');
 
 /**
  * Questionsanswers Model for Downloads
@@ -122,7 +119,7 @@ class QuestionsanswersModelDownloads extends JModelList
 	 */
 	public function getItems()
 	{
-		$user = JFactory::getUser();  
+		$user = JFactory::getUser();
 		// load parent items
 		$items = parent::getItems();
 
@@ -137,19 +134,18 @@ class QuestionsanswersModelDownloads extends JModelList
 				// Always create a slug for sef URL's
 				$item->slug = (isset($item->alias) && isset($item->id)) ? $item->id.':'.$item->alias : $item->id;
 			}
-		} 
+		}
 
 		// return items
 		return $items;
-	} 
-
+	}
 
 	/**
-	* Get the uikit needed components
-	*
-	* @return mixed  An array of objects on success.
-	*
-	*/
+	 * Get the uikit needed components
+	 *
+	 * @return mixed  An array of objects on success.
+	 *
+	 */
 	public function getUikitComp()
 	{
 		if (isset($this->uikitComp) && QuestionsanswersHelper::checkArray($this->uikitComp))
@@ -157,7 +153,7 @@ class QuestionsanswersModelDownloads extends JModelList
 			return $this->uikitComp;
 		}
 		return false;
-	} 
+	}
 
 	public function getButtons()
 	{
@@ -204,5 +200,5 @@ class QuestionsanswersModelDownloads extends JModelList
 			return $db->loadColumn();
 		}
 		return false;
-	} 
+	}
 }

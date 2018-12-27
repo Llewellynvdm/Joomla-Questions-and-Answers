@@ -6,28 +6,25 @@
       \ \/ / _` / __| __| | |  | |/ _ \ \ / / _ \ |/ _ \| '_ \| '_ ` _ \ / _ \ '_ \| __| | |\/| |/ _ \ __| '_ \ / _ \ / _` |
        \  / (_| \__ \ |_  | |__| |  __/\ V /  __/ | (_) | |_) | | | | | |  __/ | | | |_  | |  | |  __/ |_| | | | (_) | (_| |
         \/ \__,_|___/\__| |_____/ \___| \_/ \___|_|\___/| .__/|_| |_| |_|\___|_| |_|\__| |_|  |_|\___|\__|_| |_|\___/ \__,_|
-                                                        | |                                                                 
-                                                        |_| 				
+                                                        | |
+                                                        |_|
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			5th May, 2018
+	@build			27th December, 2018
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		questions_and_answers.php
-	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
+	@author			Llewellyn van der Merwe <https://www.vdm.io/>
 	@copyright		Copyright (C) 2015. All Rights Reserved
-	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
-	
-	Questions &amp; Answers 
-                                                             
+	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html
+
+	Questions &amp; Answers
+
 /-----------------------------------------------------------------------------------------------------------------------------*/
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
-
-// import the Joomla modellist library
-jimport('joomla.application.component.modellist');
 
 /**
  * Questions_and_answers Model
@@ -100,7 +97,7 @@ class QuestionsanswersModelQuestions_and_answers extends JModelList
 	 * @return  mixed  An array of data items on success, false on failure.
 	 */
 	public function getItems()
-	{ 
+	{
 		// check in items
 		$this->checkInNow();
 
@@ -110,11 +107,9 @@ class QuestionsanswersModelQuestions_and_answers extends JModelList
 		// set values to display correctly.
 		if (QuestionsanswersHelper::checkArray($items))
 		{
-			// get user object.
-			$user = JFactory::getUser();
 			foreach ($items as $nr => &$item)
 			{
-				$access = ($user->authorise('question_and_answer.access', 'com_questionsanswers.question_and_answer.' . (int) $item->id) && $user->authorise('question_and_answer.access', 'com_questionsanswers'));
+				$access = (JFactory::getUser()->authorise('question_and_answer.access', 'com_questionsanswers.question_and_answer.' . (int) $item->id) && JFactory::getUser()->authorise('question_and_answer.access', 'com_questionsanswers'));
 				if (!$access)
 				{
 					unset($items[$nr]);
@@ -122,7 +117,7 @@ class QuestionsanswersModelQuestions_and_answers extends JModelList
 				}
 
 			}
-		}  
+		}
         
 		// return items
 		return $items;
@@ -224,10 +219,10 @@ class QuestionsanswersModelQuestions_and_answers extends JModelList
 	}
 
 	/**
-	* Method to get list export data.
-	*
-	* @return mixed  An array of data items on success, false on failure.
-	*/
+	 * Method to get list export data.
+	 *
+	 * @return mixed  An array of data items on success, false on failure.
+	 */
 	public function getExportData($pks)
 	{
 		// setup the query
@@ -272,11 +267,9 @@ class QuestionsanswersModelQuestions_and_answers extends JModelList
 				// set values to display correctly.
 				if (QuestionsanswersHelper::checkArray($items))
 				{
-					// get user object.
-					$user = JFactory::getUser();
 					foreach ($items as $nr => &$item)
 					{
-						$access = ($user->authorise('question_and_answer.access', 'com_questionsanswers.question_and_answer.' . (int) $item->id) && $user->authorise('question_and_answer.access', 'com_questionsanswers'));
+						$access = (JFactory::getUser()->authorise('question_and_answer.access', 'com_questionsanswers.question_and_answer.' . (int) $item->id) && JFactory::getUser()->authorise('question_and_answer.access', 'com_questionsanswers'));
 						if (!$access)
 						{
 							unset($items[$nr]);
@@ -336,7 +329,7 @@ class QuestionsanswersModelQuestions_and_answers extends JModelList
 			return $headers;
 		}
 		return false;
-	} 
+	}
 	
 	/**
 	 * Method to get a store id based on model configuration state.
@@ -360,16 +353,16 @@ class QuestionsanswersModelQuestions_and_answers extends JModelList
 	}
 
 	/**
-	* Build an SQL query to checkin all items left checked out longer then a set time.
-	*
-	* @return  a bool
-	*
-	*/
+	 * Build an SQL query to checkin all items left checked out longer then a set time.
+	 *
+	 * @return  a bool
+	 *
+	 */
 	protected function checkInNow()
 	{
 		// Get set check in time
 		$time = JComponentHelper::getParams('com_questionsanswers')->get('check_in');
-		
+
 		if ($time)
 		{
 

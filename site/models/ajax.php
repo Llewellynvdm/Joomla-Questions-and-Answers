@@ -6,21 +6,21 @@
       \ \/ / _` / __| __| | |  | |/ _ \ \ / / _ \ |/ _ \| '_ \| '_ ` _ \ / _ \ '_ \| __| | |\/| |/ _ \ __| '_ \ / _ \ / _` |
        \  / (_| \__ \ |_  | |__| |  __/\ V /  __/ | (_) | |_) | | | | | |  __/ | | | |_  | |  | |  __/ |_| | | | (_) | (_| |
         \/ \__,_|___/\__| |_____/ \___| \_/ \___|_|\___/| .__/|_| |_| |_|\___|_| |_|\__| |_|  |_|\___|\__|_| |_|\___/ \__,_|
-                                                        | |                                                                 
-                                                        |_| 				
+                                                        | |
+                                                        |_|
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			5th May, 2018
+	@build			27th December, 2018
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		ajax.php
-	@author			Llewellyn van der Merwe <https://www.vdm.io/>	
+	@author			Llewellyn van der Merwe <https://www.vdm.io/>
 	@copyright		Copyright (C) 2015. All Rights Reserved
-	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html 
-	
-	Questions &amp; Answers 
-                                                             
+	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html
+
+	Questions &amp; Answers
+
 /-----------------------------------------------------------------------------------------------------------------------------*/
 
 // No direct access to this file
@@ -56,6 +56,7 @@ class QuestionsanswersModelAjax extends JModelList
 			$vdm = $jinput->get('vdm', null, 'WORD');
 			if ($vdm) 
 			{
+				// set view and id
 				if ($view = QuestionsanswersHelper::get($vdm))
 				{
 					$current = (array) explode('__', $view);
@@ -66,6 +67,14 @@ class QuestionsanswersModelAjax extends JModelList
 							'a_id' => (int) $current[1],
 							'a_view' => $current[0]
 						);
+					}
+				}
+				// set return if found
+				if ($return = QuestionsanswersHelper::get($vdm . '__return'))
+				{
+					if (QuestionsanswersHelper::checkString($return))
+					{
+						$this->viewid[$call]['a_return'] = $return;
 					}
 				}
 			}

@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			27th December, 2018
+	@build			4th April, 2019
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		ajax.php
@@ -197,7 +197,7 @@ class QuestionsanswersModelAjax extends JModelList
 			{
 				QuestionsanswersHelper::resizeImage($this->fileName, $this->fileFormat, $this->target, $this->folderPath, $this->fullPath);
 			}
-			// Get the basic encription.
+			// Get the basic encryption.
 			$basickey = QuestionsanswersHelper::getCryptKey('basic');
 			$basic = null;
 			// set link options
@@ -430,8 +430,8 @@ class QuestionsanswersModelAjax extends JModelList
 	protected function _getPackageFromUpload()
 	{		
 		// Get the uploaded file information
-		$app	= JFactory::getApplication();
-		$input	= $app->input;
+		$app = JFactory::getApplication();
+		$input = $app->input;
 
 		// See JInputFiles::get.
 		$userfiles = $input->files->get('files', null, 'array');
@@ -465,9 +465,9 @@ class QuestionsanswersModelAjax extends JModelList
 		}
 
 		// Build the appropriate paths
-		$config		= JFactory::getConfig();
-		$tmp_dest	= $config->get('tmp_path') . '/' . $userfile['name'];
-		$tmp_src	= $userfile['tmp_name'];
+		$config = JFactory::getConfig();
+		$tmp_dest = $config->get('tmp_path') . '/' . $userfile['name'];
+		$tmp_src = $userfile['tmp_name'];
 
 		// Move uploaded file
 		jimport('joomla.filesystem.file');
@@ -537,12 +537,12 @@ class QuestionsanswersModelAjax extends JModelList
 			}
 		}
 		
-		$config			= JFactory::getConfig();
+		$config = JFactory::getConfig();
 		// set Package Name
-		$check['packagename']	= $archivename;
+		$check['packagename'] = $archivename;
 		
 		// set directory
-		$check['dir']		= $config->get('tmp_path'). '/' .$archivename;
+		$check['dir'] = $config->get('tmp_path'). '/' .$archivename;
 		
 		return $check;
 	}
@@ -559,8 +559,8 @@ class QuestionsanswersModelAjax extends JModelList
 	{
 		jimport('joomla.filesystem.file');
 		
-		$config		= JFactory::getConfig();
-		$package	= $config->get('tmp_path'). '/' .$package;
+		$config = JFactory::getConfig();
+		$package = $config->get('tmp_path'). '/' .$package;
 
 		// Is the package file a valid file?
 		if (is_file($package))

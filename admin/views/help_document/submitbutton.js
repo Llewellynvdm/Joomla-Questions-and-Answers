@@ -10,7 +10,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			27th December, 2018
+	@build			4th April, 2019
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		submitbutton.js
@@ -27,19 +27,9 @@ Joomla.submitbutton = function(task)
 	if (task == ''){
 		return false;
 	} else { 
-		var isValid=true;
 		var action = task.split('.');
-		if (action[1] != 'cancel' && action[1] != 'close'){
-			var forms = $$('form.form-validate');
-			for (var i=0;i<forms.length;i++){
-				if (!document.formvalidator.isValid(forms[i])){
-					isValid = false;
-					break;
-				}
-			}
-		}
-		if (isValid){
-			Joomla.submitform(task);
+		if (action[1] == 'cancel' || action[1] == 'close' || document.formvalidator.isValid(document.getElementById("adminForm"))){
+			Joomla.submitform(task, document.getElementById("adminForm"));
 			return true;
 		} else {
 			alert(Joomla.JText._('help_document, some values are not acceptable.','Some values are unacceptable'));

@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			27th December, 2018
+	@build			4th April, 2019
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		question_and_answer.php
@@ -78,7 +78,7 @@ class QuestionsanswersModelQuestion_and_answer extends JModelAdmin
 			else
 			{
 				$id = 0;
-			}			
+			}
 			// set the id and view name to session
 			if ($vdm = QuestionsanswersHelper::get('question_and_answer__'.$id))
 			{
@@ -153,7 +153,7 @@ class QuestionsanswersModelQuestion_and_answer extends JModelAdmin
 			else
 			{
 				$id = $item->id;
-			}			
+			}
 			// set the id and view name to session
 			if ($vdm = QuestionsanswersHelper::get('question_and_answer__'.$id))
 			{

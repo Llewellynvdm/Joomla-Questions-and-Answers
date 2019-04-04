@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			27th December, 2018
+	@build			4th April, 2019
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		questionsanswers.php
@@ -457,6 +457,32 @@ abstract class QuestionsanswersHelper
 			$date = strtotime($date);
 		}
 		return date('jS \o\f F Y',$date);
+	}
+
+	/**
+	 *	get date based in period past
+	 */
+	public static function fancyDynamicDate($date)
+	{
+		if (!self::isValidTimeStamp($date))
+		{
+			$date = strtotime($date);
+		}
+		// older then year
+		$lastyear = date("Y", strtotime("-1 year"));
+		$tragetyear = date("Y", $date);
+		if ($tragetyear <= $lastyear)
+		{
+			return date('m/d/y', $date);
+		}
+		// same day
+		$yesterday = strtotime("-1 day");
+		if ($date > $yesterday)
+		{
+			return date('g:i A', $date);
+		}
+		// just month day
+		return date('M j', $date);
 	}
 
 	/**

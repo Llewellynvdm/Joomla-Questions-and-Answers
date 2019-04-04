@@ -10,7 +10,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			27th December, 2018
+	@build			4th April, 2019
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		question_and_answer.js

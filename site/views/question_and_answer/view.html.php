@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			27th December, 2018
+	@build			4th April, 2019
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		view.html.php
@@ -185,7 +185,7 @@ class QuestionsanswersViewQuestion_and_answer extends JViewLegacy
 	{
 		if(strlen($var) > 30)
 		{
-    		// use the helper htmlEscape method instead and shorten the string
+    			// use the helper htmlEscape method instead and shorten the string
 			return QuestionsanswersHelper::htmlEscape($var, $this->_charset, true, 30);
 		}
 		// use the helper htmlEscape method instead.
@@ -205,15 +205,22 @@ class QuestionsanswersViewQuestion_and_answer extends JViewLegacy
 			$this->document = JFactory::getDocument();
 		}
 		$this->document->setTitle(JText::_($isNew ? 'COM_QUESTIONSANSWERS_QUESTION_AND_ANSWER_NEW' : 'COM_QUESTIONSANSWERS_QUESTION_AND_ANSWER_EDIT'));
-		// we need this to fix the form display (TODO)
-		$this->document->addStyleSheet(JURI::root()."administrator/templates/isis/css/template.css", (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css');
-		$this->document->addScript(JURI::root()."administrator/templates/isis/js/template.js", (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/javascript');
+		// only add the ISIS template css & js if needed (default is 1 = true)
+		// you can override this in the global component options
+		// just add a (radio yes/no field) with a name called add_isis_template
+		// to your components config area
+		if ($this->params->get('add_isis_template', 1))
+		{
+			// we need this to fix the form display (TODO)
+			$this->document->addStyleSheet(JURI::root() . "administrator/templates/isis/css/template.css", (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css');
+			$this->document->addScript(JURI::root() . "administrator/templates/isis/js/template.js", (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/javascript');
+		}
 		// the default style of this view
 		$this->document->addStyleSheet(JURI::root()."components/com_questionsanswers/assets/css/question_and_answer.css", (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css');
 		// Add Ajax Token
 		$this->document->addScriptDeclaration("var token = '".JSession::getFormToken()."';");
 		// default javascript of this view
-		$this->document->addScript(JURI::root().$this->script, (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/javascript');
+		$this->document->addScript(JURI::root(). $this->script, (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/javascript');
 		$this->document->addScript(JURI::root(). "components/com_questionsanswers/views/question_and_answer/submitbutton.js", (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/javascript'); 
 		// add JavaScripts
 		$this->document->addScript( JURI::root(true) .'/media/com_questionsanswers/uikit/js/uikit.min.js' );

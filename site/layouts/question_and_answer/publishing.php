@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			27th December, 2018
+	@build			4th April, 2019
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		publishing.php
@@ -26,7 +26,6 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
-$app = JFactory::getApplication();
 $form = $displayData->getForm();
 
 $fields = $displayData->get('fields') ?: array(
@@ -44,20 +43,10 @@ $fields = $displayData->get('fields') ?: array(
 
 $hiddenFields = $displayData->get('hidden_fields') ?: array();
 
-foreach ($fields as $field)
-{
-	$field = is_array($field) ? $field : array($field);
-	foreach ($field as $f)
-	{
-		if ($form->getField($f))
-		{
-			if (in_array($f, $hiddenFields))
-			{
-				$form->setFieldAttribute($f, 'type', 'hidden');
-			}
-
-			echo $form->renderField($f);
-			break;
-		}
-	}
-}
+?>
+<?php foreach($fields as $field): ?>
+	<?php if (in_array($field, $hiddenFields)) : ?>
+		<?php $form->setFieldAttribute($field, 'type', 'hidden'); ?>
+	<?php endif; ?>
+	<?php echo $form->renderField($field, null, null, array('class' => 'control-wrapper-' . $field)); ?>
+<?php endforeach; ?>

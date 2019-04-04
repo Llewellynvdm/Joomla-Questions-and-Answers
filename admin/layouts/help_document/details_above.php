@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			27th December, 2018
+	@build			4th April, 2019
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		details_above.php
@@ -28,14 +28,19 @@ defined('_JEXEC') or die('Restricted access');
 
 $form = $displayData->getForm();
 
-$fields = array(
+$fields = $displayData->get('fields') ?: array(
 	'title',
 	'alias'
 );
 
+$hiddenFields = $displayData->get('hidden_fields') ?: array();
+
 ?>
 <div class="form-inline form-inline-header">
-	<?php foreach($fields as $field){
-		echo $form->renderField($field);
-	} ?>
+	<?php foreach($fields as $field): ?>
+		<?php if (in_array($field, $hiddenFields)) : ?>
+			<?php $form->setFieldAttribute($field, 'type', 'hidden'); ?>
+		<?php endif; ?>
+		<?php echo $form->renderField($field, null, null, array('class' => 'control-wrapper-' . $field)); ?>
+	<?php endforeach; ?>
 </div>

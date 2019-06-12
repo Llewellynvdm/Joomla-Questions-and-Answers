@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			4th April, 2019
+	@build			12th June, 2019
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		edit.php
@@ -120,7 +120,6 @@ $componentParams = $this->params; // will be removed just use $this->params inst
 	<div>
 		<input type="hidden" name="task" value="help_document.edit" />
 		<?php echo JHtml::_('form.token'); ?>
-	</div>
 	</div>
 </div>
 

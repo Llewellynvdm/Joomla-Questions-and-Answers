@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			4th April, 2019
+	@build			12th June, 2019
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		categoryquestions_and_answers.php

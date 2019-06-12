@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			4th April, 2019
+	@build			12th June, 2019
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		category.php
@@ -31,7 +31,7 @@ defined('_JEXEC') or die('Restricted access');
  */
 
 //Insure this view category file is loaded.
-$classname = 'questionsanswersQuestions_and_answersCategories';
+$classname = 'QuestionsanswersQuestions_and_answersCategories';
 if (!class_exists($classname))
 {
 	$path = JPATH_SITE . '/components/com_questionsanswers/helpers/categoryquestions_and_answers.php';

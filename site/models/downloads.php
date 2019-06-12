@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			4th April, 2019
+	@build			12th June, 2019
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		downloads.php
@@ -70,6 +70,12 @@ class QuestionsanswersModelDownloads extends JModelList
 		// Create a new query object.
 		$query = $db->getQuery(true);
 
+		// Get from #__questionsanswers_question_and_answer as a
+		$query->select($db->quoteName(
+			array('a.id','a.catid'),
+			array('id','catid')));
+		$query->from($db->quoteName('#__questionsanswers_question_and_answer', 'a'));
+
 		// Filtering.
 
 		$catid = $this->input->get('catid', null);
@@ -99,12 +105,6 @@ class QuestionsanswersModelDownloads extends JModelList
 				$query->where('a.catid = ' . (int) $catid);
 			}
 		}
-
-		// Get from #__questionsanswers_question_and_answer as a
-		$query->select($db->quoteName(
-			array('a.id','a.catid'),
-			array('id','catid')));
-		$query->from($db->quoteName('#__questionsanswers_question_and_answer', 'a'));
 		// Get where a.published is 1
 		$query->where('a.published = 1');
 

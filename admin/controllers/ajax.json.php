@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			12th June, 2019
+	@build			14th August, 2019
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		ajax.json.php
@@ -50,7 +50,7 @@ class QuestionsanswersControllerAjax extends JControllerLegacy
 		// Check Token!
 		$token 		= JSession::getFormToken();
 		$call_token	= $jinput->get('token', 0, 'ALNUM');
-		if($token == $call_token)
+		if($jinput->get($token, 0, 'ALNUM') || $token === $call_token)
 		{
 			$task = $this->getTask();
 			switch($task)

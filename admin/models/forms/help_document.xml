@@ -176,7 +176,6 @@
 			height="300 px"
 			buttons="false"
 			filter="safehtml"
-			required="true"
 		/>
 		<!-- Article Field. Type: Articles. (custom) -->
 		<field

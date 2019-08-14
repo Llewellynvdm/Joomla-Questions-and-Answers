@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			12th June, 2019
+	@build			14th August, 2019
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		router.php
@@ -204,6 +204,8 @@ class QuestionsanswersRouter extends JComponentRouterBase
 		{
 			$getTable = '#__categories';
 			$query->from($db->quoteName($getTable));
+			// we need this to target the components categories (TODO will keep an eye on this)
+			$query->where($db->quoteName('extension') . ' LIKE '. $db->quote((string)'com_' . $main . '%'));
 		}
 		else
 		{

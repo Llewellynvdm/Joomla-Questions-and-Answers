@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			12th June, 2019
+	@build			14th August, 2019
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		script.php
@@ -34,21 +34,27 @@ JHTML::_('behavior.modal');
 class com_questionsanswersInstallerScript
 {
 	/**
-	 * method to install the component
+	 * Constructor
 	 *
-	 * @return void
+	 * @param   JAdapterInstance  $parent  The object responsible for running this script
 	 */
-	function install($parent)
-	{
-
-	}
+	public function __construct(JAdapterInstance $parent) {}
 
 	/**
-	 * method to uninstall the component
+	 * Called on installation
 	 *
-	 * @return void
+	 * @param   JAdapterInstance  $parent  The object responsible for running this script
+	 *
+	 * @return  boolean  True on success
 	 */
-	function uninstall($parent)
+	public function install(JAdapterInstance $parent) {}
+
+	/**
+	 * Called on uninstallation
+	 *
+	 * @param   JAdapterInstance  $parent  The object responsible for running this script
+	 */
+	public function uninstall(JAdapterInstance $parent)
 	{
 		// Get Application object
 		$app = JFactory::getApplication();
@@ -342,57 +348,63 @@ class com_questionsanswersInstallerScript
 	}
 
 	/**
-	 * method to update the component
+	 * Called on update
 	 *
-	 * @return void
+	 * @param   JAdapterInstance  $parent  The object responsible for running this script
+	 *
+	 * @return  boolean  True on success
 	 */
-	function update($parent)
-	{
-		
-	}
+	public function update(JAdapterInstance $parent){}
 
 	/**
-	 * method to run before an install/update/uninstall method
+	 * Called before any type of action
 	 *
-	 * @return void
+	 * @param   string  $type  Which action is happening (install|uninstall|discover_install|update)
+	 * @param   JAdapterInstance  $parent  The object responsible for running this script
+	 *
+	 * @return  boolean  True on success
 	 */
-	function preflight($type, $parent)
+	public function preflight($type, JAdapterInstance $parent)
 	{
 		// get application
 		$app = JFactory::getApplication();
-		// is redundant ...hmmm
-		if ($type == 'uninstall')
+		// is redundant or so it seems ...hmmm let me know if it works again
+		if ($type === 'uninstall')
 		{
 			return true;
 		}
 		// the default for both install and update
 		$jversion = new JVersion();
-		if (!$jversion->isCompatible('3.6.0'))
+		if (!$jversion->isCompatible('3.8.0'))
 		{
-			$app->enqueueMessage('Please upgrade to at least Joomla! 3.6.0 before continuing!', 'error');
+			$app->enqueueMessage('Please upgrade to at least Joomla! 3.8.0 before continuing!', 'error');
 			return false;
 		}
 		// do any updates needed
-		if ($type == 'update')
+		if ($type === 'update')
 		{
 		}
 		// do any install needed
-		if ($type == 'install')
+		if ($type === 'install')
 		{
 		}
+		return true;
 	}
 
 	/**
-	 * method to run after an install/update/uninstall method
+	 * Called after any type of action
 	 *
-	 * @return void
+	 * @param   string  $type  Which action is happening (install|uninstall|discover_install|update)
+	 * @param   JAdapterInstance  $parent  The object responsible for running this script
+	 *
+	 * @return  boolean  True on success
 	 */
-	function postflight($type, $parent)
+	public function postflight($type, JAdapterInstance $parent)
 	{
 		// get application
 		$app = JFactory::getApplication();
 		// set the default component settings
-		if ($type == 'install')
+		if ($type === 'install')
 		{
 
 			// Get The Database object
@@ -454,7 +466,7 @@ class com_questionsanswersInstallerScript
 				</a>';
 		}
 		// do any updates needed
-		if ($type == 'update')
+		if ($type === 'update')
 		{
 
 			// Get The Database object
@@ -553,5 +565,6 @@ class com_questionsanswersInstallerScript
 				</a>
 				<h3>Upgrade to Version 1.0.2 Was Successful! Let us know if anything is not working as expected.</h3>';
 		}
+		return true;
 	}
 }

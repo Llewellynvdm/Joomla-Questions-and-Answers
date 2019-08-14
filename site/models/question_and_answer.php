@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			12th June, 2019
+	@build			14th August, 2019
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		question_and_answer.php
@@ -32,13 +32,36 @@ use Joomla\Registry\Registry;
  * Questionsanswers Question_and_answer Model
  */
 class QuestionsanswersModelQuestion_and_answer extends JModelAdmin
-{    
+{
+	/**
+	 * The tab layout fields array.
+	 *
+	 * @var      array
+	 */
+	protected $tabLayoutFields = array(
+		'details' => array(
+			'fullwidth' => array(
+				'question',
+				'main_image_uploader',
+				'answer',
+				'answer_documents_uploader'
+			),
+			'under' => array(
+				'main_image',
+				'answer_documents'
+			),
+			'rightside' => array(
+				'catid'
+			)
+		)
+	);
+
 	/**
 	 * @var        string    The prefix to use with controller messages.
 	 * @since   1.6
 	 */
 	protected $text_prefix = 'COM_QUESTIONSANSWERS';
-    
+
 	/**
 	 * The type alias for this content type.
 	 *

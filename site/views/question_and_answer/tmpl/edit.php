@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			14th August, 2019
+	@build			30th May, 2020
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		edit.php
@@ -387,7 +387,7 @@ $componentParams = $this->params; // will be removed just use $this->params inst
 ?>
 function JRouter(link) {
 <?php
-	if ($app->isSite())
+	if ($app->isClient('site'))
 	{
 		echo 'var url = "'.JURI::root().'";';
 	}
@@ -483,16 +483,23 @@ function getFile(filename, fileFormat, target, type){
 			counter++;
 		});
 		return fileBox + '</div></div></div>';
-	} else if (type === 'document') {
+	} else if (type === 'document' || type === 'file') {
 		var fileFormat = filename.split('_')[2];
 		// set the file name
 		var fileName = filename.split('VDM')[1]+'.'+fileFormat;
 		// set the placeholder
-		var theplaceholder = '<div class="uk-width-1-1"><div class="uk-panel uk-panel-box"><center><code>[DOCLINK='+fileName+']</code> <?php echo JText::_('COM_QUESTIONSANSWERS_OR'); ?> <code>[DOCBUTTON='+fileName+']</code><br /><?php echo JText::_('COM_QUESTIONSANSWERS_ADD_ONE_OF_THESE_PLACEHOLDERS_IN_TEXT_FOR_CUSTOM_DOWNLOAD_PLACEMENT'); ?>.</center></div></div>';
+		var theplaceholder = '';
+		if (type === 'document') {
+			var theplaceholder = '<div class="uk-width-1-1"><div class="uk-panel uk-panel-box"><center><code>[DOCLINK='+fileName+']</code> <?php echo JText::_('COM_QUESTIONSANSWERS_OR'); ?> <code>[DOCBUTTON='+fileName+']</code><br /><?php echo JText::_('COM_QUESTIONSANSWERS_ADD_ONE_OF_THESE_PLACEHOLDERS_IN_TEXT_FOR_CUSTOM_DOWNLOAD_PLACEMENT'); ?></center></div></div>';
+		} else if (type === 'file' && typeof fileKey !== 'undefined') {
+			var theplaceholder = '<div class="uk-width-1-1"><div class="uk-panel uk-panel-box"><center><code>[[[[SECUREFILE]]]=icon_'+fileKey+']</code> <?php echo JText::_('COM_QUESTIONSANSWERS_OR'); ?> <code>[[[[SECUREFILE]]]=url_'+fileKey+']</code> <?php echo JText::_('COM_QUESTIONSANSWERS_OR'); ?> <code>[[[[SECUREFILE]]]=link_'+fileKey+']</code><br /><?php echo JText::_('COM_QUESTIONSANSWERS_ADD_ONE_OF_THESE_PLACEHOLDERS_IN_ARTICLES_FOR_CUSTOM_DOWNLOAD_PLACEMENT'); ?></center></div></div>';
+		}
 		// get the download link if set
 		var thedownload = '';
-		if (documentsLinks.hasOwnProperty(filename)) {
+		if (type === 'document' && typeof documentsLinks !== 'undefined' && documentsLinks.hasOwnProperty(filename)) {
 			thedownload = '<a href="'+JRouter(documentsLinks[filename])+'" class="uk-button uk-width-1-1 uk-button-small uk-margin-small-bottom uk-button-success"><i class="uk-icon-download"></i> <?php echo JText::_('COM_QUESTIONSANSWERS_DOWNLOAD'); ?> '+fileName+'</a>';
+		} else if (type === 'file' && typeof fileLink !== 'undefined' && fileLink.length > 20) {
+			thedownload = '<a href="'+JRouter(fileLink)+'" class="uk-button uk-width-1-1 uk-button-small uk-margin-small-bottom uk-button-success"><i class="uk-icon-download"></i> <?php echo JText::_('COM_QUESTIONSANSWERS_DOWNLOAD'); ?> '+fileName+'</a>';
 		}
 		var thedelete = '<button onclick="removeFileCheck(\''+filename+'\', \''+target+'\', \''+type+'\', \''+uiVer+'\')" type="button" class="uk-button uk-width-1-1 uk-button-small uk-margin-small-bottom uk-button-danger"><i class="uk-icon-trash"></i> <?php echo JText::_('COM_QUESTIONSANSWERS_REMOVE'); ?> '+fileName+'</button>';
 		return theplaceholder+thedownload+thedelete + '</div>';

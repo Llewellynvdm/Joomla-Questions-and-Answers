@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			14th August, 2019
+	@build			30th May, 2020
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		questionsanswers.php
@@ -26,11 +26,28 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Language\Language;
+use Joomla\String\StringHelper;
+use Joomla\Utilities\ArrayHelper;
+
 /**
  * Questionsanswers component helper
  */
 abstract class QuestionsanswersHelper
 {
+	/**
+	 * Composer Switch
+	 * 
+	 * @var      array
+	 */
+	protected static $composer = array();
+
+	/**
+	 * The Main Active Language
+	 * 
+	 * @var      string
+	 */
+	public static $langTag;
 
 	/**
 	*	The Global Site Event Method.
@@ -50,17 +67,17 @@ abstract class QuestionsanswersHelper
 	protected static $basickey;
  
 	/**
-	* 	the Butler
+	* the Butler
 	**/
 	public static $session = array();
 
 	/**
-	* 	the Butler Assistant 
+	* the Butler Assistant 
 	**/
 	protected static $localSession = array();
 
 	/**
-	* 	start a session if not already set, and load with data
+	* start a session if not already set, and load with data
 	**/
 	public static function loadSession()
 	{
@@ -73,7 +90,7 @@ abstract class QuestionsanswersHelper
 	}
 
 	/**
-	* 	give Session more to keep
+	* give Session more to keep
 	**/
 	public static function set($key, $value)
 	{
@@ -88,7 +105,7 @@ abstract class QuestionsanswersHelper
 	}
 
 	/**
-	* 	get info from Session
+	* get info from Session
 	**/
 	public static function get($key, $default = null)
 	{
@@ -448,7 +465,7 @@ abstract class QuestionsanswersHelper
 	}
 
 	/**
-	 *	Change to nice fancy date
+	 * Change to nice fancy date
 	 */
 	public static function fancyDate($date)
 	{
@@ -460,7 +477,7 @@ abstract class QuestionsanswersHelper
 	}
 
 	/**
-	 *	get date based in period past
+	 * get date based in period past
 	 */
 	public static function fancyDynamicDate($date)
 	{
@@ -486,7 +503,7 @@ abstract class QuestionsanswersHelper
 	}
 
 	/**
-	 *	Change to nice fancy day time and date
+	 * Change to nice fancy day time and date
 	 */
 	public static function fancyDayTimeDate($time)
 	{
@@ -498,7 +515,7 @@ abstract class QuestionsanswersHelper
 	}
 
 	/**
-	 *	Change to nice fancy time and date
+	 * Change to nice fancy time and date
 	 */
 	public static function fancyDateTime($time)
 	{
@@ -510,7 +527,7 @@ abstract class QuestionsanswersHelper
 	}
 
 	/**
-	 *	Change to nice hour:minutes time
+	 * Change to nice hour:minutes time
 	 */
 	public static function fancyTime($time)
 	{
@@ -522,31 +539,91 @@ abstract class QuestionsanswersHelper
 	}
 
 	/**
-	 * set the date as 2004/05 (for charts)
+	 * set the date day as Sunday through Saturday
 	 */
-	public static function setYearMonth($date)
+	public static function setDayName($date)
 	{
 		if (!self::isValidTimeStamp($date))
 		{
 			$date = strtotime($date);
 		}
-		return date('Y/m', $date);
+		return date('l', $date);
+	}
+
+	/**
+	 * set the date month as January through December
+	 */
+	public static function setMonthName($date)
+	{
+		if (!self::isValidTimeStamp($date))
+		{
+			$date = strtotime($date);
+		}
+		return date('F', $date);
+	}
+
+	/**
+	 * set the date day as 1st
+	 */
+	public static function setDay($date)
+	{
+		if (!self::isValidTimeStamp($date))
+		{
+			$date = strtotime($date);
+		}
+		return date('jS', $date);
+	}
+
+	/**
+	 * set the date month as 5
+	 */
+	public static function setMonth($date)
+	{
+		if (!self::isValidTimeStamp($date))
+		{
+			$date = strtotime($date);
+		}
+		return date('n', $date);
+	}
+
+	/**
+	 * set the date year as 2004 (for charts)
+	 */
+	public static function setYear($date)
+	{
+		if (!self::isValidTimeStamp($date))
+		{
+			$date = strtotime($date);
+		}
+		return date('Y', $date);
+	}
+
+	/**
+	 * set the date as 2004/05 (for charts)
+	 */
+	public static function setYearMonth($date, $spacer = '/')
+	{
+		if (!self::isValidTimeStamp($date))
+		{
+			$date = strtotime($date);
+		}
+		return date('Y' . $spacer . 'm', $date);
 	}
 
 	/**
 	 * set the date as 2004/05/03 (for charts)
 	 */
-	public static function setYearMonthDay($date)
+	public static function setYearMonthDay($date, $spacer = '/')
 	{
 		if (!self::isValidTimeStamp($date))
 		{
 			$date = strtotime($date);
 		}
-		return date('Y/m/d', $date);
+		return date('Y' . $spacer . 'm' . $spacer . 'd', $date);
 	}
 
 	/**
-	 *	Check if string is a valid time stamp
+	 * Check if string is a valid time stamp
 	 */
 	public static function isValidTimeStamp($timestamp)
 	{
@@ -739,12 +816,19 @@ abstract class QuestionsanswersHelper
 	/**
 	 * @return array of link options
 	 */
-	public static function getLinkOptions($lock = 0, $session = 0)
+	public static function getLinkOptions($lock = 0, $session = 0, $params = null)
 	{
 		// get the global settings
 		if (!self::checkObject(self::$params))
 		{
-			self::$params = JComponentHelper::getParams('com_questionsanswers');
+			if (self::checkObject($params))
+			{
+				self::$params = $params;
+			}
+			else
+			{
+				self::$params = JComponentHelper::getParams('com_questionsanswers');
+			}
 		}
 		$linkoptions = self::$params->get('link_option', null);
 		// set the options to array
@@ -772,7 +856,7 @@ abstract class QuestionsanswersHelper
 	 * 
 	 * @var     array
 	 **/
-	protected static $fileExtentionToMimeType = array(
+	protected static $fileExtensionToMimeType = array(
 		'123'			=> 'application/vnd.lotus-1-2-3',
 		'3dml'			=> 'text/vnd.in3d.3dml',
 		'3ds'			=> 'image/x-3ds',
@@ -1779,9 +1863,9 @@ abstract class QuestionsanswersHelper
 		// get the extension form file
 		$extension = \strtolower(\pathinfo($file, \PATHINFO_EXTENSION));
 		// check if we have the extension listed
-		if (isset(self::$fileExtentionToMimeType[$extension]))
+		if (isset(self::$fileExtensionToMimeType[$extension]))
 		{
-			return self::$fileExtentionToMimeType[$extension];
+			return self::$fileExtensionToMimeType[$extension];
 		}
 		elseif (function_exists('mime_content_type'))
 		{
@@ -1796,7 +1880,85 @@ abstract class QuestionsanswersHelper
 		}
 		return 'application/octet-stream';
 	}
-	
+
+	/**
+	 * Get the file extensions
+	 * 
+	 * @param   string    $target   The targeted/filter option
+	 * @param   boolean   $sorted   The multidimensional grouping sort (only if targeted filter is used)
+	 *
+	 * @return  array     All the extensions (targeted & sorted)
+	 * 
+	 */
+	public static function getFileExtensions($target = null, $sorted = false)
+	{
+		// we have some in-house grouping/filters :)
+		$filters = array(
+			'image' => array('image', 'font', 'model'),
+			'document' => array('application', 'text', 'chemical', 'message'),
+			'media' => array('video', 'audio'),
+			'file' => array('image', 'application', 'text', 'video', 'audio'),
+			'all' => array('application', 'text', 'chemical', 'message', 'image', 'font', 'model', 'video', 'audio', 'x-conference')
+		);
+		// sould we filter
+		if ($target)
+		{
+			// the bucket to get extensions
+			$fileextensions = array();
+			// check if filter exist (if not return empty array)
+			if (isset($filters[$target]))
+			{
+				foreach (self::$fileExtensionToMimeType as $extension => $mimetype)
+				{
+					// get the key mime type
+					$mimearr = explode("/", $mimetype, 2);
+					// check if this file extension should be added
+					if (in_array($mimearr[0], $filters[$target]))
+					{
+						if ($sorted)
+						{
+							if (!isset($fileextensions[$mimearr[0]]))
+							{
+								$fileextensions[$mimearr[0]] = array();
+							}
+							$fileextensions[$mimearr[0]][$extension] = $extension;
+						}
+						else
+						{
+							$fileextensions[$extension] = $extension;
+						}
+					}
+				}
+			}
+			return $fileextensions;
+		}
+		// we just return all file extensions
+		return array_keys(self::$fileExtensionToMimeType);
+	}
+
+	/**
+	 * Load the Composer Vendors
+	 */
+	public static function composerAutoload($target)
+	{
+		// insure we load the composer vendor only once
+		if (!isset(self::$composer[$target]))
+		{
+			// get the function name
+			$functionName = self::safeString('compose' . $target);
+			// check if method exist
+			if (method_exists(__CLASS__, $functionName))
+			{
+				return self::{$functionName}();
+			}
+			return false;
+		}
+		return self::$composer[$target];
+	}
+
+	/**
+	 * Convert it into a string
+	 */
 	public static function jsonToString($value, $sperator = ", ", $table = null, $id = 'id', $name = 'name')
 	{
 		// do some table foot work
@@ -1846,8 +2008,8 @@ abstract class QuestionsanswersHelper
 	}
 
 	/**
-	* Load the Component xml manifest.
-	**/
+	 * Load the Component xml manifest.
+	 */
 	public static function manifest()
 	{
 		$manifestUrl = JPATH_ADMINISTRATOR."/components/com_questionsanswers/questionsanswers.xml";
@@ -1855,13 +2017,13 @@ abstract class QuestionsanswersHelper
 	}
 
 	/**
-	* Joomla version object
-	**/	
+	 * Joomla version object
+	 */	
 	protected static $JVersion;
 
 	/**
-	* set/get Joomla version
-	**/
+	 * set/get Joomla version
+	 */
 	public static function jVersion()
 	{
 		// check if set
@@ -1873,8 +2035,8 @@ abstract class QuestionsanswersHelper
 	}
 
 	/**
-	* Load the Contributors details.
-	**/
+	 * Load the Contributors details.
+	 */
 	public static function getContributors()
 	{
 		// get params
@@ -1983,8 +2145,8 @@ abstract class QuestionsanswersHelper
 	}
 
 	/**
-	* Get any component's model
-	**/
+	 * Get any component's model
+	 */
 	public static function getModel($name, $path = JPATH_COMPONENT_SITE, $Component = 'Questionsanswers', $config = array())
 	{
 		// fix the name
@@ -2031,8 +2193,8 @@ abstract class QuestionsanswersHelper
 	}
 
 	/**
-	* Add to asset Table
-	*/
+	 * Add to asset Table
+	 */
 	public static function setAsset($id, $table, $inherit = true)
 	{
 		$parent = JTable::getInstance('Asset');
@@ -2138,7 +2300,7 @@ abstract class QuestionsanswersHelper
 				}
 			}
 			// check if there are any view values remaining
-			if (count($_result))
+			if (count((array) $_result))
 			{
 				$_result = json_encode($_result);
 				$_result = array($_result);
@@ -2252,7 +2414,7 @@ abstract class QuestionsanswersHelper
 	 * @return  object
 	 *
 	 */
-	public static function getFieldObject($attributes, $default = '', $options = null)
+	public static function getFieldObject(&$attributes, $default = '', $options = null)
 	{
 		// make sure we have attributes and a type value
 		if (self::checkArray($attributes) && isset($attributes['type']))
@@ -2263,7 +2425,31 @@ abstract class QuestionsanswersHelper
 				jimport('joomla.form.form');
 			}
 			// get field type
-			$field = JFormHelper::loadFieldType($attributes['type'],true);
+			$field = JFormHelper::loadFieldType($attributes['type'], true);
+			// get field xml
+			$XML = self::getFieldXML($attributes, $options);
+			// setup the field
+			$field->setup($XML, $default);
+			// return the field object
+			return $field;
+		}
+		return false;
+	}
+
+	/**
+	 * get the field xml
+	 *
+	 * @param   array      $attributes   The array of attributes
+	 * @param   array      $options      The options to apply to the XML element
+	 *
+	 * @return  object
+	 *
+	 */
+	public static function getFieldXML(&$attributes, $options = null)
+	{
+		// make sure we have attributes and a type value
+		if (self::checkArray($attributes))
+		{
 			// start field xml
 			$XML = new SimpleXMLElement('<field/>');
 			// load the attributes
@@ -2274,10 +2460,8 @@ abstract class QuestionsanswersHelper
 				// load the options
 				self::xmlAddOptions($XML, $options);
 			}
-			// setup the field
-			$field->setup($XML, $default);
-			// return the field object
-			return $field;
+			// return the field xml
+			return $XML;
 		}
 		return false;
 	}
@@ -2518,7 +2702,15 @@ abstract class QuestionsanswersHelper
 			{
 				$query->from($db->quoteName('#_'.$main.'_'.$table));
 			}
-			$query->where($db->quoteName($whereString) . ' '.$operator.' (' . implode(',',$where) . ')');
+			// add strings to array search
+			if ('IN_STRINGS' === $operator || 'NOT IN_STRINGS' === $operator)
+			{
+				$query->where($db->quoteName($whereString) . ' ' . str_replace('_STRINGS', '', $operator) . ' ("' . implode('","',$where) . '")');
+			}
+			else
+			{
+				$query->where($db->quoteName($whereString) . ' ' . $operator . ' (' . implode(',',$where) . ')');
+			}
 			$db->setQuery($query);
 			$db->execute();
 			if ($db->getNumRows())
@@ -2573,21 +2765,26 @@ abstract class QuestionsanswersHelper
 	}
 
 	/**
-	* Get the action permissions
-	*
-	* @param  string   $view        The related view name
-	* @param  int      $record      The item to act upon
-	* @param  string   $views       The related list view name
-	* @param  mixed    $target      Only get this permission (like edit, create, delete)
-	* @param  string   $component   The target component
-	*
-	* @return  object   The JObject of permission/authorised actions
-	* 
-	**/
-	public static function getActions($view, &$record = null, $views = null, $target = null, $component = 'questionsanswers')
+	 * Get the action permissions
+	 *
+	 * @param  string   $view        The related view name
+	 * @param  int      $record      The item to act upon
+	 * @param  string   $views       The related list view name
+	 * @param  mixed    $target      Only get this permission (like edit, create, delete)
+	 * @param  string   $component   The target component
+	 * @param  object   $user        The user whose permissions we are loading
+	 *
+	 * @return  object   The JObject of permission/authorised actions
+	 * 
+	 */
+	public static function getActions($view, &$record = null, $views = null, $target = null, $component = 'questionsanswers', $user = 'null')
 	{
-		// get the user object
-		$user = JFactory::getUser();
+		// load the user if not given
+		if (!self::checkObject($user))
+		{
+			// get the user object
+			$user = JFactory::getUser();
+		}
 		// load the JObject
 		$result = new JObject;
 		// make view name safe (just incase)
@@ -2743,14 +2940,14 @@ abstract class QuestionsanswersHelper
 	}
 
 	/**
-	* Filter the action permissions
-	*
-	* @param  string   $action   The action to check
-	* @param  array    $targets  The array of target actions
-	*
-	* @return  boolean   true if action should be filtered out
-	* 
-	**/
+	 * Filter the action permissions
+	 *
+	 * @param  string   $action   The action to check
+	 * @param  array    $targets  The array of target actions
+	 *
+	 * @return  boolean   true if action should be filtered out
+	 * 
+	 */
 	protected static function filterActions(&$view, &$action, &$targets)
 	{
 		foreach ($targets as $target)
@@ -2766,12 +2963,12 @@ abstract class QuestionsanswersHelper
 	}
 
 	/**
-	* Check if have an json string
-	*
-	* @input	string   The json string to check
-	*
-	* @returns bool true on success
-	**/
+	 * Check if have an json string
+	 *
+	 * @input	string   The json string to check
+	 *
+	 * @returns bool true on success
+	 */
 	public static function checkJson($string)
 	{
 		if (self::checkString($string))
@@ -2783,12 +2980,12 @@ abstract class QuestionsanswersHelper
 	}
 
 	/**
-	* Check if have an object with a length
-	*
-	* @input	object   The object to check
-	*
-	* @returns bool true on success
-	**/
+	 * Check if have an object with a length
+	 *
+	 * @input	object   The object to check
+	 *
+	 * @returns bool true on success
+	 */
 	public static function checkObject($object)
 	{
 		if (isset($object) && is_object($object))
@@ -2799,12 +2996,12 @@ abstract class QuestionsanswersHelper
 	}
 
 	/**
-	* Check if have an array with a length
-	*
-	* @input	array   The array to check
-	*
-	* @returns bool/int  number of items in array on success
-	**/
+	 * Check if have an array with a length
+	 *
+	 * @input	array   The array to check
+	 *
+	 * @returns bool/int  number of items in array on success
+	 */
 	public static function checkArray($array, $removeEmptyString = false)
 	{
 		if (isset($array) && is_array($array) && ($nr = count((array)$array)) > 0)
@@ -2827,12 +3024,12 @@ abstract class QuestionsanswersHelper
 	}
 
 	/**
-	* Check if have a string with a length
-	*
-	* @input	string   The string to check
-	*
-	* @returns bool true on success
-	**/
+	 * Check if have a string with a length
+	 *
+	 * @input	string   The string to check
+	 *
+	 * @returns bool true on success
+	 */
 	public static function checkString($string)
 	{
 		if (isset($string) && is_string($string) && strlen($string) > 0)
@@ -2843,11 +3040,11 @@ abstract class QuestionsanswersHelper
 	}
 
 	/**
-	* Check if we are connected
-	* Thanks https://stackoverflow.com/a/4860432/1429677
-	*
-	* @returns bool true on success
-	**/
+	 * Check if we are connected
+	 * Thanks https://stackoverflow.com/a/4860432/1429677
+	 *
+	 * @returns bool true on success
+	 */
 	public static function isConnected()
 	{
 		// If example.com is down, then probably the whole internet is down, since IANA maintains the domain. Right?
@@ -2868,12 +3065,12 @@ abstract class QuestionsanswersHelper
 	}
 
 	/**
-	* Merge an array of array's
-	*
-	* @input	array   The arrays you would like to merge
-	*
-	* @returns array on success
-	**/
+	 * Merge an array of array's
+	 *
+	 * @input	array   The arrays you would like to merge
+	 *
+	 * @returns array on success
+	 */
 	public static function mergeArrays($arrays)
 	{
 		if(self::checkArray($arrays))
@@ -2898,12 +3095,12 @@ abstract class QuestionsanswersHelper
 	}
 
 	/**
-	* Shorten a string
-	*
-	* @input	string   The you would like to shorten
-	*
-	* @returns string on success
-	**/
+	 * Shorten a string
+	 *
+	 * @input	string   The you would like to shorten
+	 *
+	 * @returns string on success
+	 */
 	public static function shorten($string, $length = 40, $addTip = true)
 	{
 		if (self::checkString($string))
@@ -2939,12 +3136,12 @@ abstract class QuestionsanswersHelper
 	}
 
 	/**
-	* Making strings safe (various ways)
-	*
-	* @input	string   The you would like to make safe
-	*
-	* @returns string on success
-	**/
+	 * Making strings safe (various ways)
+	 *
+	 * @input	string   The you would like to make safe
+	 *
+	 * @returns string on success
+	 */
 	public static function safeString($string, $type = 'L', $spacer = '_', $replaceNumbers = true, $keepOnlyCharacters = true)
 	{
 		if ($replaceNumbers === true)
@@ -2974,6 +3171,8 @@ abstract class QuestionsanswersHelper
 			$string = trim($string);
 			$string = preg_replace('/'.$spacer.'+/', ' ', $string);
 			$string = preg_replace('/\s+/', ' ', $string);
+			// Transliterate string
+			$string = self::transliterate($string);
 			// remove all and keep only characters
 			if ($keepOnlyCharacters)
 			{
@@ -3042,6 +3241,19 @@ abstract class QuestionsanswersHelper
 		return '';
 	}
 
+	public static function transliterate($string)
+	{
+		// set tag only once
+		if (!self::checkString(self::$langTag))
+		{
+			// get global value
+			self::$langTag = JComponentHelper::getParams('com_questionsanswers')->get('language', 'en-GB');
+		}
+		// Transliterate on the language requested
+		$lang = Language::getInstance(self::$langTag);
+		return $lang->transliterate($string);
+	}
+
 	public static function htmlEscape($var, $charset = 'UTF-8', $shorten = false, $length = 40)
 	{
 		if (self::checkString($var))
@@ -3083,12 +3295,12 @@ abstract class QuestionsanswersHelper
 	}
 
 	/**
-	* Convert an integer into an English word string
-	* Thanks to Tom Nicholson <http://php.net/manual/en/function.strval.php#41988>
-	*
-	* @input	an int
-	* @returns a string
-	**/
+	 * Convert an integer into an English word string
+	 * Thanks to Tom Nicholson <http://php.net/manual/en/function.strval.php#41988>
+	 *
+	 * @input	an int
+	 * @returns a string
+	 */
 	public static function numberToString($x)
 	{
 		$nwords = array( "zero", "one", "two", "three", "four", "five", "six", "seven",
@@ -3174,10 +3386,10 @@ abstract class QuestionsanswersHelper
 	}
 
 	/**
-	* Random Key
-	*
-	* @returns a string
-	**/
+	 * Random Key
+	 *
+	 * @returns a string
+	 */
 	public static function randomkey($size)
 	{
 		$bag = "abcefghijknopqrstuwxyzABCDDEFGHIJKLLMMNOPQRSTUVVWXYZabcddefghijkllmmnopqrstuvvwxyzABCEFGHIJKNOPQRSTUWXYZ";

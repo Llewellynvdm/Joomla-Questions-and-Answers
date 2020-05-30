@@ -165,7 +165,16 @@
 		<field
 			type="hidden"
 			name="not_required"
-			default="[]"
+			default="一_一"
+		/>
+		<!-- Alias Field. Type: Text. (joomla) -->
+		<field
+			type="text"
+			name="alias"
+			label="COM_QUESTIONSANSWERS_HELP_DOCUMENT_ALIAS_LABEL"
+			description="JFIELD_ALIAS_DESC"
+			filter="STRING"
+			hint="COM_QUESTIONSANSWERS_HELP_DOCUMENT_ALIAS_HINT"
 		/>
 		<!-- Content Field. Type: Editor. (joomla) -->
 		<field
@@ -219,15 +228,6 @@
 			<option value="2">
 				COM_QUESTIONSANSWERS_HELP_DOCUMENT_ALL</option>
 		</field>
-		<!-- Alias Field. Type: Text. (joomla) -->
-		<field
-			type="text"
-			name="alias"
-			label="COM_QUESTIONSANSWERS_HELP_DOCUMENT_ALIAS_LABEL"
-			description="JFIELD_ALIAS_DESC"
-			filter="STRING"
-			hint="COM_QUESTIONSANSWERS_HELP_DOCUMENT_ALIAS_HINT"
-		/>
 	</fieldset>
 	
 	<!-- Access Control Fields. -->

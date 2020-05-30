@@ -4,7 +4,7 @@
 		<description>Questions &amp; Answers</description>
 		<element>com_questionsanswers</element>
 		<type>component</type>
-		<version>1.0.1</version>
+		<version>1.0.2</version>
 		<infourl title="Questions and Answers!">https://www.vdm.io/</infourl>
 		<downloads>
 			<downloadurl type="full" format="zip">https://github.com/vdm-io/Joomla-Questions-and-Answers/archive/master.zip</downloadurl>
@@ -21,7 +21,7 @@
 		<description>Questions &amp; Answers</description>
 		<element>com_questionsanswers</element>
 		<type>component</type>
-		<version>1.0.2</version>
+		<version>1.0.4</version>
 		<infourl title="Questions and Answers!">https://www.vdm.io/</infourl>
 		<downloads>
 			<downloadurl type="full" format="zip">https://github.com/vdm-io/Joomla-Questions-and-Answers/archive/master.zip</downloadurl>

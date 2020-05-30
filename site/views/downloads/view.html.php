@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			14th August, 2019
+	@build			30th May, 2020
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		view.html.php
@@ -60,7 +60,7 @@ class QuestionsanswersViewDownloads extends JViewLegacy
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
 		{
-			throw new Exception(implode("\n", $errors), 500);
+			throw new Exception(implode(PHP_EOL, $errors), 500);
 		}
 
 		parent::display($tpl);
@@ -139,51 +139,74 @@ class QuestionsanswersViewDownloads extends JViewLegacy
 		$uikit = $this->params->get('uikit_load');
 		// Set script size.
 		$size = $this->params->get('uikit_min');
-		// Set css style.
-		$style = $this->params->get('uikit_style');
 
-		// The uikit css.
-		if ((!$HeaderCheck->css_loaded('uikit.min') || $uikit == 1) && $uikit != 2 && $uikit != 3)
-		{
-			$this->document->addStyleSheet(JURI::root(true) .'/media/com_questionsanswers/uikit-v2/css/uikit'.$style.$size.'.css', (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css');
-		}
-		// The uikit js.
-		if ((!$HeaderCheck->js_loaded('uikit.min') || $uikit == 1) && $uikit != 2 && $uikit != 3)
-		{
-			$this->document->addScript(JURI::root(true) .'/media/com_questionsanswers/uikit-v2/js/uikit'.$size.'.js', (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/javascript');
-		}
+		// Load uikit version.
+		$this->uikitVersion = $this->params->get('uikit_version', 2);
 
-		// Load the script to find all uikit components needed.
-		if ($uikit != 2)
+		// Use Uikit Version 2
+		if (2 == $this->uikitVersion)
 		{
-			// Set the default uikit components in this view.
-			$uikitComp = array();
-			$uikitComp[] = 'data-uk-grid';
-		}
+			// Set css style.
+			$style = $this->params->get('uikit_style');
 
-		// Load the needed uikit components in this view.
-		if ($uikit != 2 && isset($uikitComp) && QuestionsanswersHelper::checkArray($uikitComp))
-		{
-			// load just in case.
-			jimport('joomla.filesystem.file');
-			// loading...
-			foreach ($uikitComp as $class)
+			// The uikit css.
+			if ((!$HeaderCheck->css_loaded('uikit.min') || $uikit == 1) && $uikit != 2 && $uikit != 3)
 			{
-				foreach (QuestionsanswersHelper::$uk_components[$class] as $name)
+				$this->document->addStyleSheet(JURI::root(true) .'/media/com_questionsanswers/uikit-v2/css/uikit'.$style.$size.'.css', (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css');
+			}
+			// The uikit js.
+			if ((!$HeaderCheck->js_loaded('uikit.min') || $uikit == 1) && $uikit != 2 && $uikit != 3)
+			{
+				$this->document->addScript(JURI::root(true) .'/media/com_questionsanswers/uikit-v2/js/uikit'.$size.'.js', (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/javascript');
+			}
+
+			// Load the script to find all uikit components needed.
+			if ($uikit != 2)
+			{
+				// Set the default uikit components in this view.
+				$uikitComp = array();
+				$uikitComp[] = 'data-uk-grid';
+			}
+
+			// Load the needed uikit components in this view.
+			if ($uikit != 2 && isset($uikitComp) && QuestionsanswersHelper::checkArray($uikitComp))
+			{
+				// load just in case.
+				jimport('joomla.filesystem.file');
+				// loading...
+				foreach ($uikitComp as $class)
 				{
-					// check if the CSS file exists.
-					if (JFile::exists(JPATH_ROOT.'/media/com_questionsanswers/uikit-v2/css/components/'.$name.$style.$size.'.css'))
+					foreach (QuestionsanswersHelper::$uk_components[$class] as $name)
 					{
-						// load the css.
-						$this->document->addStyleSheet(JURI::root(true) .'/media/com_questionsanswers/uikit-v2/css/components/'.$name.$style.$size.'.css', (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css');
-					}
-					// check if the JavaScript file exists.
-					if (JFile::exists(JPATH_ROOT.'/media/com_questionsanswers/uikit-v2/js/components/'.$name.$size.'.js'))
-					{
-						// load the js.
-						$this->document->addScript(JURI::root(true) .'/media/com_questionsanswers/uikit-v2/js/components/'.$name.$size.'.js', (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/javascript', (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('type' => 'text/javascript', 'async' => 'async') : true);
+						// check if the CSS file exists.
+						if (JFile::exists(JPATH_ROOT.'/media/com_questionsanswers/uikit-v2/css/components/'.$name.$style.$size.'.css'))
+						{
+							// load the css.
+							$this->document->addStyleSheet(JURI::root(true) .'/media/com_questionsanswers/uikit-v2/css/components/'.$name.$style.$size.'.css', (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css');
+						}
+						// check if the JavaScript file exists.
+						if (JFile::exists(JPATH_ROOT.'/media/com_questionsanswers/uikit-v2/js/components/'.$name.$size.'.js'))
+						{
+							// load the js.
+							$this->document->addScript(JURI::root(true) .'/media/com_questionsanswers/uikit-v2/js/components/'.$name.$size.'.js', (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/javascript', (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('type' => 'text/javascript', 'async' => 'async') : true);
+						}
 					}
 				}
+			}
+		}
+		// Use Uikit Version 3
+		elseif (3 == $this->uikitVersion)
+		{
+			// The uikit css.
+			if ((!$HeaderCheck->css_loaded('uikit.min') || $uikit == 1) && $uikit != 2 && $uikit != 3)
+			{
+				$this->document->addStyleSheet(JURI::root(true) .'/media/com_questionsanswers/uikit-v3/css/uikit'.$size.'.css', (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css');
+			}
+			// The uikit js.
+			if ((!$HeaderCheck->js_loaded('uikit.min') || $uikit == 1) && $uikit != 2 && $uikit != 3)
+			{
+				$this->document->addScript(JURI::root(true) .'/media/com_questionsanswers/uikit-v3/js/uikit'.$size.'.js', (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/javascript');
+				$this->document->addScript(JURI::root(true) .'/media/com_questionsanswers/uikit-v3/js/uikit-icons'.$size.'.js', (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/javascript');
 			}
 		}
 

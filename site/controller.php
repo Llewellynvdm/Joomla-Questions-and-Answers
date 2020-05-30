@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			14th August, 2019
+	@build			30th May, 2020
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		controller.php
@@ -25,6 +25,8 @@
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
+
+use Joomla\Utilities\ArrayHelper;
 
 /**
  * Questionsanswers Component Controller

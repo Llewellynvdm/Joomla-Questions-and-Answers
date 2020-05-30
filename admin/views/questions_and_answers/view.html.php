@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			14th August, 2019
+	@build			30th May, 2020
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		view.html.php
@@ -48,8 +48,9 @@ class QuestionsanswersViewQuestions_and_answers extends JViewLegacy
 		$this->pagination = $this->get('Pagination');
 		$this->state = $this->get('State');
 		$this->user = JFactory::getUser();
-		$this->listOrder = $this->escape($this->state->get('list.ordering'));
-		$this->listDirn = $this->escape($this->state->get('list.direction'));
+		// Add the list ordering clause.
+		$this->listOrder = $this->escape($this->state->get('list.ordering', 'a.id'));
+		$this->listDirn = $this->escape($this->state->get('list.direction', 'desc'));
 		$this->saveOrder = $this->listOrder == 'ordering';
 		// set the return here value
 		$this->return_here = urlencode(base64_encode((string) JUri::getInstance()));
@@ -204,7 +205,7 @@ class QuestionsanswersViewQuestions_and_answers extends JViewLegacy
 		JHtmlSidebar::addFilter(
 			JText::_('JOPTION_SELECT_CATEGORY'),
 			'filter_category_id',
-			JHtml::_('select.options', JHtml::_('category.options', 'com_questionsanswers.questions_and_answers'), 'value', 'text', $this->state->get('filter.category_id'))
+			JHtml::_('select.options', JHtml::_('category.options', 'com_questionsanswers.question_and_answer'), 'value', 'text', $this->state->get('filter.category_id'))
 		);
 
 		if ($this->canBatch && $this->canCreate && $this->canEdit)
@@ -213,7 +214,7 @@ class QuestionsanswersViewQuestions_and_answers extends JViewLegacy
 			JHtmlBatch_::addListSelection(
 				JText::_('COM_QUESTIONSANSWERS_KEEP_ORIGINAL_CATEGORY'),
 				'batch[category]',
-				JHtml::_('select.options', JHtml::_('category.options', 'com_questionsanswers.questions_and_answers'), 'value', 'text')
+				JHtml::_('select.options', JHtml::_('category.options', 'com_questionsanswers.question_and_answer'), 'value', 'text')
 			);
 		}
 	}
@@ -259,10 +260,11 @@ class QuestionsanswersViewQuestions_and_answers extends JViewLegacy
 	protected function getSortFields()
 	{
 		return array(
-			'a.sorting' => JText::_('JGRID_HEADING_ORDERING'),
+			'ordering' => JText::_('JGRID_HEADING_ORDERING'),
 			'a.published' => JText::_('JSTATUS'),
 			'a.question' => JText::_('COM_QUESTIONSANSWERS_QUESTION_AND_ANSWER_QUESTION_LABEL'),
 			'a.answer' => JText::_('COM_QUESTIONSANSWERS_QUESTION_AND_ANSWER_ANSWER_LABEL'),
+			'category_title' => JText::_('COM_QUESTIONSANSWERS_QUESTION_AND_ANSWER_QUESTIONS_AND_ANSWERS_CATEGORIES'),
 			'a.id' => JText::_('JGRID_HEADING_ID')
 		);
 	}

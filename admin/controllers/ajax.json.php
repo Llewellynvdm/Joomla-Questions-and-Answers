@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			14th August, 2019
+	@build			30th May, 2020
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		ajax.json.php
@@ -25,6 +25,8 @@
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
+
+use Joomla\Utilities\ArrayHelper;
 
 /**
  * Questionsanswers Ajax Controller
@@ -61,7 +63,7 @@ class QuestionsanswersControllerAjax extends JControllerLegacy
 						$returnRaw = $jinput->get('raw', false, 'BOOLEAN');
 						$targetValue = $jinput->get('target', NULL, 'WORD');
 						$typeValue = $jinput->get('type', NULL, 'WORD');
-						if($targetValue && $typeValue && $user->id != 0)
+						if($targetValue && $user->id != 0 && $typeValue)
 						{
 							$result = $this->getModel('ajax')->uploadfile($targetValue, $typeValue);
 						}
@@ -102,7 +104,7 @@ class QuestionsanswersControllerAjax extends JControllerLegacy
 						$targetValue = $jinput->get('target', NULL, 'WORD');
 						$flushValue = $jinput->get('flush', NULL, 'INT');
 						$typeValue = $jinput->get('type', NULL, 'WORD');
-						if($filenameValue && $targetValue && $flushValue && $typeValue && $user->id != 0)
+						if($filenameValue && $user->id != 0 && $targetValue && $flushValue && $typeValue)
 						{
 							$result = $this->getModel('ajax')->removeFile($filenameValue, $targetValue, $flushValue, $typeValue);
 						}

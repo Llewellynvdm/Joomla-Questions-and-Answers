@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			14th August, 2019
+	@build			30th May, 2020
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		default_body.php
@@ -88,6 +88,15 @@ $edit = "index.php?option=com_questionsanswers&view=questions_and_answers&task=q
 		</td>
 		<td class="hidden-phone">
 			<?php echo $this->escape($item->answer); ?>
+		</td>
+		<td class="nowrap">
+			<div class="name">
+				<?php if ($this->user->authorise('core.edit', 'com_questionsanswers.question_and_answer.category.' . (int)$item->catid)): ?>
+					<a href="index.php?option=com_categories&task=category.edit&id=<?php echo (int)$item->catid; ?>&extension=com_questionsanswers.question_and_answer"><?php echo $this->escape($item->category_title); ?></a>
+				<?php else: ?>
+					<?php echo $this->escape($item->category_title); ?>
+				<?php endif; ?>
+			</div>
 		</td>
 		<td class="center">
 		<?php if ($canDo->get('question_and_answer.edit.state')) : ?>

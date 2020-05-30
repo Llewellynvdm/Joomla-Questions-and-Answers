@@ -135,8 +135,7 @@
 			type="category"
 			name="catid"
 			label="COM_QUESTIONSANSWERS_QUESTION_AND_ANSWER_CATID_LABEL"
-			extension="com_questionsanswers.questions_and_answers"
-			default=""
+			extension="com_questionsanswers.question_and_answer"
 			description="COM_QUESTIONSANSWERS_QUESTION_AND_ANSWER_CATID_DESCRIPTION"
 			class="inputbox"
 		/>

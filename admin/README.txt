@@ -12,16 +12,16 @@ Just a basic Questions & Answers.
 + *Author*: [Llewellyn van der Merwe](mailto:joomla@vdm.io)
 + *Name*: [Questions and Answers](https://www.vdm.io/)
 + *First Build*: 30th January, 2017
-+ *Last Build*: 14th August, 2019
++ *Last Build*: 30th May, 2020
 + *Version*: 1.0.x
 + *Copyright*: Copyright (C) 2015. All Rights Reserved
 + *License*: GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html
 
 # Component Number
 
-+ *Line count*: **29308**
-+ *File count*: **201**
-+ *Folder count*: **62**
++ *Line count*: **30682**
++ *File count*: **202**
++ *Folder count*: **63**
 
 > This **component** was build with a Joomla [Automated Component Builder](http://vdm.bz/component-builder).
 > Developed by [Llewellyn van der Merwe](mailto:joomla@vdm.io)

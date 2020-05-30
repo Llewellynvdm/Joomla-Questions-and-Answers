@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			14th August, 2019
+	@build			30th May, 2020
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		default_foot.php
@@ -28,5 +28,5 @@ defined('_JEXEC') or die('Restricted access');
 
 ?>
 <tr>
-	<td colspan="6"><?php echo $this->pagination->getListFooter(); ?></td>
+	<td colspan="7"><?php echo $this->pagination->getListFooter(); ?></td>
 </tr>

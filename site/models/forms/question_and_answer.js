@@ -10,7 +10,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			14th August, 2019
+	@build			30th May, 2020
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		question_and_answer.js
@@ -42,12 +42,12 @@ jQuery(document).ready(function($)
 
 function setFilekey(filename, fileFormat, target, type){
 	var currentFileName = jQuery("#jform_"+target+"_"+type).val();
-	if (currentFileName.length > 20 && (type === 'image' || type === 'document')){
+	if (currentFileName.length > 20 && (type === 'image' || type === 'document' || type === 'file')){
 		// remove file from server
 		removeFile_server(currentFileName, target, 2, type);
 	}
 	// set new key
-	if ((filename.length > 20 && (type === 'image' || type === 'document')) || (isJsonString(filename) && (type === 'images' || type === 'documents' || type === 'media'))){
+	if ((filename.length > 20 && (type === 'image' || type === 'document' || type === 'file')) || (isJsonString(filename) && (type === 'images' || type === 'documents' || type === 'media'))){
 		if((type === 'images' || type === 'documents' || type === 'media') && jQuery("#jform_id").val() == 0 && isJsonString(currentFileName)) {
 			var newA = jQuery.parseJSON(currentFileName);
 			var newB = jQuery.parseJSON(filename);
@@ -55,15 +55,15 @@ function setFilekey(filename, fileFormat, target, type){
 		}
 		jQuery("#jform_"+target+"_"+type).val(filename);
 		// set the FILE
-		return setFile(filename, fileFormat, target, type);
+		return setFile(filename, fileFormat, target, type, true);
 	}
 	return false;
 }
 
-function setFile(filename, fileFormat, target, type){
-	if (type === 'image' || type === 'document') {
+function setFile(filename, fileFormat, target, type, updateName){
+	if (type === 'image' || type === 'document'  || type === 'file') {
 		if (!target) {
-			target = filename.split('_')[0];
+			target = filename.split('_')[0].trimLeft('.');
 		}
 		if (!type) {
 			type = filename.split('_')[1];
@@ -72,6 +72,11 @@ function setFile(filename, fileFormat, target, type){
 			fileFormat = filename.split('_')[2];
 		}
 		var isAre = 'is';
+		// if we have a file then we must update the name with the file name
+		if (updateName && type === 'file' && filename.length > 20) {
+			jQuery('#jform_name').val(filename.split('VDM')[1]+'.'+fileFormat);
+			jQuery('#jform_alias').val('');
+		}
 	} else if ((type === 'images' || type === 'documents' || type === 'media') && isJsonString(filename) ) {
 		filename = jQuery.parseJSON(filename);
 		if (!target) {
@@ -85,12 +90,17 @@ function setFile(filename, fileFormat, target, type){
 		return false;
 	}
 	// set icon
-	if (type === 'images' || type === 'image') {
-		var icon = 'file-image-o';
+	if (typeof file_vector_style_abr !== 'undefined'  && fileFormat){
+		var icon = 'fiv-' + file_vector_style_abr + ' fiv-icon-' + fileFormat + ' fiv-size-lg';
+		var thenotice = '<div class="success-'+target+'-'+type+'-8768"><div class="uk-alert uk-alert-success" data-uk-alert><p class="uk-text-center"><span class="uk-text-bold uk-text-large"><span class="'+icon+'"></span><br />Your '+target+' '+type+' '+isAre+' set </span> </p></div>';
 	} else {
-		var icon = 'file';
+		if (type === 'images' || type === 'image') {
+			var icon = 'uk-icon-file-image-o';
+		} else {
+			var icon = 'uk-icon-file';
+		}
+		var thenotice = '<div class="success-'+target+'-'+type+'-8768"><div class="uk-alert uk-alert-success" data-uk-alert><p class="uk-text-center"><span class="uk-text-bold uk-text-large"><i class="'+icon+'"></i> Your '+target+' '+type+' '+isAre+' set </span> </p></div>';
 	}
-	var thenotice = '<div class="success-'+target+'-'+type+'-8768"><div class="uk-alert uk-alert-success" data-uk-alert><p class="uk-text-center"><span class="uk-text-bold uk-text-large"><i class="uk-icon-'+icon+'"></i> Your '+target+' '+type+' '+isAre+' set </span> </p></div>';
 	var thefile = getFile(filename, fileFormat, target, type);
 	jQuery("."+target+"_"+type+"_uploader").append(thenotice+thefile);
 	// all is done
@@ -106,13 +116,13 @@ function removeFileCheck(clearServer, target, type, uiVer){
 }
 
 function removeFile(clearServer, target, flush, type){
-	if ((clearServer.length > 20 && (type === 'image' || type === 'document')) || (clearServer.length > 1 && (type === 'images' || type === 'documents' || type === 'media'))){
+	if ((clearServer.length > 20 && (type === 'image' || type === 'document' || type === 'file')) || (clearServer.length > 1 && (type === 'images' || type === 'documents' || type === 'media'))){
 		// remove file from server
 		removeFile_server(clearServer, target, flush, type);
 	}
 	jQuery(".success-"+target+"-"+type+"-8768").remove();	
 	// remove locally 
-	if (clearServer.length > 20 && (type === 'image' || type === 'document')) {
+	if (clearServer.length > 20 && (type === 'image' || type === 'document' || type === 'file')) {
 		// remove the file
 		jQuery("#jform_"+target+"_"+type).val('');
 	} else if (clearServer.length > 20 && (type === 'images' || type === 'documents' || type === 'media')) {

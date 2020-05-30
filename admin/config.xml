@@ -73,6 +73,18 @@
 		name="uikit_config"
 		label="COM_QUESTIONSANSWERS_CONFIG_UIKIT_LABEL"
 		description="COM_QUESTIONSANSWERS_CONFIG_UIKIT_DESC">
+		<field name="uikit_version"
+			type="radio"
+			label="COM_QUESTIONSANSWERS_CONFIG_UIKIT_VERSION_LABEL"
+			description="COM_QUESTIONSANSWERS_CONFIG_UIKIT_VERSION_DESC"
+			class="btn-group btn-group-yesno"
+			default="2">
+			<!-- Option Set. -->
+			<option value="2">
+				COM_QUESTIONSANSWERS_CONFIG_UIKIT_V2</option>"
+			<option value="3">
+				COM_QUESTIONSANSWERS_CONFIG_UIKIT_V3</option>"
+		</field>
 		<field name="uikit_load"
 			type="radio"
 			label="COM_QUESTIONSANSWERS_CONFIG_UIKIT_LOAD_LABEL"
@@ -106,6 +118,7 @@
 			label="COM_QUESTIONSANSWERS_CONFIG_UIKIT_STYLE_LABEL"
 			description="COM_QUESTIONSANSWERS_CONFIG_UIKIT_STYLE_DESC"
 			class="btn-group btn-group-yesno"
+			showon="uikit_version:2"
 			default="">
 			<!-- Option Set. -->
 			<option value="">
@@ -133,66 +146,24 @@
 		name="media_custom_config"
 		label="COM_QUESTIONSANSWERS_CONFIG_MEDIA">
 
-		<!-- Document_formats Field. Type: List. (joomla) -->
+		<!-- Document_formats Field. Type: Alloweddocumentformats. (custom) -->
 		<field
-			type="list"
+			type="alloweddocumentformats"
 			name="document_formats"
 			label="COM_QUESTIONSANSWERS_CONFIG_DOCUMENT_FORMATS_LABEL"
 			description="COM_QUESTIONSANSWERS_CONFIG_DOCUMENT_FORMATS_DESCRIPTION"
 			class="list_class"
 			multiple="true"
-			filter="ARRAY"
-			default="">
-			<!-- Option Set. -->
-			<option value="doc">
-				COM_QUESTIONSANSWERS_CONFIG_DOC</option>
-			<option value="docx">
-				COM_QUESTIONSANSWERS_CONFIG_DOCX</option>
-			<option value="odt">
-				COM_QUESTIONSANSWERS_CONFIG_ODT</option>
-			<option value="pdf">
-				COM_QUESTIONSANSWERS_CONFIG_PDF</option>
-			<option value="csv">
-				COM_QUESTIONSANSWERS_CONFIG_CSV</option>
-			<option value="xls">
-				COM_QUESTIONSANSWERS_CONFIG_XLS</option>
-			<option value="xlsx">
-				COM_QUESTIONSANSWERS_CONFIG_XLSX</option>
-			<option value="ods">
-				COM_QUESTIONSANSWERS_CONFIG_ODS</option>
-			<option value="ppt">
-				COM_QUESTIONSANSWERS_CONFIG_PPT</option>
-			<option value="pptx">
-				COM_QUESTIONSANSWERS_CONFIG_PPTX</option>
-			<option value="pps">
-				COM_QUESTIONSANSWERS_CONFIG_PPS</option>
-			<option value="ppsx">
-				COM_QUESTIONSANSWERS_CONFIG_PPSX</option>
-			<option value="odp">
-				COM_QUESTIONSANSWERS_CONFIG_ODP</option>
-			<option value="zip">
-				COM_QUESTIONSANSWERS_CONFIG_ZIP</option>
-		</field>
-		<!-- Image_formats Field. Type: List. (joomla) -->
+		/>
+		<!-- Image_formats Field. Type: Allowedimageformats. (custom) -->
 		<field
-			type="list"
+			type="allowedimageformats"
 			name="image_formats"
 			label="COM_QUESTIONSANSWERS_CONFIG_IMAGE_FORMATS_LABEL"
 			description="COM_QUESTIONSANSWERS_CONFIG_IMAGE_FORMATS_DESCRIPTION"
 			class="list_class"
 			multiple="true"
-			filter="ARRAY"
-			default="">
-			<!-- Option Set. -->
-			<option value="jpg">
-				COM_QUESTIONSANSWERS_CONFIG_JPG</option>
-			<option value="jpeg">
-				COM_QUESTIONSANSWERS_CONFIG_JPEG</option>
-			<option value="gif">
-				COM_QUESTIONSANSWERS_CONFIG_GIF</option>
-			<option value="png">
-				COM_QUESTIONSANSWERS_CONFIG_PNG</option>
-		</field>
+		/>
 		<!-- Spacer_hr Field. Type: Spacer. A None Database Field. (joomla) -->
 		<field type="spacer" name="spacer_hr" hr="true" class="spacer_hr" />
 		<!-- Crop_main Field. Type: Radio. (joomla) -->

@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			14th August, 2019
+	@build			30th May, 2020
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		questions_and_answers.php
@@ -25,6 +25,8 @@
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
+
+use Joomla\Utilities\ArrayHelper;
 
 /**
  * Questions_and_answers Model
@@ -42,7 +44,10 @@ class QuestionsanswersModelQuestions_and_answers extends JModelList
 				'a.created_by','created_by',
 				'a.modified_by','modified_by',
 				'a.question','question',
-				'a.answer','answer'
+				'a.answer','answer',
+				'c.title','category_title',
+				'c.id', 'category_id',
+				'a.catid', 'catid'
 			);
 		}
 
@@ -68,6 +73,15 @@ class QuestionsanswersModelQuestions_and_answers extends JModelList
 
 		$answer = $this->getUserStateFromRequest($this->context . '.filter.answer', 'filter_answer');
 		$this->setState('filter.answer', $answer);
+
+		$category = $app->getUserStateFromRequest($this->context . '.filter.category', 'filter_category');
+		$this->setState('filter.category', $category);
+
+		$categoryId = $this->getUserStateFromRequest($this->context . '.filter.category_id', 'filter_category_id');
+		$this->setState('filter.category_id', $categoryId);
+
+		$catid = $app->getUserStateFromRequest($this->context . '.filter.catid', 'filter_catid');
+		$this->setState('filter.catid', $catid);
         
 		$sorting = $this->getUserStateFromRequest($this->context . '.filter.sorting', 'filter_sorting', 0, 'int');
 		$this->setState('filter.sorting', $sorting);
@@ -104,12 +118,18 @@ class QuestionsanswersModelQuestions_and_answers extends JModelList
 		// load parent items
 		$items = parent::getItems();
 
-		// set values to display correctly.
+		// Set values to display correctly.
 		if (QuestionsanswersHelper::checkArray($items))
 		{
+			// Get the user object if not set.
+			if (!isset($user) || !QuestionsanswersHelper::checkObject($user))
+			{
+				$user = JFactory::getUser();
+			}
 			foreach ($items as $nr => &$item)
 			{
-				$access = (JFactory::getUser()->authorise('question_and_answer.access', 'com_questionsanswers.question_and_answer.' . (int) $item->id) && JFactory::getUser()->authorise('question_and_answer.access', 'com_questionsanswers'));
+				// Remove items the user can't access.
+				$access = ($user->authorise('question_and_answer.access', 'com_questionsanswers.question_and_answer.' . (int) $item->id) && $user->authorise('question_and_answer.access', 'com_questionsanswers'));
 				if (!$access)
 				{
 					unset($items[$nr]);
@@ -201,7 +221,7 @@ class QuestionsanswersModelQuestions_and_answers extends JModelList
 		}
 		elseif (is_array($categoryId))
 		{
-			JArrayHelper::toInteger($categoryId);
+			ArrayHelper::toInteger($categoryId);
 			$categoryId = implode(',', $categoryId);
 			$query->where('a.category IN (' . $categoryId . ')');
 		}
@@ -209,7 +229,7 @@ class QuestionsanswersModelQuestions_and_answers extends JModelList
 
 		// Add the list ordering clause.
 		$orderCol = $this->state->get('list.ordering', 'a.id');
-		$orderDirn = $this->state->get('list.direction', 'asc');	
+		$orderDirn = $this->state->get('list.direction', 'desc');
 		if ($orderCol != '')
 		{
 			$query->order($db->escape($orderCol . ' ' . $orderDirn));
@@ -221,17 +241,23 @@ class QuestionsanswersModelQuestions_and_answers extends JModelList
 	/**
 	 * Method to get list export data.
 	 *
+	 * @param   array  $pks  The ids of the items to get
+	 * @param   JUser  $user  The user making the request
+	 *
 	 * @return mixed  An array of data items on success, false on failure.
 	 */
-	public function getExportData($pks)
+	public function getExportData($pks, $user = null)
 	{
 		// setup the query
 		if (QuestionsanswersHelper::checkArray($pks))
 		{
-			// Set a value to know this is exporting method.
+			// Set a value to know this is export method. (USE IN CUSTOM CODE TO ALTER OUTCOME)
 			$_export = true;
-			// Get the user object.
-			$user = JFactory::getUser();
+			// Get the user object if not set.
+			if (!isset($user) || !QuestionsanswersHelper::checkObject($user))
+			{
+				$user = JFactory::getUser();
+			}
 			// Create a new query object.
 			$db = JFactory::getDBO();
 			$query = $db->getQuery(true);
@@ -250,7 +276,7 @@ class QuestionsanswersModelQuestions_and_answers extends JModelList
 			}
 
 			// Order the results by ordering
-			$query->order('a.ordering  ASC');
+			$query->order('a.id desc');
 
 			// Load the items
 			$db->setQuery($query);
@@ -264,12 +290,13 @@ class QuestionsanswersModelQuestions_and_answers extends JModelList
 				// Get the encryption object.
 				$basic = new FOFEncryptAes($basickey);
 
-				// set values to display correctly.
+				// Set values to display correctly.
 				if (QuestionsanswersHelper::checkArray($items))
 				{
 					foreach ($items as $nr => &$item)
 					{
-						$access = (JFactory::getUser()->authorise('question_and_answer.access', 'com_questionsanswers.question_and_answer.' . (int) $item->id) && JFactory::getUser()->authorise('question_and_answer.access', 'com_questionsanswers'));
+						// Remove items the user can't access.
+						$access = ($user->authorise('question_and_answer.access', 'com_questionsanswers.question_and_answer.' . (int) $item->id) && $user->authorise('question_and_answer.access', 'com_questionsanswers'));
 						if (!$access)
 						{
 							unset($items[$nr]);
@@ -348,6 +375,9 @@ class QuestionsanswersModelQuestions_and_answers extends JModelList
 		$id .= ':' . $this->getState('filter.modified_by');
 		$id .= ':' . $this->getState('filter.question');
 		$id .= ':' . $this->getState('filter.answer');
+		$id .= ':' . $this->getState('filter.category');
+		$id .= ':' . $this->getState('filter.category_id');
+		$id .= ':' . $this->getState('filter.catid');
 
 		return parent::getStoreId($id);
 	}

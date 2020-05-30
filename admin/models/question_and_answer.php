@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			14th August, 2019
+	@build			30th May, 2020
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		question_and_answer.php
@@ -27,6 +27,8 @@
 defined('_JEXEC') or die('Restricted access');
 
 use Joomla\Registry\Registry;
+use Joomla\String\StringHelper;
+use Joomla\Utilities\ArrayHelper;
 
 /**
  * Questionsanswers Question_and_answer Model
@@ -89,18 +91,26 @@ class QuestionsanswersModelQuestion_and_answer extends JModelAdmin
 		return JTable::getInstance($type, $prefix, $config);
 	}
 
+
+	/**
+	 * get VDM internal session key
+	 *
+	 * @return  string  the session key
+	 *
+	 */
 	public function getVDM()
 	{
 		if (!isset($this->vastDevMod))
 		{
+			$_id = 0; // new item probably (since it was not set in the getItem method)
 
-			if (empty(0))
+			if (empty($_id))
 			{
 				$id = 0;
 			}
 			else
 			{
-				$id = 0;
+				$id = $_id;
 			}
 			// set the id and view name to session
 			if ($vdm = QuestionsanswersHelper::get('question_and_answer__'.$id))
@@ -117,10 +127,18 @@ class QuestionsanswersModelQuestion_and_answer extends JModelAdmin
 				$jinput = JFactory::getApplication()->input;
 				$return = $jinput->get('return', null, 'base64');
 				QuestionsanswersHelper::set($this->vastDevMod . '__return', $return);
+				// set a GUID value if found
+				if (isset($item) && QuestionsanswersHelper::checkObject($item) && isset($item->guid)
+					&& method_exists('QuestionsanswersHelper', 'validGUID')
+					&& QuestionsanswersHelper::validGUID($item->guid))
+				{
+					QuestionsanswersHelper::set($this->vastDevMod . '__guid', $item->guid);
+				}
 			}
 		}
 		return $this->vastDevMod;
 	}
+
     
 	/**
 	 * Method to get a single record.
@@ -192,6 +210,13 @@ class QuestionsanswersModelQuestion_and_answer extends JModelAdmin
 				$jinput = JFactory::getApplication()->input;
 				$return = $jinput->get('return', null, 'base64');
 				QuestionsanswersHelper::set($this->vastDevMod . '__return', $return);
+				// set a GUID value if found
+				if (isset($item) && QuestionsanswersHelper::checkObject($item) && isset($item->guid)
+					&& method_exists('QuestionsanswersHelper', 'validGUID')
+					&& QuestionsanswersHelper::validGUID($item->guid))
+				{
+					QuestionsanswersHelper::set($this->vastDevMod . '__guid', $item->guid);
+				}
 			}
 			// build download links
 			$item->links = array();	
@@ -252,8 +277,23 @@ class QuestionsanswersModelQuestion_and_answer extends JModelAdmin
 	{
 		// set load data option
 		$options['load_data'] = $loadData;
+		// check if xpath was set in options
+		$xpath = false;
+		if (isset($options['xpath']))
+		{
+			$xpath = $options['xpath'];
+			unset($options['xpath']);
+		}
+		// check if clear form was set in options
+		$clear = false;
+		if (isset($options['clear']))
+		{
+			$clear = $options['clear'];
+			unset($options['clear']);
+		}
+
 		// Get the form.
-		$form = $this->loadForm('com_questionsanswers.question_and_answer', 'question_and_answer', $options);
+		$form = $this->loadForm('com_questionsanswers.question_and_answer', 'question_and_answer', $options, $clear, $xpath);
 
 		if (empty($form))
 		{
@@ -379,23 +419,6 @@ class QuestionsanswersModelQuestion_and_answer extends JModelAdmin
 				$form->setFieldAttribute('answer_documents', 'filter', 'unset');
 				// Disable fields while saving.
 				$form->setFieldAttribute('answer_documents', 'required', 'false');
-			}
-		}
-		// Modify the form based on Edit Main Image Uploader access controls.
-		if ($id != 0 && (!$user->authorise('question_and_answer.edit.main_image_uploader', 'com_questionsanswers.question_and_answer.' . (int) $id))
-			|| ($id == 0 && !$user->authorise('question_and_answer.edit.main_image_uploader', 'com_questionsanswers')))
-		{
-			// Disable fields for display.
-			$form->setFieldAttribute('main_image_uploader', 'disabled', 'true');
-			// Disable fields for display.
-			$form->setFieldAttribute('main_image_uploader', 'readonly', 'true');
-			// If there is no value continue.
-			if (!$form->getValue('main_image_uploader'))
-			{
-				// Disable fields while saving.
-				$form->setFieldAttribute('main_image_uploader', 'filter', 'unset');
-				// Disable fields while saving.
-				$form->setFieldAttribute('main_image_uploader', 'required', 'false');
 			}
 		}
 		// Only load these values if no id is found
@@ -570,6 +593,8 @@ class QuestionsanswersModelQuestion_and_answer extends JModelAdmin
 		if (empty($data))
 		{
 			$data = $this->getItem();
+			// run the perprocess of the data
+			$this->preprocessData('com_questionsanswers.question_and_answer', $data);
 		}
 
 		return $data;
@@ -582,7 +607,7 @@ class QuestionsanswersModelQuestion_and_answer extends JModelAdmin
 	 *
 	 * @since   3.0
 	 */
-	protected function getUniqeFields()
+	protected function getUniqueFields()
 	{
 		return false;
 	}
@@ -641,7 +666,7 @@ class QuestionsanswersModelQuestion_and_answer extends JModelAdmin
 	{
 		// Sanitize ids.
 		$pks = array_unique($pks);
-		JArrayHelper::toInteger($pks);
+		ArrayHelper::toInteger($pks);
 
 		// Remove any values of zero.
 		if (array_search(0, $pks, true))
@@ -682,7 +707,7 @@ class QuestionsanswersModelQuestion_and_answer extends JModelAdmin
 
 		if (!empty($commands['move_copy']))
 		{
-			$cmd = JArrayHelper::getValue($commands, 'move_copy', 'c');
+			$cmd = ArrayHelper::getValue($commands, 'move_copy', 'c');
 
 			if ($cmd == 'c')
 			{
@@ -749,8 +774,8 @@ class QuestionsanswersModelQuestion_and_answer extends JModelAdmin
 			return false;
 		}
 
-		// get list of uniqe fields
-		$uniqeFields = $this->getUniqeFields();
+		// get list of unique fields
+		$uniqueFields = $this->getUniqueFields();
 		// remove move_copy from array
 		unset($values['move_copy']);
 
@@ -825,12 +850,12 @@ class QuestionsanswersModelQuestion_and_answer extends JModelAdmin
 				}
 			}
 
-			// update all uniqe fields
-			if (QuestionsanswersHelper::checkArray($uniqeFields))
+			// update all unique fields
+			if (QuestionsanswersHelper::checkArray($uniqueFields))
 			{
-				foreach ($uniqeFields as $uniqeField)
+				foreach ($uniqueFields as $uniqueField)
 				{
-					$this->table->$uniqeField = $this->generateUniqe($uniqeField,$this->table->$uniqeField);
+					$this->table->$uniqueField = $this->generateUnique($uniqueField,$this->table->$uniqueField);
 				}
 			}
 
@@ -1047,16 +1072,16 @@ class QuestionsanswersModelQuestion_and_answer extends JModelAdmin
 			$data['params'] = (string) $params;
 		}
 
-		// Alter the uniqe field for save as copy
+		// Alter the unique field for save as copy
 		if ($input->get('task') === 'save2copy')
 		{
-			// Automatic handling of other uniqe fields
-			$uniqeFields = $this->getUniqeFields();
-			if (QuestionsanswersHelper::checkArray($uniqeFields))
+			// Automatic handling of other unique fields
+			$uniqueFields = $this->getUniqueFields();
+			if (QuestionsanswersHelper::checkArray($uniqueFields))
 			{
-				foreach ($uniqeFields as $uniqeField)
+				foreach ($uniqueFields as $uniqueField)
 				{
-					$data[$uniqeField] = $this->generateUniqe($uniqeField,$data[$uniqeField]);
+					$data[$uniqueField] = $this->generateUnique($uniqueField,$data[$uniqueField]);
 				}
 			}
 		}
@@ -1069,7 +1094,7 @@ class QuestionsanswersModelQuestion_and_answer extends JModelAdmin
 	}
 	
 	/**
-	 * Method to generate a uniqe value.
+	 * Method to generate a unique value.
 	 *
 	 * @param   string  $field name.
 	 * @param   string  $value data.
@@ -1078,15 +1103,15 @@ class QuestionsanswersModelQuestion_and_answer extends JModelAdmin
 	 *
 	 * @since   3.0
 	 */
-	protected function generateUniqe($field,$value)
+	protected function generateUnique($field,$value)
 	{
 
-		// set field value uniqe 
+		// set field value unique
 		$table = $this->getTable();
 
 		while ($table->load(array($field => $value)))
 		{
-			$value = JString::increment($value);
+			$value = StringHelper::increment($value);
 		}
 
 		return $value;

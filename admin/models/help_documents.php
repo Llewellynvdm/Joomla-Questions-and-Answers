@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			14th August, 2019
+	@build			30th May, 2020
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		help_documents.php
@@ -25,6 +25,8 @@
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
+
+use Joomla\Utilities\ArrayHelper;
 
 /**
  * Help_documents Model
@@ -44,8 +46,8 @@ class QuestionsanswersModelHelp_documents extends JModelList
 				'a.title','title',
 				'a.type','type',
 				'a.location','location',
-				'a.admin_view','admin_view',
-				'a.site_view','site_view'
+				'g.',
+				'h.'
 			);
 		}
 
@@ -116,12 +118,18 @@ class QuestionsanswersModelHelp_documents extends JModelList
 		// load parent items
 		$items = parent::getItems();
 
-		// set values to display correctly.
+		// Set values to display correctly.
 		if (QuestionsanswersHelper::checkArray($items))
 		{
+			// Get the user object if not set.
+			if (!isset($user) || !QuestionsanswersHelper::checkObject($user))
+			{
+				$user = JFactory::getUser();
+			}
 			foreach ($items as $nr => &$item)
 			{
-				$access = (JFactory::getUser()->authorise('help_document.access', 'com_questionsanswers.help_document.' . (int) $item->id) && JFactory::getUser()->authorise('help_document.access', 'com_questionsanswers'));
+				// Remove items the user can't access.
+				$access = ($user->authorise('help_document.access', 'com_questionsanswers.help_document.' . (int) $item->id) && $user->authorise('help_document.access', 'com_questionsanswers'));
 				if (!$access)
 				{
 					unset($items[$nr]);
@@ -132,21 +140,12 @@ class QuestionsanswersModelHelp_documents extends JModelList
 				$groupsArray = json_decode($item->groups, true);
 				if (QuestionsanswersHelper::checkArray($groupsArray))
 				{
-					$groupsNames = '';
-					$counter = 0;
+					$groupsNames = array();
 					foreach ($groupsArray as $groups)
 					{
-						if ($counter == 0)
-						{
-							$groupsNames .= QuestionsanswersHelper::getGroupName($groups);
-						}
-						else
-						{
-							$groupsNames .= ', '.QuestionsanswersHelper::getGroupName($groups);
-						}
-						$counter++;
+						$groupsNames[] = QuestionsanswersHelper::getGroupName($groups);
 					}
-					$item->groups = $groupsNames;
+					$item->groups =  implode(', ', $groupsNames);
 				}
 			}
 		}
@@ -273,7 +272,7 @@ class QuestionsanswersModelHelp_documents extends JModelList
 
 		// Add the list ordering clause.
 		$orderCol = $this->state->get('list.ordering', 'a.id');
-		$orderDirn = $this->state->get('list.direction', 'asc');	
+		$orderDirn = $this->state->get('list.direction', 'asc');
 		if ($orderCol != '')
 		{
 			$query->order($db->escape($orderCol . ' ' . $orderDirn));
@@ -285,17 +284,23 @@ class QuestionsanswersModelHelp_documents extends JModelList
 	/**
 	 * Method to get list export data.
 	 *
+	 * @param   array  $pks  The ids of the items to get
+	 * @param   JUser  $user  The user making the request
+	 *
 	 * @return mixed  An array of data items on success, false on failure.
 	 */
-	public function getExportData($pks)
+	public function getExportData($pks, $user = null)
 	{
 		// setup the query
 		if (QuestionsanswersHelper::checkArray($pks))
 		{
-			// Set a value to know this is exporting method.
+			// Set a value to know this is export method. (USE IN CUSTOM CODE TO ALTER OUTCOME)
 			$_export = true;
-			// Get the user object.
-			$user = JFactory::getUser();
+			// Get the user object if not set.
+			if (!isset($user) || !QuestionsanswersHelper::checkObject($user))
+			{
+				$user = JFactory::getUser();
+			}
 			// Create a new query object.
 			$db = JFactory::getDBO();
 			$query = $db->getQuery(true);
@@ -317,12 +322,13 @@ class QuestionsanswersModelHelp_documents extends JModelList
 			{
 				$items = $db->loadObjectList();
 
-				// set values to display correctly.
+				// Set values to display correctly.
 				if (QuestionsanswersHelper::checkArray($items))
 				{
 					foreach ($items as $nr => &$item)
 					{
-						$access = (JFactory::getUser()->authorise('help_document.access', 'com_questionsanswers.help_document.' . (int) $item->id) && JFactory::getUser()->authorise('help_document.access', 'com_questionsanswers'));
+						// Remove items the user can't access.
+						$access = ($user->authorise('help_document.access', 'com_questionsanswers.help_document.' . (int) $item->id) && $user->authorise('help_document.access', 'com_questionsanswers'));
 						if (!$access)
 						{
 							unset($items[$nr]);

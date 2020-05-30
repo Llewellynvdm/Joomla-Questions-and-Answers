@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			14th August, 2019
+	@build			30th May, 2020
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		ajax.php
@@ -26,7 +26,7 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
-jimport('joomla.application.component.helper');
+use Joomla\Utilities\ArrayHelper;
 
 /**
  * Questionsanswers Ajax Model
@@ -54,7 +54,7 @@ class QuestionsanswersModelAjax extends JModelList
 			// get the vdm key
 			$jinput = JFactory::getApplication()->input;
 			$vdm = $jinput->get('vdm', null, 'WORD');
-			if ($vdm) 
+			if ($vdm)
 			{
 				// set view and id
 				if ($view = QuestionsanswersHelper::get($vdm))
@@ -69,8 +69,16 @@ class QuestionsanswersModelAjax extends JModelList
 						);
 					}
 				}
+				// set GUID if found
+				if (($guid = QuestionsanswersHelper::get($vdm . '__guid')) !== false && method_exists('QuestionsanswersHelper', 'validGUID'))
+				{
+					if (QuestionsanswersHelper::validGUID($guid))
+					{
+						$this->viewid[$call]['a_guid'] = $guid;
+					}
+				}
 				// set return if found
-				if ($return = QuestionsanswersHelper::get($vdm . '__return'))
+				if (($return = QuestionsanswersHelper::get($vdm . '__return')) !== false)
 				{
 					if (QuestionsanswersHelper::checkString($return))
 					{
@@ -99,45 +107,6 @@ class QuestionsanswersModelAjax extends JModelList
 	protected $target;
 	protected $targetType;
 	protected $formatType;
-
-	// set some defaults
-	protected $formats = 
-		array( 
-			'image_formats' => array(
-				1 => 'jpg',
-				2 => 'jpeg',
-				3 => 'gif',
-				4 => 'png'),
-			'document_formats' => array(
-				1 => 'doc',
-				2 => 'docx',
-				3 => 'odt',
-				4 => 'pdf',
-				5 => 'csv',
-				6 => 'xls',
-				7 => 'xlsx',
-				8 => 'ods',
-				9 => 'ppt',
-				10 => 'pptx',
-				11 => 'pps',
-				12 => 'ppsx',
-				13 => 'odp',
-				14 => 'zip'),
-			'media_formats' => array(
-				1 => 'mp3',
-				2 => 'm4a',
-				3 => 'ogg',
-				4 => 'wav',
-				5 => 'mp4',
-				6 => 'm4v',
-				7 => 'mov',
-				8 => 'wmv',
-				9 => 'avi',
-				10 => 'mpg',
-				11 => 'ogv',
-				12 => '3gp',
-				13 => '3g2'));
-
 	// file details
 	protected $fileName;
 	protected $folderPath;
@@ -159,7 +128,7 @@ class QuestionsanswersModelAjax extends JModelList
 			$this->target = (string) $target;
 			$this->targetType = (string) $type;
 			$this->formatType = (string) $this->types[$type];
-			if ($package = $this->_getPackageFromUpload())
+			if (($package = $this->_getPackageFromUpload()) !== false)
 			{
 				// now we move the file into place
 				return $this->uploadNow($package, $view);
@@ -177,9 +146,9 @@ class QuestionsanswersModelAjax extends JModelList
 		{
 			$name = QuestionsanswersHelper::safeString(str_replace('.'.$this->fileFormat, '', $package['packagename']), 'filename', '_', false);
 		}
-		$this->fileName = $this->target.'_'.$this->targetType.'_'.$this->fileFormat.'_'.QuestionsanswersHelper::randomkey(20).'VDM'.$name;
+		$this->fileName = $this->target . '_' . $this->targetType . '_' . $this->fileFormat . '_' . QuestionsanswersHelper::randomkey(20) . 'VDM' . $name;
 		// set the folder path
-		if ($this->formatType === 'document' || $this->formatType === 'media')
+		if ($this->formatType === 'file' || $this->formatType === 'document' || $this->formatType === 'media')
 		{
 			// get the folder path
 			$this->folderPath = QuestionsanswersHelper::getFolderPath('path', 'hiddenfilepath');
@@ -199,26 +168,69 @@ class QuestionsanswersModelAjax extends JModelList
 			{
 				QuestionsanswersHelper::resizeImage($this->fileName, $this->fileFormat, $this->target, $this->folderPath, $this->fullPath);
 			}
-			// Get the basic encryption.
-			$basickey = QuestionsanswersHelper::getCryptKey('basic');
-			$basic = null;
+			$encryption = null;
+			$expertmode = false;
+			// basic encryption of these format types
+			if ($this->formatType === 'document' || $this->formatType === 'media')
+			{
+				// Get the basic encryption.
+				$encryptionkey = QuestionsanswersHelper::getCryptKey('basic');
+			}
+			// medium encryption of these format types
+			elseif ($this->formatType === 'file')
+			{
+				// check if we have expert Mode
+				if (method_exists('QuestionsanswersHelper', 'encrypt'))
+				{
+					$expertmode = true;
+				}
+				else
+				{
+					// Get the medium encryption.
+					$encryptionkey = QuestionsanswersHelper::getCryptKey('medium');
+				}
+			}
 			// set link options
-			$linkOptions = QuestionsanswersHelper::getLinkOptions();
-			// set link options
-			if ($basickey)
+			if (isset($encryptionkey) && $encryptionkey)
 			{
 				// Get the encryption object.
-				$basic = new FOFEncryptAes($basickey, 128);
+				$encryption = new FOFEncryptAes($encryptionkey, 128);
 			}
 			// when it is documents we need to give file name in base64
-			if ($this->formatType === 'document' || $this->formatType === 'media')
+			if ($this->formatType === 'file' || $this->formatType === 'document' || $this->formatType === 'media')
 			{
 				// store the name
 				$keyName = $this->fileName;
-				if (QuestionsanswersHelper::checkObject($basic))
+				if (QuestionsanswersHelper::checkObject($encryption) || $expertmode)
 				{
+					// also encrypt the actual content of the file
+					if ($this->formatType === 'file')
+					{
+						// add notice to name that file is encrypted
+						$this->fileName = $keyName =  '.' . $this->fileName;
+						$securefullPath = $this->folderPath . $this->fileName;
+						// also encrypt the actual content of the file
+						if ($expertmode)
+						{
+							QuestionsanswersHelper::writeFile($securefullPath, wordwrap(QuestionsanswersHelper::encrypt(file_get_contents($this->fullPath)), 128, "\n", true));
+						}
+						else
+						{
+							QuestionsanswersHelper::writeFile($securefullPath, wordwrap($encryption->encryptString(file_get_contents($this->fullPath)), 128, "\n", true));
+						}
+						// remove the original
+						jimport('joomla.filesystem.file');
+						JFile::delete($this->fullPath);
+					}
 					// Get the encryption object.
-					$localFile = QuestionsanswersHelper::base64_urlencode($basic->encryptString($keyName));
+					if ($expertmode)
+					{
+						$localFile = QuestionsanswersHelper::base64_urlencode(QuestionsanswersHelper::encrypt($keyName, false), true);
+					}
+					else
+					{
+						$localFile = QuestionsanswersHelper::base64_urlencode($encryption->encryptString($keyName));
+					}
 				}
 				else
 				{
@@ -227,39 +239,45 @@ class QuestionsanswersModelAjax extends JModelList
 				}
 			}
 			// check if we must update the current item
-			if (isset($view['a_id']) && $view['a_id'] > 0 && isset($view['a_view']))
+			if (isset($view['a_id']) && $view['a_id'] > 0)
 			{
 				$object = new stdClass();
 				$object->id = (int) $view['a_id'];
-				if ($this->targetType === 'image' || $this->targetType === 'document')
+				if ($this->formatType === 'file' || $this->targetType === 'image' || $this->targetType === 'document')
 				{
-					if ($linkOptions['lock'] && QuestionsanswersHelper::checkObject($basic))
+					if (QuestionsanswersHelper::checkObject($encryption) || $expertmode)
 					{
 						// Get the encryption object.
-						$object->{$this->target.'_'.$this->targetType} = $basic->encryptString($this->fileName);
+						if ($expertmode)
+						{
+							$object->{$this->target . '_' . $this->targetType} = QuestionsanswersHelper::encrypt($this->fileName);
+						}
+						else
+						{
+							$object->{$this->target . '_' . $this->targetType} = $encryption->encryptString($this->fileName);
+						}
 					}
 					else
 					{
 						// can not get the encryption object.
-						$object->{$this->target.'_'.$this->targetType} = $this->fileName;
+						$object->{$this->target . '_' . $this->targetType} = $this->fileName;
 					}
 				}
 				elseif ($this->targetType === 'images' || $this->targetType === 'documents' || $this->targetType === 'media')
 				{
-					$this->fileName = $this->setFileNameArray('add', $basic, $view);
-					if ($linkOptions['lock'] && QuestionsanswersHelper::checkObject($basic))
+					$this->fileName = $this->setFileNameArray('add', $encryption, $view);
+					if (QuestionsanswersHelper::checkObject($encryption))
 					{
 						// Get the encryption object.
-						$object->{$this->target.'_'.$this->targetType} = $basic->encryptString($this->fileName);
+						$object->{$this->target . '_' . $this->targetType} = $encryption->encryptString($this->fileName);
 					}
 					else
 					{
 						// can not get the encryption object.
-						$object->{$this->target.'_'.$this->targetType} = $this->fileName;
+						$object->{$this->target . '_' . $this->targetType} = $this->fileName;
 					}
-					
 				}
-				JFactory::getDbo()->updateObject('#__questionsanswers_'.$view['a_view'], $object, 'id');
+				JFactory::getDbo()->updateObject('#__questionsanswers_' . (string) $view['a_view'], $object, 'id');
 			}
 			elseif ($this->targetType === 'images' || $this->targetType === 'documents' || $this->targetType === 'media')
 			{
@@ -269,19 +287,22 @@ class QuestionsanswersModelAjax extends JModelList
 			// set the results
 			$result = array('success' =>  $this->fileName, 'fileformat' => $this->fileFormat);
 			// add some more values if document format type
-			if ($this->formatType === 'document' || $this->formatType === 'media')
+			if ($this->formatType === 'file' || $this->formatType === 'document' || $this->formatType === 'media')
 			{
-				$tokenLink = '';
+				// set link options
+				$linkOptions = QuestionsanswersHelper::getLinkOptions();
+				// do not lock file for link unless lock is set
 				if ($linkOptions['lock'] == 0)
 				{
 					$localFile = QuestionsanswersHelper::base64_urlencode($keyName, true);
 				}
+				$tokenLink = '';
 				if ($linkOptions['session'])
 				{
-					$tokenLink = '&token=' . JSession::getFormToken();
+					$tokenLink = '&' . JSession::getFormToken() . '=1';
 				}
-				// if document
-				if ($this->formatType === 'document')
+				// if document or file
+				if ($this->formatType === 'file' || $this->formatType === 'document')
 				{
 					$result['link'] = 'index.php?option=com_questionsanswers&task=download.document&file=' . $localFile . $tokenLink;
 				}
@@ -308,16 +329,17 @@ class QuestionsanswersModelAjax extends JModelList
 			$this->targetType = (string) $type;
 			$this->formatType = (string) $this->types[$type];
 			$this->fileName = (string) $oldFile;
+			// check permissions
 			if (isset($view['a_id']) && $view['a_id'] > 0 && isset($view['a_view']))
 			{
 				// get user to see if he has permission to upload
 				$user = JFactory::getUser();
-				if (!$user->authorise($view['a_view'].'.edit.'.$this->target.'_'.$this->targetType, 'com_questionsanswers'))
+				if (!$user->authorise($view['a_view'] . '.edit.'. $this->target . '_' . $this->targetType, 'com_questionsanswers'))
 				{
 					return array('error' =>  JText::_('COM_QUESTIONSANSWERS_YOU_DO_NOT_HAVE_PERMISSION_TO_REMOVE_THIS_FILE'));
 				}
 			}
-			if ($this->formatType === 'document' || $this->formatType === 'media')
+			if ($this->formatType === 'file' || $this->formatType === 'document' || $this->formatType === 'media')
 			{
 				// get the file path
 				$this->folderPath = QuestionsanswersHelper::getFolderPath('path', 'hiddenfilepath');
@@ -328,32 +350,30 @@ class QuestionsanswersModelAjax extends JModelList
 				$this->folderPath = QuestionsanswersHelper::getFolderPath();
 			}
 			// remove from the db if there is an id
-			if ($clearDB == 1 && isset($view['a_id']) && $view['a_id'] > 0 && isset($view['a_view']) && in_array($view['a_view'], $this->allowedViews))
+			if ($clearDB == 1 && isset($view['a_id']) && $view['a_id'] > 0)
 			{
 				$object = new stdClass();
 				$object->id = (int) $view['a_id'];
-				if ($this->targetType === 'image' || $this->targetType === 'document')
+				if ($this->formatType === 'file' || $this->targetType === 'image' || $this->targetType === 'document')
 				{
-					$object->{$this->target.'_'.$this->targetType} = '';
-					JFactory::getDbo()->updateObject('#__questionsanswers_'.$view['a_view'], $object, 'id');
+					$object->{$this->target . '_' . $this->targetType} = '';
+					JFactory::getDbo()->updateObject('#__questionsanswers_' . $view['a_view'], $object, 'id');
 				}
 				elseif ($this->targetType === 'images' || $this->targetType === 'documents' || $this->targetType === 'media')
 				{
 					// Get the basic encription.
-					$basickey = QuestionsanswersHelper::getCryptKey('basic');
-					$basic = null;
-					// set link options
-					$linkOptions = QuestionsanswersHelper::getLinkOptions();
-					if ($linkOptions['lock'] && $basickey)
+					$encryptionkey = QuestionsanswersHelper::getCryptKey('basic');
+					$encryption = null;
+					if ($encryptionkey)
 					{
 						// Get the encryption object.
-						$basic = new FOFEncryptAes($basickey, 128);
+						$encryption = new FOFEncryptAes($encryptionkey, 128);
 					}
-					$fileNameArray = $this->setFileNameArray('remove', $basic, $view);
-					if ($linkOptions['lock'] && QuestionsanswersHelper::checkObject($basic))
+					$fileNameArray = $this->setFileNameArray('remove', $encryption, $view);
+					if (QuestionsanswersHelper::checkObject($encryption))
 					{
 						// Get the encryption object.
-						$object->{$this->target.'_'.$this->targetType} = $basic->encryptString($fileNameArray);
+						$object->{$this->target.'_'.$this->targetType} = $encryption->encryptString($fileNameArray);
 					}
 					else
 					{
@@ -365,28 +385,37 @@ class QuestionsanswersModelAjax extends JModelList
 			}
 			// load the file class
 			jimport('joomla.filesystem.file');
-			// remove file with this filename
-			$fileFormats = $this->formats[$this->formatType .'_formats'];
-			foreach ($fileFormats as $fileFormat)
+			// check if this is a locked file
+			if (substr($this->fileName, 0, 1) === '.' && JFile::exists($this->folderPath . $this->fileName))
 			{
-				if (JFile::exists($this->folderPath . $this->fileName . '.' . $fileFormat))
+				// remove the file
+				return JFile::delete($this->folderPath . $this->fileName);
+			}
+			else
+			{
+				// set formats
+				$this->formats = QuestionsanswersHelper::getFileExtensions($this->formatType);
+				foreach ($this->formats as $fileFormat)
 				{
-					// remove the file
-					return JFile::delete($this->folderPath . $this->fileName . '.' . $fileFormat);
+					if (JFile::exists($this->folderPath . $this->fileName . '.' . $fileFormat))
+					{
+						// remove the file
+						return JFile::delete($this->folderPath . $this->fileName . '.' . $fileFormat);
+					}
 				}
 			}
 		}
 		return array('error' => JText::_('COM_QUESTIONSANSWERS_THERE_HAS_BEEN_AN_ERROR'));
 	}
 
-	protected function setFileNameArray($action, $basic, $view)
+	protected function setFileNameArray($action, $encryption, $view)
 	{
 		$curentFiles = QuestionsanswersHelper::getVar($view['a_view'], $view['a_id'], 'id', $this->target.'_'.$this->targetType);
 		// unlock if needed
-		if ($basic && $curentFiles === base64_encode(base64_decode($curentFiles, true)))
+		if ($encryption && $curentFiles === base64_encode(base64_decode($curentFiles, true)))
 		{
-			// basic decrypt data banner_image.
-			$curentFiles = rtrim($basic->decryptString($curentFiles), "\0");
+			// decrypt data image.
+			$curentFiles = rtrim($encryption->decryptString($curentFiles), "\0");
 		}
 		// convert to array if needed
 		if (QuestionsanswersHelper::checkJson($curentFiles))
@@ -504,16 +533,18 @@ class QuestionsanswersModelAjax extends JModelList
 	 */
 	protected function check($archivename)
 	{
+		// set formats
+		$this->formats = QuestionsanswersHelper::getFileExtensions($this->formatType);
 		// Clean the name
 		$archivename = JPath::clean($archivename);
 		// get file format
 		$this->fileFormat = strtolower(pathinfo($archivename, PATHINFO_EXTENSION));
 		// get fileFormat key
 		$allowedFormats = array();
-		if (in_array($this->fileFormat, $this->formats[$this->formatType .'_formats']))
+		if (in_array($this->fileFormat, $this->formats))
 		{
 			// get allowed formats
-			$allowedFormats = (array) $this->app_params->get($this->formatType.'_formats', null);
+			$allowedFormats = (array) $this->app_params->get($this->formatType.'_formats', array());
 		}
 		// check the extension
 		if (!in_array($this->fileFormat, $allowedFormats))
@@ -526,29 +557,26 @@ class QuestionsanswersModelAjax extends JModelList
 
 		// check permission if user
 		$view = $this->getViewID();
-		if (isset($view['a_id']) && $view['a_id'] > 0 && isset($view['a_view']) && in_array($view['a_view'], $this->allowedViews))
+		// get user to see if he has permission to upload
+		$user = JFactory::getUser();
+		if (!$user->authorise($view['a_view'] . '.edit.' . $this->target . '_' . $this->targetType, 'com_questionsanswers'))
 		{
-			// get user to see if he has permission to upload
-			$user = JFactory::getUser();
-			if (!$user->authorise($view['a_view'].'.edit.'.$this->target.'_'.$this->targetType, 'com_questionsanswers'))
-			{
-				// Cleanup the import files
-				$this->remove($archivename);
-				$this->errorMessage = JText::_('COM_QUESTIONSANSWERS_YOU_DO_NOT_HAVE_PERMISSION_TO_UPLOAD_AN'.$this->targetType);
-				return false;
-			}
+			// Cleanup the import files
+			$this->remove($archivename);
+			$this->errorMessage = JText::_('COM_QUESTIONSANSWERS_YOU_DO_NOT_HAVE_PERMISSION_TO_UPLOAD_AN' . $this->targetType);
+			return false;
 		}
-		
+
 		$config = JFactory::getConfig();
 		// set Package Name
 		$check['packagename'] = $archivename;
-		
+
 		// set directory
 		$check['dir'] = $config->get('tmp_path'). '/' .$archivename;
-		
+
 		return $check;
 	}
-	
+
 	/**
 	 * Clean up temporary uploaded file
 	 *
@@ -560,7 +588,7 @@ class QuestionsanswersModelAjax extends JModelList
 	protected function remove($package)
 	{
 		jimport('joomla.filesystem.file');
-		
+
 		$config = JFactory::getConfig();
 		$package = $config->get('tmp_path'). '/' .$package;
 

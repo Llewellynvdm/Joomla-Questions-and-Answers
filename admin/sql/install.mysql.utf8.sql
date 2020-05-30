@@ -22,12 +22,12 @@ CREATE TABLE IF NOT EXISTS `#__questionsanswers_question_and_answer` (
 	`metadesc` TEXT NOT NULL,
 	`metadata` TEXT NOT NULL,
 	PRIMARY KEY  (`id`),
+	KEY `idx_catid` (`catid`),
 	KEY `idx_access` (`access`),
 	KEY `idx_checkout` (`checked_out`),
 	KEY `idx_createdby` (`created_by`),
 	KEY `idx_modifiedby` (`modified_by`),
-	KEY `idx_state` (`published`),
-	KEY `idx_catid` (`catid`)
+	KEY `idx_state` (`published`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `#__questionsanswers_help_document` (
@@ -39,7 +39,6 @@ CREATE TABLE IF NOT EXISTS `#__questionsanswers_help_document` (
 	`content` TEXT NOT NULL,
 	`groups` TEXT NOT NULL,
 	`location` TINYINT(1) NOT NULL DEFAULT 0,
-	`not_required` INT(1) NOT NULL DEFAULT 0,
 	`site_view` CHAR(255) NOT NULL DEFAULT '',
 	`target` TINYINT(1) NOT NULL DEFAULT 0,
 	`title` CHAR(64) NOT NULL DEFAULT '',
@@ -57,16 +56,16 @@ CREATE TABLE IF NOT EXISTS `#__questionsanswers_help_document` (
 	`hits` INT(10) unsigned NOT NULL DEFAULT 0,
 	`ordering` INT(11) NOT NULL DEFAULT 0,
 	PRIMARY KEY  (`id`),
-	KEY `idx_checkout` (`checked_out`),
-	KEY `idx_createdby` (`created_by`),
-	KEY `idx_modifiedby` (`modified_by`),
-	KEY `idx_state` (`published`),
 	KEY `idx_title` (`title`),
 	KEY `idx_type` (`type`),
 	KEY `idx_location` (`location`),
+	KEY `idx_alias` (`alias`),
 	KEY `idx_article` (`article`),
 	KEY `idx_target` (`target`),
-	KEY `idx_alias` (`alias`)
+	KEY `idx_checkout` (`checked_out`),
+	KEY `idx_createdby` (`created_by`),
+	KEY `idx_modifiedby` (`modified_by`),
+	KEY `idx_state` (`published`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci;
 
 

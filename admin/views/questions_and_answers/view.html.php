@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			30th May, 2020
+	@build			6th January, 2021
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		view.html.php
@@ -51,7 +51,7 @@ class QuestionsanswersViewQuestions_and_answers extends JViewLegacy
 		// Add the list ordering clause.
 		$this->listOrder = $this->escape($this->state->get('list.ordering', 'a.id'));
 		$this->listDirn = $this->escape($this->state->get('list.direction', 'desc'));
-		$this->saveOrder = $this->listOrder == 'ordering';
+		$this->saveOrder = $this->listOrder == 'a.ordering';
 		// set the return here value
 		$this->return_here = urlencode(base64_encode((string) JUri::getInstance()));
 		// get global action permissions
@@ -168,6 +168,7 @@ class QuestionsanswersViewQuestions_and_answers extends JViewLegacy
 			JToolBarHelper::preferences('com_questionsanswers');
 		}
 
+		// Only load publish filter if state change is allowed
 		if ($this->canState)
 		{
 			JHtmlSidebar::addFilter(
@@ -175,15 +176,6 @@ class QuestionsanswersViewQuestions_and_answers extends JViewLegacy
 				'filter_published',
 				JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
 			);
-			// only load if batch allowed
-			if ($this->canBatch)
-			{
-				JHtmlBatch_::addListSelection(
-					JText::_('COM_QUESTIONSANSWERS_KEEP_ORIGINAL_STATE'),
-					'batch[published]',
-					JHtml::_('select.options', JHtml::_('jgrid.publishedOptions', array('all' => false)), 'value', 'text', '', true)
-				);
-			}
 		}
 
 		JHtmlSidebar::addFilter(
@@ -192,6 +184,24 @@ class QuestionsanswersViewQuestions_and_answers extends JViewLegacy
 			JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text', $this->state->get('filter.access'))
 		);
 
+		// Category Filter.
+		JHtmlSidebar::addFilter(
+			JText::_('JOPTION_SELECT_CATEGORY'),
+			'filter_category_id',
+			JHtml::_('select.options', JHtml::_('category.options', 'com_questionsanswers.question_and_answer'), 'value', 'text', $this->state->get('filter.category_id'))
+		);
+
+		// Only load published batch if state and batch is allowed
+		if ($this->canState && $this->canBatch)
+		{
+			JHtmlBatch_::addListSelection(
+				JText::_('COM_QUESTIONSANSWERS_KEEP_ORIGINAL_STATE'),
+				'batch[published]',
+				JHtml::_('select.options', JHtml::_('jgrid.publishedOptions', array('all' => false)), 'value', 'text', '', true)
+			);
+		}
+
+		// Only load access batch if create, edit and batch is allowed
 		if ($this->canBatch && $this->canCreate && $this->canEdit)
 		{
 			JHtmlBatch_::addListSelection(
@@ -200,13 +210,6 @@ class QuestionsanswersViewQuestions_and_answers extends JViewLegacy
 				JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text')
 			);
 		}
-
-		// Category Filter.
-		JHtmlSidebar::addFilter(
-			JText::_('JOPTION_SELECT_CATEGORY'),
-			'filter_category_id',
-			JHtml::_('select.options', JHtml::_('category.options', 'com_questionsanswers.question_and_answer'), 'value', 'text', $this->state->get('filter.category_id'))
-		);
 
 		if ($this->canBatch && $this->canCreate && $this->canEdit)
 		{
@@ -260,7 +263,7 @@ class QuestionsanswersViewQuestions_and_answers extends JViewLegacy
 	protected function getSortFields()
 	{
 		return array(
-			'ordering' => JText::_('JGRID_HEADING_ORDERING'),
+			'a.ordering' => JText::_('JGRID_HEADING_ORDERING'),
 			'a.published' => JText::_('JSTATUS'),
 			'a.question' => JText::_('COM_QUESTIONSANSWERS_QUESTION_AND_ANSWER_QUESTION_LABEL'),
 			'a.answer' => JText::_('COM_QUESTIONSANSWERS_QUESTION_AND_ANSWER_ANSWER_LABEL'),

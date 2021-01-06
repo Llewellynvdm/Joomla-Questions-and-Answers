@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			30th May, 2020
+	@build			6th January, 2021
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		edit.php
@@ -77,7 +77,7 @@ $componentParams = $this->params; // will be removed just use $this->params inst
 	<?php $this->tab_name = 'question_and_answerTab'; ?>
 	<?php echo JLayoutHelper::render('joomla.edit.params', $this); ?>
 
-	<?php if ($this->canDo->get('question_and_answer.delete') || $this->canDo->get('question_and_answer.edit.created_by') || $this->canDo->get('question_and_answer.edit.state') || $this->canDo->get('question_and_answer.edit.created')) : ?>
+	<?php if ($this->canDo->get('question_and_answer.edit.created_by') || $this->canDo->get('question_and_answer.edit.created') || $this->canDo->get('question_and_answer.edit.state') || ($this->canDo->get('question_and_answer.delete') && $this->canDo->get('question_and_answer.edit.state'))) : ?>
 	<?php echo JHtml::_('bootstrap.addTab', 'question_and_answerTab', 'publishing', JText::_('COM_QUESTIONSANSWERS_QUESTION_AND_ANSWER_PUBLISHING', true)); ?>
 		<div class="row-fluid form-horizontal-desktop">
 			<div class="span6">
@@ -422,7 +422,7 @@ function JRouter(link) {
 
 function getFile(filename, fileFormat, target, type){
 	// set uikit version
-	var uiVer = <?php echo (int) $this->params->get('uikit_version', 2); ?>;
+	var uiVer = <?php echo (int) $this->params->get('uikit_version', 3); ?>;
 	// set the link
 	var link = '<?php echo QuestionsanswersHelper::getFolderPath('url'); ?>';
 	// build the return
@@ -486,7 +486,7 @@ function getFile(filename, fileFormat, target, type){
 			var theplaceholder = '<div class="uk-width-1-1"><div class="uk-panel uk-panel-box"><center><code>[DOCLINK='+fileName+']</code> <?php echo JText::_('COM_QUESTIONSANSWERS_OR'); ?> <code>[DOCBUTTON='+fileName+']</code><br /><?php echo JText::_('COM_QUESTIONSANSWERS_ADD_ONE_OF_THESE_PLACEHOLDERS_IN_TEXT_FOR_CUSTOM_DOWNLOAD_PLACEMENT'); ?>.</center></div></div>';
 			// get the download link if set
 			var thedownload = '';
-			if (documentsLinks.hasOwnProperty(item)) {
+			if (typeof documentsLinks !== 'undefined' && documentsLinks.hasOwnProperty(item)) {
 				thedownload = '<a href="'+JRouter(documentsLinks[item])+'" class="uk-button uk-width-1-1 uk-button-small uk-margin-small-bottom uk-button-success"><i class="uk-icon-download"></i> <?php echo JText::_('COM_QUESTIONSANSWERS_DOWNLOAD'); ?> '+fileName+'</a>';
 			}
 			var thedelete = '<button onclick="removeFileCheck(\''+item+'\', \''+target+'\', \''+type+'\', \''+uiVer+'\')" type="button" class="uk-button uk-width-1-1 uk-button-small uk-margin-small-bottom uk-button-danger"><i class="uk-icon-trash"></i> <?php echo JText::_('COM_QUESTIONSANSWERS_REMOVE'); ?> '+fileName+'</button>';

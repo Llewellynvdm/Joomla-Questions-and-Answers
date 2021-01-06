@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			30th May, 2020
+	@build			6th January, 2021
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		view.html.php
@@ -50,8 +50,8 @@ class QuestionsanswersViewHelp_documents extends JViewLegacy
 		$this->user = JFactory::getUser();
 		// Add the list ordering clause.
 		$this->listOrder = $this->escape($this->state->get('list.ordering', 'a.id'));
-		$this->listDirn = $this->escape($this->state->get('list.direction', 'asc'));
-		$this->saveOrder = $this->listOrder == 'ordering';
+		$this->listDirn = $this->escape($this->state->get('list.direction', 'DESC'));
+		$this->saveOrder = $this->listOrder == 'a.ordering';
 		// set the return here value
 		$this->return_here = urlencode(base64_encode((string) JUri::getInstance()));
 		// get global action permissions
@@ -168,36 +168,13 @@ class QuestionsanswersViewHelp_documents extends JViewLegacy
 			JToolBarHelper::preferences('com_questionsanswers');
 		}
 
+		// Only load publish filter if state change is allowed
 		if ($this->canState)
 		{
 			JHtmlSidebar::addFilter(
 				JText::_('JOPTION_SELECT_PUBLISHED'),
 				'filter_published',
 				JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
-			);
-			// only load if batch allowed
-			if ($this->canBatch)
-			{
-				JHtmlBatch_::addListSelection(
-					JText::_('COM_QUESTIONSANSWERS_KEEP_ORIGINAL_STATE'),
-					'batch[published]',
-					JHtml::_('select.options', JHtml::_('jgrid.publishedOptions', array('all' => false)), 'value', 'text', '', true)
-				);
-			}
-		}
-
-		JHtmlSidebar::addFilter(
-			JText::_('JOPTION_SELECT_ACCESS'),
-			'filter_access',
-			JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text', $this->state->get('filter.access'))
-		);
-
-		if ($this->canBatch && $this->canCreate && $this->canEdit)
-		{
-			JHtmlBatch_::addListSelection(
-				JText::_('COM_QUESTIONSANSWERS_KEEP_ORIGINAL_ACCESS'),
-				'batch[access]',
-				JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text')
 			);
 		}
 
@@ -219,16 +196,6 @@ class QuestionsanswersViewHelp_documents extends JViewLegacy
 				'filter_type',
 				JHtml::_('select.options', $this->typeOptions, 'value', 'text', $this->state->get('filter.type'))
 			);
-
-			if ($this->canBatch && $this->canCreate && $this->canEdit)
-			{
-				// Type Batch Selection
-				JHtmlBatch_::addListSelection(
-					'- Keep Original '.JText::_('COM_QUESTIONSANSWERS_HELP_DOCUMENT_TYPE_LABEL').' -',
-					'batch[type]',
-					JHtml::_('select.options', $this->typeOptions, 'value', 'text')
-				);
-			}
 		}
 
 		// Set Location Selection
@@ -249,16 +216,6 @@ class QuestionsanswersViewHelp_documents extends JViewLegacy
 				'filter_location',
 				JHtml::_('select.options', $this->locationOptions, 'value', 'text', $this->state->get('filter.location'))
 			);
-
-			if ($this->canBatch && $this->canCreate && $this->canEdit)
-			{
-				// Location Batch Selection
-				JHtmlBatch_::addListSelection(
-					'- Keep Original '.JText::_('COM_QUESTIONSANSWERS_HELP_DOCUMENT_LOCATION_LABEL').' -',
-					'batch[location]',
-					JHtml::_('select.options', $this->locationOptions, 'value', 'text')
-				);
-			}
 		}
 
 		// Set Admin View Selection
@@ -275,20 +232,10 @@ class QuestionsanswersViewHelp_documents extends JViewLegacy
 		{
 			// Admin View Filter
 			JHtmlSidebar::addFilter(
-				'- Select '.JText::_('COM_QUESTIONSANSWERS_HELP_DOCUMENT_ADMIN_VIEW_LABEL').' -',
+				'- Select ' . JText::_('COM_QUESTIONSANSWERS_HELP_DOCUMENT_ADMIN_VIEW_LABEL') . ' -',
 				'filter_admin_view',
 				JHtml::_('select.options', $this->admin_viewOptions, 'value', 'text', $this->state->get('filter.admin_view'))
 			);
-
-			if ($this->canBatch && $this->canCreate && $this->canEdit)
-			{
-				// Admin View Batch Selection
-				JHtmlBatch_::addListSelection(
-					'- Keep Original '.JText::_('COM_QUESTIONSANSWERS_HELP_DOCUMENT_ADMIN_VIEW_LABEL').' -',
-					'batch[admin_view]',
-					JHtml::_('select.options', $this->admin_viewOptions, 'value', 'text')
-				);
-			}
 		}
 
 		// Set Site View Selection
@@ -305,20 +252,64 @@ class QuestionsanswersViewHelp_documents extends JViewLegacy
 		{
 			// Site View Filter
 			JHtmlSidebar::addFilter(
-				'- Select '.JText::_('COM_QUESTIONSANSWERS_HELP_DOCUMENT_SITE_VIEW_LABEL').' -',
+				'- Select ' . JText::_('COM_QUESTIONSANSWERS_HELP_DOCUMENT_SITE_VIEW_LABEL') . ' -',
 				'filter_site_view',
 				JHtml::_('select.options', $this->site_viewOptions, 'value', 'text', $this->state->get('filter.site_view'))
 			);
+		}
 
-			if ($this->canBatch && $this->canCreate && $this->canEdit)
-			{
-				// Site View Batch Selection
-				JHtmlBatch_::addListSelection(
-					'- Keep Original '.JText::_('COM_QUESTIONSANSWERS_HELP_DOCUMENT_SITE_VIEW_LABEL').' -',
-					'batch[site_view]',
-					JHtml::_('select.options', $this->site_viewOptions, 'value', 'text')
-				);
-			}
+		// Only load published batch if state and batch is allowed
+		if ($this->canState && $this->canBatch)
+		{
+			JHtmlBatch_::addListSelection(
+				JText::_('COM_QUESTIONSANSWERS_KEEP_ORIGINAL_STATE'),
+				'batch[published]',
+				JHtml::_('select.options', JHtml::_('jgrid.publishedOptions', array('all' => false)), 'value', 'text', '', true)
+			);
+		}
+
+		// Only load Type batch if create, edit, and batch is allowed
+		if ($this->canBatch && $this->canCreate && $this->canEdit)
+		{
+			// Type Batch Selection
+			JHtmlBatch_::addListSelection(
+				'- Keep Original '.JText::_('COM_QUESTIONSANSWERS_HELP_DOCUMENT_TYPE_LABEL').' -',
+				'batch[type]',
+				JHtml::_('select.options', $this->typeOptions, 'value', 'text')
+			);
+		}
+
+		// Only load Location batch if create, edit, and batch is allowed
+		if ($this->canBatch && $this->canCreate && $this->canEdit)
+		{
+			// Location Batch Selection
+			JHtmlBatch_::addListSelection(
+				'- Keep Original '.JText::_('COM_QUESTIONSANSWERS_HELP_DOCUMENT_LOCATION_LABEL').' -',
+				'batch[location]',
+				JHtml::_('select.options', $this->locationOptions, 'value', 'text')
+			);
+		}
+
+		// Only load Admin View batch if create, edit, and batch is allowed
+		if ($this->canBatch && $this->canCreate && $this->canEdit)
+		{
+			// Admin View Batch Selection
+			JHtmlBatch_::addListSelection(
+				'- Keep Original '.JText::_('COM_QUESTIONSANSWERS_HELP_DOCUMENT_ADMIN_VIEW_LABEL').' -',
+				'batch[admin_view]',
+				JHtml::_('select.options', $this->admin_viewOptions, 'value', 'text')
+			);
+		}
+
+		// Only load Site View batch if create, edit, and batch is allowed
+		if ($this->canBatch && $this->canCreate && $this->canEdit)
+		{
+			// Site View Batch Selection
+			JHtmlBatch_::addListSelection(
+				'- Keep Original '.JText::_('COM_QUESTIONSANSWERS_HELP_DOCUMENT_SITE_VIEW_LABEL').' -',
+				'batch[site_view]',
+				JHtml::_('select.options', $this->site_viewOptions, 'value', 'text')
+			);
 		}
 	}
 
@@ -363,7 +354,7 @@ class QuestionsanswersViewHelp_documents extends JViewLegacy
 	protected function getSortFields()
 	{
 		return array(
-			'ordering' => JText::_('JGRID_HEADING_ORDERING'),
+			'a.ordering' => JText::_('JGRID_HEADING_ORDERING'),
 			'a.published' => JText::_('JSTATUS'),
 			'a.title' => JText::_('COM_QUESTIONSANSWERS_HELP_DOCUMENT_TITLE_LABEL'),
 			'a.type' => JText::_('COM_QUESTIONSANSWERS_HELP_DOCUMENT_TYPE_LABEL'),
@@ -391,13 +382,13 @@ class QuestionsanswersViewHelp_documents extends JViewLegacy
 		$db->setQuery($query);
 
 		$results = $db->loadColumn();
+		$_filter = array();
 
 		if ($results)
 		{
 			// get model
 			$model = $this->getModel();
 			$results = array_unique($results);
-			$_filter = array();
 			foreach ($results as $type)
 			{
 				// Translate the type selection
@@ -405,9 +396,8 @@ class QuestionsanswersViewHelp_documents extends JViewLegacy
 				// Now add the type and its text to the options array
 				$_filter[] = JHtml::_('select.option', $type, JText::_($text));
 			}
-			return $_filter;
 		}
-		return false;
+		return $_filter;
 	}
 
 	protected function getTheLocationSelections()
@@ -427,13 +417,13 @@ class QuestionsanswersViewHelp_documents extends JViewLegacy
 		$db->setQuery($query);
 
 		$results = $db->loadColumn();
+		$_filter = array();
 
 		if ($results)
 		{
 			// get model
 			$model = $this->getModel();
 			$results = array_unique($results);
-			$_filter = array();
 			foreach ($results as $location)
 			{
 				// Translate the location selection
@@ -441,8 +431,7 @@ class QuestionsanswersViewHelp_documents extends JViewLegacy
 				// Now add the location and its text to the options array
 				$_filter[] = JHtml::_('select.option', $location, JText::_($text));
 			}
-			return $_filter;
 		}
-		return false;
+		return $_filter;
 	}
 }

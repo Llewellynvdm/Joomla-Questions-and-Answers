@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			30th May, 2020
+	@build			6th January, 2021
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		help_documents.php
@@ -69,7 +69,7 @@ class QuestionsanswersControllerHelp_documents extends JControllerAdmin
 			$input = JFactory::getApplication()->input;
 			$pks = $input->post->get('cid', array(), 'array');
 			// Sanitize the input
-			ArrayHelper::toInteger($pks);
+			$pks = ArrayHelper::toInteger($pks);
 			// Get the model
 			$model = $this->getModel('Help_documents');
 			// get the data to export

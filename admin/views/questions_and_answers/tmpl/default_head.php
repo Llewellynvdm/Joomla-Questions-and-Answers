@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			30th May, 2020
+	@build			6th January, 2021
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		default_head.php
@@ -30,7 +30,7 @@ defined('_JEXEC') or die('Restricted access');
 <tr>
 	<?php if ($this->canEdit&& $this->canState): ?>
 		<th width="1%" class="nowrap center hidden-phone">
-			<?php echo JHtml::_('grid.sort', '<i class="icon-menu-2"></i>', 'ordering', $this->listDirn, $this->listOrder, null, 'asc', 'JGRID_HEADING_ORDERING'); ?>
+			<?php echo JHtml::_('grid.sort', '<i class="icon-menu-2"></i>', 'a.ordering', $this->listDirn, $this->listOrder, null, 'asc', 'JGRID_HEADING_ORDERING'); ?>
 		</th>
 		<th width="20" class="nowrap center">
 			<?php echo JHtml::_('grid.checkall'); ?>

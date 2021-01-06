@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			30th May, 2020
+	@build			6th January, 2021
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		edit.php
@@ -83,7 +83,7 @@ $componentParams = $this->params; // will be removed just use $this->params inst
 	<?php $this->tab_name = 'help_documentTab'; ?>
 	<?php echo JLayoutHelper::render('joomla.edit.params', $this); ?>
 
-	<?php if ($this->canDo->get('help_document.delete') || $this->canDo->get('core.edit.created_by') || $this->canDo->get('help_document.edit.state') || $this->canDo->get('core.edit.created')) : ?>
+	<?php if ($this->canDo->get('core.edit.created_by') || $this->canDo->get('core.edit.created') || $this->canDo->get('help_document.edit.state') || ($this->canDo->get('help_document.delete') && $this->canDo->get('help_document.edit.state'))) : ?>
 	<?php echo JHtml::_('bootstrap.addTab', 'help_documentTab', 'publishing', JText::_('COM_QUESTIONSANSWERS_HELP_DOCUMENT_PUBLISHING', true)); ?>
 		<div class="row-fluid form-horizontal-desktop">
 			<div class="span6">
@@ -91,25 +91,6 @@ $componentParams = $this->params; // will be removed just use $this->params inst
 			</div>
 			<div class="span6">
 				<?php echo JLayoutHelper::render('help_document.publlshing', $this); ?>
-			</div>
-		</div>
-	<?php echo JHtml::_('bootstrap.endTab'); ?>
-	<?php endif; ?>
-
-	<?php if ($this->canDo->get('core.admin')) : ?>
-	<?php echo JHtml::_('bootstrap.addTab', 'help_documentTab', 'permissions', JText::_('COM_QUESTIONSANSWERS_HELP_DOCUMENT_PERMISSION', true)); ?>
-		<div class="row-fluid form-horizontal-desktop">
-			<div class="span12">
-				<fieldset class="adminform">
-					<div class="adminformlist">
-					<?php foreach ($this->form->getFieldset('accesscontrol') as $field): ?>
-						<div>
-							<?php echo $field->label; echo $field->input;?>
-						</div>
-						<div class="clearfix"></div>
-					<?php endforeach; ?>
-					</div>
-				</fieldset>
 			</div>
 		</div>
 	<?php echo JHtml::_('bootstrap.endTab'); ?>

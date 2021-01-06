@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			30th May, 2020
+	@build			6th January, 2021
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		script.php
@@ -89,7 +89,7 @@ class com_questionsanswersInstallerScript
 			$question_and_answer_done = $db->execute();
 			if ($question_and_answer_done)
 			{
-				// If succesfully remove Question_and_answer add queued success message.
+				// If successfully remove Question_and_answer add queued success message.
 				$app->enqueueMessage(JText::_('The (com_questionsanswers.question_and_answer) type alias was removed from the <b>#__content_type</b> table'));
 			}
 
@@ -104,7 +104,7 @@ class com_questionsanswersInstallerScript
 			$question_and_answer_done = $db->execute();
 			if ($question_and_answer_done)
 			{
-				// If succesfully remove Question_and_answer add queued success message.
+				// If successfully remove Question_and_answer add queued success message.
 				$app->enqueueMessage(JText::_('The (com_questionsanswers.question_and_answer) type alias was removed from the <b>#__contentitem_tag_map</b> table'));
 			}
 
@@ -119,7 +119,7 @@ class com_questionsanswersInstallerScript
 			$question_and_answer_done = $db->execute();
 			if ($question_and_answer_done)
 			{
-				// If succesfully remove Question_and_answer add queued success message.
+				// If successfully removed Question_and_answer add queued success message.
 				$app->enqueueMessage(JText::_('The (com_questionsanswers.question_and_answer) type alias was removed from the <b>#__ucm_content</b> table'));
 			}
 
@@ -175,7 +175,7 @@ class com_questionsanswersInstallerScript
 			$question_and_answer_catid_done = $db->execute();
 			if ($question_and_answer_catid_done)
 			{
-				// If succesfully remove Question_and_answer catid add queued success message.
+				// If successfully remove Question_and_answer catid add queued success message.
 				$app->enqueueMessage(JText::_('The (com_questionsanswers.question_and_answer.category) type alias was removed from the <b>#__content_type</b> table'));
 			}
 
@@ -190,7 +190,7 @@ class com_questionsanswersInstallerScript
 			$question_and_answer_catid_done = $db->execute();
 			if ($question_and_answer_catid_done)
 			{
-				// If succesfully remove Question_and_answer catid add queued success message.
+				// If successfully remove Question_and_answer catid add queued success message.
 				$app->enqueueMessage(JText::_('The (com_questionsanswers.question_and_answer.category) type alias was removed from the <b>#__contentitem_tag_map</b> table'));
 			}
 
@@ -205,7 +205,7 @@ class com_questionsanswersInstallerScript
 			$question_and_answer_catid_done = $db->execute();
 			if ($question_and_answer_catid_done)
 			{
-				// If succesfully remove Question_and_answer catid add queued success message.
+				// If successfully removed Question_and_answer catid add queued success message.
 				$app->enqueueMessage(JText::_('The (com_questionsanswers.question_and_answer.category) type alias was removed from the <b>#__ucm_content</b> table'));
 			}
 
@@ -261,7 +261,7 @@ class com_questionsanswersInstallerScript
 			$help_document_done = $db->execute();
 			if ($help_document_done)
 			{
-				// If succesfully remove Help_document add queued success message.
+				// If successfully remove Help_document add queued success message.
 				$app->enqueueMessage(JText::_('The (com_questionsanswers.help_document) type alias was removed from the <b>#__content_type</b> table'));
 			}
 
@@ -276,7 +276,7 @@ class com_questionsanswersInstallerScript
 			$help_document_done = $db->execute();
 			if ($help_document_done)
 			{
-				// If succesfully remove Help_document add queued success message.
+				// If successfully remove Help_document add queued success message.
 				$app->enqueueMessage(JText::_('The (com_questionsanswers.help_document) type alias was removed from the <b>#__contentitem_tag_map</b> table'));
 			}
 
@@ -291,7 +291,7 @@ class com_questionsanswersInstallerScript
 			$help_document_done = $db->execute();
 			if ($help_document_done)
 			{
-				// If succesfully remove Help_document add queued success message.
+				// If successfully removed Help_document add queued success message.
 				$app->enqueueMessage(JText::_('The (com_questionsanswers.help_document) type alias was removed from the <b>#__ucm_content</b> table'));
 			}
 
@@ -335,10 +335,31 @@ class com_questionsanswersInstallerScript
 		$help_document_done = $db->execute();
 		if ($help_document_done)
 		{
-			// If succesfully remove questionsanswers add queued success message.
+			// If successfully removed questionsanswers add queued success message.
 			$app->enqueueMessage(JText::_('All related items was removed from the <b>#__assets</b> table'));
 		}
 
+		// Get the biggest rule column in the assets table at this point.
+		$get_rule_length = "SELECT CHAR_LENGTH(`rules`) as rule_size FROM #__assets ORDER BY rule_size DESC LIMIT 1";
+		$db->setQuery($get_rule_length);
+		if ($db->execute())
+		{
+			$rule_length = $db->loadResult();
+			// Check the size of the rules column
+			if ($rule_length < 5120)
+			{
+				// Revert the assets table rules column back to the default
+				$revert_rule = "ALTER TABLE `#__assets` CHANGE `rules` `rules` varchar(5120) NOT NULL COMMENT 'JSON encoded access control.';";
+				$db->setQuery($revert_rule);
+				$db->execute();
+				$app->enqueueMessage(JText::_('Reverted the <b>#__assets</b> table rules column back to its default size of varchar(5120)'));
+			}
+			else
+			{
+
+				$app->enqueueMessage(JText::_('Could not revert the <b>#__assets</b> table rules column back to its default size of varchar(5120), since there is still one or more components that still requires the column to be larger.'));
+			}
+		}
 
 		// Set db if not set already.
 		if (!isset($db))
@@ -602,9 +623,9 @@ class com_questionsanswersInstallerScript
 			$help_document->type_title = 'Questionsanswers Help_document';
 			$help_document->type_alias = 'com_questionsanswers.help_document';
 			$help_document->table = '{"special": {"dbtable": "#__questionsanswers_help_document","key": "id","type": "Help_document","prefix": "questionsanswersTable","config": "array()"},"common": {"dbtable": "#__ucm_content","key": "ucm_id","type": "Corecontent","prefix": "JTable","config": "array()"}}';
-			$help_document->field_mappings = '{"common": {"core_content_item_id": "id","core_title": "title","core_state": "published","core_alias": "alias","core_created_time": "created","core_modified_time": "modified","core_body": "content","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "null","core_params": "params","core_featured": "null","core_metadata": "null","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "null","core_metadesc": "null","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"title":"title","type":"type","groups":"groups","location":"location","admin_view":"admin_view","site_view":"site_view","not_required":"not_required","alias":"alias","content":"content","article":"article","url":"url","target":"target"}}';
+			$help_document->field_mappings = '{"common": {"core_content_item_id": "id","core_title": "title","core_state": "published","core_alias": "alias","core_created_time": "created","core_modified_time": "modified","core_body": "content","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "null","core_params": "params","core_featured": "null","core_metadata": "null","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "null","core_metadesc": "null","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"title":"title","type":"type","groups":"groups","location":"location","admin_view":"admin_view","site_view":"site_view","alias":"alias","content":"content","article":"article","url":"url","target":"target"}}';
 			$help_document->router = 'QuestionsanswersHelperRoute::getHelp_documentRoute';
-			$help_document->content_history_options = '{"formFile": "administrator/components/com_questionsanswers/models/forms/help_document.xml","hideFields": ["asset_id","checked_out","checked_out_time","version","not_required"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","type","location","article","target"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "article","targetTable": "#__content","targetColumn": "id","displayColumn": "title"}]}';
+			$help_document->content_history_options = '{"formFile": "administrator/components/com_questionsanswers/models/forms/help_document.xml","hideFields": ["asset_id","checked_out","checked_out_time","version"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","type","location","article","target"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "article","targetTable": "#__content","targetColumn": "id","displayColumn": "title"}]}';
 
 			// Set the object into the content types table.
 			$help_document_Inserted = $db->insertObject('#__content_types', $help_document);
@@ -624,6 +645,22 @@ class com_questionsanswersInstallerScript
 			$db->setQuery($query);
 			$allDone = $db->execute();
 
+			// Get the biggest rule column in the assets table at this point.
+			$get_rule_length = "SELECT CHAR_LENGTH(`rules`) as rule_size FROM #__assets ORDER BY rule_size DESC LIMIT 1";
+			$db->setQuery($get_rule_length);
+			if ($db->execute())
+			{
+				$rule_length = $db->loadResult();
+				// Check the size of the rules column
+				if ($rule_length <= 7520)
+				{
+					// Fix the assets table rules column size
+					$fix_rules_size = "ALTER TABLE `#__assets` CHANGE `rules` `rules` TEXT NOT NULL COMMENT 'JSON encoded access control. Enlarged to TEXT by JCB';";
+					$db->setQuery($fix_rules_size);
+					$db->execute();
+					$app->enqueueMessage(JText::_('The <b>#__assets</b> table rules column was resized to the TEXT datatype for the components possible large permission rules.'));
+				}
+			}
 			echo '<a target="_blank" href="https://www.vdm.io/" title="Questions and Answers">
 				<img src="components/com_questionsanswers/assets/images/vdm-component.jpg"/>
 				</a>';
@@ -744,9 +781,9 @@ class com_questionsanswersInstallerScript
 			$help_document->type_title = 'Questionsanswers Help_document';
 			$help_document->type_alias = 'com_questionsanswers.help_document';
 			$help_document->table = '{"special": {"dbtable": "#__questionsanswers_help_document","key": "id","type": "Help_document","prefix": "questionsanswersTable","config": "array()"},"common": {"dbtable": "#__ucm_content","key": "ucm_id","type": "Corecontent","prefix": "JTable","config": "array()"}}';
-			$help_document->field_mappings = '{"common": {"core_content_item_id": "id","core_title": "title","core_state": "published","core_alias": "alias","core_created_time": "created","core_modified_time": "modified","core_body": "content","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "null","core_params": "params","core_featured": "null","core_metadata": "null","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "null","core_metadesc": "null","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"title":"title","type":"type","groups":"groups","location":"location","admin_view":"admin_view","site_view":"site_view","not_required":"not_required","alias":"alias","content":"content","article":"article","url":"url","target":"target"}}';
+			$help_document->field_mappings = '{"common": {"core_content_item_id": "id","core_title": "title","core_state": "published","core_alias": "alias","core_created_time": "created","core_modified_time": "modified","core_body": "content","core_hits": "hits","core_publish_up": "null","core_publish_down": "null","core_access": "null","core_params": "params","core_featured": "null","core_metadata": "null","core_language": "null","core_images": "null","core_urls": "null","core_version": "version","core_ordering": "ordering","core_metakey": "null","core_metadesc": "null","core_catid": "null","core_xreference": "null","asset_id": "asset_id"},"special": {"title":"title","type":"type","groups":"groups","location":"location","admin_view":"admin_view","site_view":"site_view","alias":"alias","content":"content","article":"article","url":"url","target":"target"}}';
 			$help_document->router = 'QuestionsanswersHelperRoute::getHelp_documentRoute';
-			$help_document->content_history_options = '{"formFile": "administrator/components/com_questionsanswers/models/forms/help_document.xml","hideFields": ["asset_id","checked_out","checked_out_time","version","not_required"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","type","location","article","target"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "article","targetTable": "#__content","targetColumn": "id","displayColumn": "title"}]}';
+			$help_document->content_history_options = '{"formFile": "administrator/components/com_questionsanswers/models/forms/help_document.xml","hideFields": ["asset_id","checked_out","checked_out_time","version"],"ignoreChanges": ["modified_by","modified","checked_out","checked_out_time","version","hits"],"convertToInt": ["published","ordering","type","location","article","target"],"displayLookup": [{"sourceColumn": "created_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "modified_by","targetTable": "#__users","targetColumn": "id","displayColumn": "name"},{"sourceColumn": "article","targetTable": "#__content","targetColumn": "id","displayColumn": "title"}]}';
 
 			// Check if help_document type is already in content_type DB.
 			$help_document_id = null;

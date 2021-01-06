@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			30th May, 2020
+	@build			6th January, 2021
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		questionsanswers.php
@@ -39,7 +39,7 @@ class QuestionsanswersModelQuestionsanswers extends JModelList
 		$icons  = array();
 		// view groups array
 		$viewGroups = array(
-			'main' => array('png.question_and_answer.add', 'png.questions_and_answers', 'png.questions_and_answers.catid', 'png.help_documents')
+			'main' => array('png.question_and_answer.add', 'png.questions_and_answers', 'png.questions_and_answers.catid_qpo0O0oqp_com_questionsanswers_po0O0oq_question_and_answer', 'png.help_documents')
 		);
 		// view access array
 		$viewAccess = array(
@@ -73,8 +73,8 @@ class QuestionsanswersModelQuestionsanswers extends JModelList
 							$viewName 	= $name;
 							$alt 		= $name;
 							$url 		= $url;
-							$image 		= $name.'.'.$type;
-							$name 		= 'COM_QUESTIONSANSWERS_DASHBOARD_'.QuestionsanswersHelper::safeString($name,'U');
+							$image 		= $name . '.' . $type;
+							$name 		= 'COM_QUESTIONSANSWERS_DASHBOARD_' . QuestionsanswersHelper::safeString($name,'U');
 						}
 					}
 					// internal views
@@ -96,17 +96,27 @@ class QuestionsanswersModelQuestionsanswers extends JModelList
 							switch($action)
 							{
 								case 'add':
-									$url 	= 'index.php?option=com_questionsanswers&view='.$name.'&layout=edit';
-									$image 	= $name.'_'.$action.'.'.$type;
-									$alt 	= $name.'&nbsp;'.$action;
+									$url	= 'index.php?option=com_questionsanswers&view=' . $name . '&layout=edit';
+									$image	= $name . '_' . $action.  '.' . $type;
+									$alt	= $name . '&nbsp;' . $action;
 									$name	= 'COM_QUESTIONSANSWERS_DASHBOARD_'.QuestionsanswersHelper::safeString($name,'U').'_ADD';
 									$add	= true;
 								break;
 								default:
-									$url 	= 'index.php?option=com_categories&view=categories&extension=com_questionsanswers.'.$name;
-									$image 	= $name.'_'.$action.'.'.$type;
-									$alt 	= $name.'&nbsp;'.$action;
-									$name	= 'COM_QUESTIONSANSWERS_DASHBOARD_'.QuestionsanswersHelper::safeString($name,'U').'_'.QuestionsanswersHelper::safeString($action,'U');
+									// check for new convention (more stable)
+									if (strpos($action, '_qpo0O0oqp_') !== false)
+									{
+										list($action, $extension) = (array) explode('_qpo0O0oqp_', $action);
+										$extension = str_replace('_po0O0oq_', '.', $extension);
+									}
+									else
+									{
+										$extension = 'com_questionsanswers.' . $name;
+									}
+									$url	= 'index.php?option=com_categories&view=categories&extension=' . $extension;
+									$image	= $name . '_' . $action . '.' . $type;
+									$alt	= $viewName . '&nbsp;' . $action;
+									$name	= 'COM_QUESTIONSANSWERS_DASHBOARD_' . QuestionsanswersHelper::safeString($name,'U') . '_' . QuestionsanswersHelper::safeString($action,'U');
 								break;
 							}
 						}
@@ -114,9 +124,9 @@ class QuestionsanswersModelQuestionsanswers extends JModelList
 						{
 							$viewName 	= $name;
 							$alt 		= $name;
-							$url 		= 'index.php?option=com_questionsanswers&view='.$name;
-							$image 		= $name.'.'.$type;
-							$name 		= 'COM_QUESTIONSANSWERS_DASHBOARD_'.QuestionsanswersHelper::safeString($name,'U');
+							$url 		= 'index.php?option=com_questionsanswers&view=' . $name;
+							$image 		= $name . '.' . $type;
+							$name 		= 'COM_QUESTIONSANSWERS_DASHBOARD_' . QuestionsanswersHelper::safeString($name,'U');
 							$hover		= false;
 						}
 					}
@@ -124,8 +134,8 @@ class QuestionsanswersModelQuestionsanswers extends JModelList
 					{
 						$viewName 	= $view;
 						$alt 		= $view;
-						$url 		= 'index.php?option=com_questionsanswers&view='.$view;
-						$image 		= $view.'.png';
+						$url 		= 'index.php?option=com_questionsanswers&view=' . $view;
+						$image 		= $view . '.png';
 						$name 		= ucwords($view).'<br /><br />';
 						$hover		= false;
 					}
@@ -137,7 +147,7 @@ class QuestionsanswersModelQuestionsanswers extends JModelList
 						$dashboard_list = false;
 						$accessTo = '';
 						$accessAdd = '';
-						// acces checking start
+						// access checking start
 						$accessCreate = (isset($viewAccess[$viewName.'.create'])) ? QuestionsanswersHelper::checkString($viewAccess[$viewName.'.create']):false;
 						$accessAccess = (isset($viewAccess[$viewName.'.access'])) ? QuestionsanswersHelper::checkString($viewAccess[$viewName.'.access']):false;
 						// set main controllers
@@ -152,7 +162,7 @@ class QuestionsanswersModelQuestionsanswers extends JModelList
 						{
 							$accessAdd = 'core.create';
 						}
-						// check if acces to view is set
+						// check if access to view is set
 						if ($accessAccess)
 						{
 							$accessTo = $viewAccess[$viewName.'.access'];

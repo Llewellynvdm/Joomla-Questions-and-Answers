@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			30th May, 2020
+	@build			6th January, 2021
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		view.html.php
@@ -91,10 +91,7 @@ class QuestionsanswersViewQuestion_and_answer extends JViewLegacy
 	 * Setting the toolbar
 	 */
 	protected function addToolBar()
-	{
-		// adding the joomla edit toolbar to the front
-		JLoader::register('JToolbarHelper', JPATH_ADMINISTRATOR.'/includes/toolbar.php');
-		JFactory::getApplication()->input->set('hidemainmenu', true);
+	{JFactory::getApplication()->input->set('hidemainmenu', true);
 		$user = JFactory::getUser();
 		$userId	= $user->id;
 		$isNew = $this->item->id == 0;

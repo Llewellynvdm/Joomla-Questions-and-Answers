@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			30th May, 2020
+	@build			6th January, 2021
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		questionsanswers.php
@@ -25,6 +25,7 @@
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
+
 JHtml::_('behavior.tabstate');
 
 // Set the component css/js
@@ -33,7 +34,7 @@ $document->addStyleSheet('components/com_questionsanswers/assets/css/site.css');
 $document->addScript('components/com_questionsanswers/assets/js/site.js');
 
 // Require helper files
-JLoader::register('QuestionsanswersHelper', __DIR__ . '/helpers/questionsanswers.php'); 
+JLoader::register('QuestionsanswersHelper', __DIR__ . '/helpers/questionsanswers.php');
 JLoader::register('QuestionsanswersHelperRoute', __DIR__ . '/helpers/route.php'); 
 
 // Triger the Global Site Event

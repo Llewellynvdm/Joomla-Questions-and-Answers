@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			30th May, 2020
+	@build			6th January, 2021
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		questionsanswers.php
@@ -27,6 +27,7 @@
 defined('_JEXEC') or die('Restricted access');
 
 use Joomla\CMS\Language\Language;
+use Joomla\Registry\Registry;
 use Joomla\String\StringHelper;
 use Joomla\Utilities\ArrayHelper;
 
@@ -467,9 +468,9 @@ abstract class QuestionsanswersHelper
 	/**
 	 * Change to nice fancy date
 	 */
-	public static function fancyDate($date)
+	public static function fancyDate($date, $check_stamp = true)
 	{
-		if (!self::isValidTimeStamp($date))
+		if ($check_stamp && !self::isValidTimeStamp($date))
 		{
 			$date = strtotime($date);
 		}
@@ -479,9 +480,9 @@ abstract class QuestionsanswersHelper
 	/**
 	 * get date based in period past
 	 */
-	public static function fancyDynamicDate($date)
+	public static function fancyDynamicDate($date, $check_stamp = true)
 	{
-		if (!self::isValidTimeStamp($date))
+		if ($check_stamp && !self::isValidTimeStamp($date))
 		{
 			$date = strtotime($date);
 		}
@@ -505,9 +506,9 @@ abstract class QuestionsanswersHelper
 	/**
 	 * Change to nice fancy day time and date
 	 */
-	public static function fancyDayTimeDate($time)
+	public static function fancyDayTimeDate($time, $check_stamp = true)
 	{
-		if (!self::isValidTimeStamp($time))
+		if ($check_stamp && !self::isValidTimeStamp($time))
 		{
 			$time = strtotime($time);
 		}
@@ -517,9 +518,9 @@ abstract class QuestionsanswersHelper
 	/**
 	 * Change to nice fancy time and date
 	 */
-	public static function fancyDateTime($time)
+	public static function fancyDateTime($time, $check_stamp = true)
 	{
-		if (!self::isValidTimeStamp($time))
+		if ($check_stamp && !self::isValidTimeStamp($time))
 		{
 			$time = strtotime($time);
 		}
@@ -529,9 +530,9 @@ abstract class QuestionsanswersHelper
 	/**
 	 * Change to nice hour:minutes time
 	 */
-	public static function fancyTime($time)
+	public static function fancyTime($time, $check_stamp = true)
 	{
-		if (!self::isValidTimeStamp($time))
+		if ($check_stamp && !self::isValidTimeStamp($time))
 		{
 			$time = strtotime($time);
 		}
@@ -541,9 +542,9 @@ abstract class QuestionsanswersHelper
 	/**
 	 * set the date day as Sunday through Saturday
 	 */
-	public static function setDayName($date)
+	public static function setDayName($date, $check_stamp = true)
 	{
-		if (!self::isValidTimeStamp($date))
+		if ($check_stamp && !self::isValidTimeStamp($date))
 		{
 			$date = strtotime($date);
 		}
@@ -553,9 +554,9 @@ abstract class QuestionsanswersHelper
 	/**
 	 * set the date month as January through December
 	 */
-	public static function setMonthName($date)
+	public static function setMonthName($date, $check_stamp = true)
 	{
-		if (!self::isValidTimeStamp($date))
+		if ($check_stamp && !self::isValidTimeStamp($date))
 		{
 			$date = strtotime($date);
 		}
@@ -565,9 +566,9 @@ abstract class QuestionsanswersHelper
 	/**
 	 * set the date day as 1st
 	 */
-	public static function setDay($date)
+	public static function setDay($date, $check_stamp = true)
 	{
-		if (!self::isValidTimeStamp($date))
+		if ($check_stamp && !self::isValidTimeStamp($date))
 		{
 			$date = strtotime($date);
 		}
@@ -577,9 +578,9 @@ abstract class QuestionsanswersHelper
 	/**
 	 * set the date month as 5
 	 */
-	public static function setMonth($date)
+	public static function setMonth($date, $check_stamp = true)
 	{
-		if (!self::isValidTimeStamp($date))
+		if ($check_stamp && !self::isValidTimeStamp($date))
 		{
 			$date = strtotime($date);
 		}
@@ -589,9 +590,9 @@ abstract class QuestionsanswersHelper
 	/**
 	 * set the date year as 2004 (for charts)
 	 */
-	public static function setYear($date)
+	public static function setYear($date, $check_stamp = true)
 	{
-		if (!self::isValidTimeStamp($date))
+		if ($check_stamp && !self::isValidTimeStamp($date))
 		{
 			$date = strtotime($date);
 		}
@@ -601,9 +602,9 @@ abstract class QuestionsanswersHelper
 	/**
 	 * set the date as 2004/05 (for charts)
 	 */
-	public static function setYearMonth($date, $spacer = '/')
+	public static function setYearMonth($date, $spacer = '/', $check_stamp = true)
 	{
-		if (!self::isValidTimeStamp($date))
+		if ($check_stamp && !self::isValidTimeStamp($date))
 		{
 			$date = strtotime($date);
 		}
@@ -613,13 +614,25 @@ abstract class QuestionsanswersHelper
 	/**
 	 * set the date as 2004/05/03 (for charts)
 	 */
-	public static function setYearMonthDay($date, $spacer = '/')
+	public static function setYearMonthDay($date, $spacer = '/', $check_stamp = true)
 	{
-		if (!self::isValidTimeStamp($date))
+		if ($check_stamp && !self::isValidTimeStamp($date))
 		{
 			$date = strtotime($date);
 		}
 		return date('Y' . $spacer . 'm' . $spacer . 'd', $date);
+	}
+
+	/**
+	 * set the date as 03/05/2004
+	 */
+	public static function setDayMonthYear($date, $spacer = '/', $check_stamp = true)
+	{
+		if ($check_stamp && !self::isValidTimeStamp($date))
+		{
+			$date = strtotime($date);
+		}
+		return date('d' . $spacer . 'm' . $spacer . 'Y', $date);
 	}
 
 	/**
@@ -630,6 +643,16 @@ abstract class QuestionsanswersHelper
 		return ((int) $timestamp === $timestamp)
 		&& ($timestamp <= PHP_INT_MAX)
 		&& ($timestamp >= ~PHP_INT_MAX);
+	}
+
+	/**
+	 * Check if string is a valid date
+	 * https://www.php.net/manual/en/function.checkdate.php#113205
+	 */
+	public static function isValidateDate($date, $format = 'Y-m-d H:i:s')
+	{
+		$d = DateTime::createFromFormat($format, $date);
+		return $d && $d->format($format) == $date;
 	}
 
 

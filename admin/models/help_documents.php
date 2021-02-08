@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			6th January, 2021
+	@build			8th February, 2021
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		help_documents.php
@@ -75,8 +75,15 @@ class QuestionsanswersModelHelp_documents extends JModelList
 			$this->context .= '.' . $layout;
 		}
 
+		// Check if the form was submitted
+		$formSubmited = $app->input->post->get('form_submited');
+
 		$access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', 0, 'int');
-		$this->setState('filter.access', $access);
+		if ($formSubmited)
+		{
+			$access = $app->input->post->get('access');
+			$this->setState('filter.access', $access);
+		}
 
 		$published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
 		$this->setState('filter.published', $published);
@@ -94,19 +101,39 @@ class QuestionsanswersModelHelp_documents extends JModelList
 		$this->setState('filter.search', $search);
 
 		$type = $this->getUserStateFromRequest($this->context . '.filter.type', 'filter_type');
-		$this->setState('filter.type', $type);
+		if ($formSubmited)
+		{
+			$type = $app->input->post->get('type');
+			$this->setState('filter.type', $type);
+		}
 
 		$location = $this->getUserStateFromRequest($this->context . '.filter.location', 'filter_location');
-		$this->setState('filter.location', $location);
+		if ($formSubmited)
+		{
+			$location = $app->input->post->get('location');
+			$this->setState('filter.location', $location);
+		}
 
 		$admin_view = $this->getUserStateFromRequest($this->context . '.filter.admin_view', 'filter_admin_view');
-		$this->setState('filter.admin_view', $admin_view);
+		if ($formSubmited)
+		{
+			$admin_view = $app->input->post->get('admin_view');
+			$this->setState('filter.admin_view', $admin_view);
+		}
 
 		$site_view = $this->getUserStateFromRequest($this->context . '.filter.site_view', 'filter_site_view');
-		$this->setState('filter.site_view', $site_view);
+		if ($formSubmited)
+		{
+			$site_view = $app->input->post->get('site_view');
+			$this->setState('filter.site_view', $site_view);
+		}
 
 		$title = $this->getUserStateFromRequest($this->context . '.filter.title', 'filter_title');
-		$this->setState('filter.title', $title);
+		if ($formSubmited)
+		{
+			$title = $app->input->post->get('title');
+			$this->setState('filter.title', $title);
+		}
 
 		// List state information.
 		parent::populateState($ordering, $direction);

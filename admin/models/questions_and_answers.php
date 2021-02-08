@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			6th January, 2021
+	@build			8th February, 2021
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		questions_and_answers.php
@@ -76,8 +76,15 @@ class QuestionsanswersModelQuestions_and_answers extends JModelList
 			$this->context .= '.' . $layout;
 		}
 
+		// Check if the form was submitted
+		$formSubmited = $app->input->post->get('form_submited');
+
 		$access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', 0, 'int');
-		$this->setState('filter.access', $access);
+		if ($formSubmited)
+		{
+			$access = $app->input->post->get('access');
+			$this->setState('filter.access', $access);
+		}
 
 		$published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
 		$this->setState('filter.published', $published);
@@ -101,13 +108,25 @@ class QuestionsanswersModelQuestions_and_answers extends JModelList
 		$this->setState('filter.category_id', $categoryId);
 
 		$catid = $this->getUserStateFromRequest($this->context . '.filter.catid', 'filter_catid');
-		$this->setState('filter.catid', $catid);
+		if ($formSubmited)
+		{
+			$catid = $app->input->post->get('catid');
+			$this->setState('filter.catid', $catid);
+		}
 
 		$question = $this->getUserStateFromRequest($this->context . '.filter.question', 'filter_question');
-		$this->setState('filter.question', $question);
+		if ($formSubmited)
+		{
+			$question = $app->input->post->get('question');
+			$this->setState('filter.question', $question);
+		}
 
 		$answer = $this->getUserStateFromRequest($this->context . '.filter.answer', 'filter_answer');
-		$this->setState('filter.answer', $answer);
+		if ($formSubmited)
+		{
+			$answer = $app->input->post->get('answer');
+			$this->setState('filter.answer', $answer);
+		}
 
 		// List state information.
 		parent::populateState($ordering, $direction);
@@ -403,13 +422,57 @@ class QuestionsanswersModelQuestions_and_answers extends JModelList
 		$id .= ':' . $this->getState('filter.id');
 		$id .= ':' . $this->getState('filter.search');
 		$id .= ':' . $this->getState('filter.published');
-		$id .= ':' . $this->getState('filter.access');
+		// Check if the value is an array
+		$_access = $this->getState('filter.access');
+		if (QuestionsanswersHelper::checkArray($_access))
+		{
+			$id .= ':' . implode(':', $_access);
+		}
+		// Check if this is only an number or string
+		elseif (is_numeric($_access)
+		 || QuestionsanswersHelper::checkString($_access))
+		{
+			$id .= ':' . $_access;
+		}
 		$id .= ':' . $this->getState('filter.ordering');
 		$id .= ':' . $this->getState('filter.created_by');
 		$id .= ':' . $this->getState('filter.modified_by');
-		$id .= ':' . $this->getState('filter.category');
-		$id .= ':' . $this->getState('filter.category_id');
-		$id .= ':' . $this->getState('filter.catid');
+		// Check if the value is an array
+		$_category = $this->getState('filter.category');
+		if (QuestionsanswersHelper::checkArray($_category))
+		{
+			$id .= ':' . implode(':', $_category);
+		}
+		// Check if this is only an number or string
+		elseif (is_numeric($_category)
+		 || QuestionsanswersHelper::checkString($_category))
+		{
+			$id .= ':' . $_category;
+		}
+		// Check if the value is an array
+		$_category_id = $this->getState('filter.category_id');
+		if (QuestionsanswersHelper::checkArray($_category_id))
+		{
+			$id .= ':' . implode(':', $_category_id);
+		}
+		// Check if this is only an number or string
+		elseif (is_numeric($_category_id)
+		 || QuestionsanswersHelper::checkString($_category_id))
+		{
+			$id .= ':' . $_category_id;
+		}
+		// Check if the value is an array
+		$_catid = $this->getState('filter.catid');
+		if (QuestionsanswersHelper::checkArray($_catid))
+		{
+			$id .= ':' . implode(':', $_catid);
+		}
+		// Check if this is only an number or string
+		elseif (is_numeric($_catid)
+		 || QuestionsanswersHelper::checkString($_catid))
+		{
+			$id .= ':' . $_catid;
+		}
 		$id .= ':' . $this->getState('filter.question');
 		$id .= ':' . $this->getState('filter.answer');
 

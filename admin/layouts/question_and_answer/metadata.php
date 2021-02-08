@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			6th January, 2021
+	@build			8th February, 2021
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		metadata.php

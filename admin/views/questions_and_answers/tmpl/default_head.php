@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			6th January, 2021
+	@build			8th February, 2021
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		default_head.php
@@ -30,7 +30,7 @@ defined('_JEXEC') or die('Restricted access');
 <tr>
 	<?php if ($this->canEdit&& $this->canState): ?>
 		<th width="1%" class="nowrap center hidden-phone">
-			<?php echo JHtml::_('grid.sort', '<i class="icon-menu-2"></i>', 'a.ordering', $this->listDirn, $this->listOrder, null, 'asc', 'JGRID_HEADING_ORDERING'); ?>
+			<?php echo JHtml::_('searchtools.sort', '', 'a.ordering', $this->listDirn, $this->listOrder, null, 'asc', 'JGRID_HEADING_ORDERING', 'icon-menu-2'); ?>
 		</th>
 		<th width="20" class="nowrap center">
 			<?php echo JHtml::_('grid.checkall'); ?>
@@ -44,17 +44,17 @@ defined('_JEXEC') or die('Restricted access');
 		</th>
 	<?php endif; ?>
 	<th class="nowrap" >
-			<?php echo JHtml::_('grid.sort', 'COM_QUESTIONSANSWERS_QUESTION_AND_ANSWER_QUESTION_LABEL', 'a.question', $this->listDirn, $this->listOrder); ?>
+			<?php echo JHtml::_('searchtools.sort', 'COM_QUESTIONSANSWERS_QUESTION_AND_ANSWER_QUESTION_LABEL', 'a.question', $this->listDirn, $this->listOrder); ?>
 	</th>
 	<th class="nowrap hidden-phone" >
-			<?php echo JHtml::_('grid.sort', 'COM_QUESTIONSANSWERS_QUESTION_AND_ANSWER_ANSWER_LABEL', 'a.answer', $this->listDirn, $this->listOrder); ?>
+			<?php echo JHtml::_('searchtools.sort', 'COM_QUESTIONSANSWERS_QUESTION_AND_ANSWER_ANSWER_LABEL', 'a.answer', $this->listDirn, $this->listOrder); ?>
 	</th>
 	<th class="nowrap" >
-			<?php echo JHtml::_('grid.sort', 'COM_QUESTIONSANSWERS_QUESTION_AND_ANSWER_QUESTIONS_AND_ANSWERS_CATEGORIES', 'category_title', $this->listDirn, $this->listOrder); ?>
+			<?php echo JHtml::_('searchtools.sort', 'COM_QUESTIONSANSWERS_QUESTION_AND_ANSWER_QUESTIONS_AND_ANSWERS_CATEGORIES', 'category_title', $this->listDirn, $this->listOrder); ?>
 	</th>
 	<?php if ($this->canState): ?>
 		<th width="10" class="nowrap center" >
-			<?php echo JHtml::_('grid.sort', 'COM_QUESTIONSANSWERS_QUESTION_AND_ANSWER_STATUS', 'a.published', $this->listDirn, $this->listOrder); ?>
+			<?php echo JHtml::_('searchtools.sort', 'COM_QUESTIONSANSWERS_QUESTION_AND_ANSWER_STATUS', 'a.published', $this->listDirn, $this->listOrder); ?>
 		</th>
 	<?php else: ?>
 		<th width="10" class="nowrap center" >
@@ -62,6 +62,6 @@ defined('_JEXEC') or die('Restricted access');
 		</th>
 	<?php endif; ?>
 	<th width="5" class="nowrap center hidden-phone" >
-			<?php echo JHtml::_('grid.sort', 'COM_QUESTIONSANSWERS_QUESTION_AND_ANSWER_ID', 'a.id', $this->listDirn, $this->listOrder); ?>
+			<?php echo JHtml::_('searchtools.sort', 'COM_QUESTIONSANSWERS_QUESTION_AND_ANSWER_ID', 'a.id', $this->listDirn, $this->listOrder); ?>
 	</th>
 </tr>

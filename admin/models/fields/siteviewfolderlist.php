@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			6th January, 2021
+	@build			8th February, 2021
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		siteviewfolderlist.php
@@ -58,6 +58,10 @@ class JFormFieldSiteviewfolderlist extends JFormFieldList
 		// now check if there are files in the folder
 		if (JFolder::exists($localfolder) && $folders = JFolder::folders($localfolder))
 		{
+			if ($this->multiple === false)
+			{
+				$options[] = JHtml::_('select.option', '', JText::_('COM_QUESTIONSANSWERS_SELECT_A_SITE_VIEW'));
+			}
 			foreach ($folders as $folder)
 			{
 				$options[] = JHtml::_('select.option', $folder, QuestionsanswersHelper::safeString($folder, 'W'));

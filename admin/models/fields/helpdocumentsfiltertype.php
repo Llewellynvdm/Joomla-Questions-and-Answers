@@ -14,7 +14,7 @@
 	@build			8th February, 2021
 	@created		30th January, 2017
 	@package		Questions and Answers
-	@subpackage		details_under.php
+	@subpackage		helpdocumentsfiltertype.php
 	@author			Llewellyn van der Merwe <https://www.vdm.io/>
 	@copyright		Copyright (C) 2015. All Rights Reserved
 	@license		GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html
@@ -26,33 +26,60 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
-// get the form
-$form = $displayData->getForm();
+// import the list field type
+jimport('joomla.form.helper');
+JFormHelper::loadFieldClass('list');
 
-// get the layout fields override method name (from layout path/ID)
-$layout_path_array = explode('.', $this->getLayoutId());
-// Since we cannot pass the layout and tab names as parameters to the model method
-// this name combination of tab and layout in the method name is the only work around
-// seeing that JCB uses those two values (tab_name & layout_name) as the layout file name.
-// example of layout name: details_left.php
-// example of method name: getFields_details_left()
-$fields_tab_layout = 'fields_' . $layout_path_array[1];
+/**
+ * Helpdocumentsfiltertype Form Field class for the Questionsanswers component
+ */
+class JFormFieldHelpdocumentsfiltertype extends JFormFieldList
+{
+	/**
+	 * The helpdocumentsfiltertype field type.
+	 *
+	 * @var		string
+	 */
+	public $type = 'helpdocumentsfiltertype';
 
-// get the fields
-$fields = $displayData->get($fields_tab_layout) ?: array(
-	'not_required'
-);
+	/**
+	 * Method to get a list of options for a list input.
+	 *
+	 * @return	array    An array of JHtml options.
+	 */
+	protected function getOptions()
+	{
+		// Get a db connection.
+		$db = JFactory::getDbo();
 
-$hiddenFields = $displayData->get('hidden_fields') ?: array();
+		// Create a new query object.
+		$query = $db->getQuery(true);
 
-?>
-<?php if ($fields && count((array) $fields)) :?>
-<div class="form-inline form-inline-header">
-	<?php foreach($fields as $field): ?>
-		<?php if (in_array($field, $hiddenFields)) : ?>
-			<?php $form->setFieldAttribute($field, 'type', 'hidden'); ?>
-		<?php endif; ?>
-		<?php echo $form->renderField($field, null, null, array('class' => 'control-wrapper-' . $field)); ?>
-	<?php endforeach; ?>
-</div>
-<?php endif; ?>
+		// Select the text.
+		$query->select($db->quoteName('type'));
+		$query->from($db->quoteName('#__questionsanswers_help_document'));
+		$query->order($db->quoteName('type') . ' ASC');
+
+		// Reset the query using our newly populated query object.
+		$db->setQuery($query);
+
+		$results = $db->loadColumn();
+		$_filter = array();
+		$_filter[] = JHtml::_('select.option', '', '- ' . JText::_('COM_QUESTIONSANSWERS_FILTER_SELECT_TYPE') . ' -');
+
+		if ($results)
+		{
+			// get help_documentsmodel
+			$model = QuestionsanswersHelper::getModel('help_documents');
+			$results = array_unique($results);
+			foreach ($results as $type)
+			{
+				// Translate the type selection
+				$text = $model->selectionTranslation($type,'type');
+				// Now add the type and its text to the options array
+				$_filter[] = JHtml::_('select.option', $type, JText::_($text));
+			}
+		}
+		return $_filter;
+	}
+}

@@ -12,14 +12,14 @@ Just a basic Questions & Answers.
 + *Author*: [Llewellyn van der Merwe](mailto:joomla@vdm.io)
 + *Name*: [Questions and Answers](https://www.vdm.io/)
 + *First Build*: 30th January, 2017
-+ *Last Build*: 8th February, 2021
++ *Last Build*: 2nd March, 2022
 + *Version*: 1.0.x
 + *Copyright*: Copyright (C) 2015. All Rights Reserved
 + *License*: GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html
 
 # Component Number
 
-+ *Line count*: **31340**
++ *Line count*: **31397**
 + *File count*: **207**
 + *Folder count*: **63**
 

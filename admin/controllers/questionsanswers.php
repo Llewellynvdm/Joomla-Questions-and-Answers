@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			8th February, 2021
+	@build			2nd March, 2022
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		questionsanswers.php
@@ -25,6 +25,8 @@
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
+
+
 
 /**
  * Questionsanswers Controller

@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			8th February, 2021
+	@build			2nd March, 2022
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		import.php
@@ -26,6 +26,8 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Filesystem\File;
+use Joomla\CMS\Filesystem\Folder;
 use Joomla\Utilities\ArrayHelper;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
@@ -236,7 +238,7 @@ class QuestionsanswersModelImport extends JModelLegacy
 
 		// Move uploaded file
 		jimport('joomla.filesystem.file');
-		$p_file = JFile::upload($tmp_src, $tmp_dest, $this->use_streams, $this->allow_unsafe, $this->safeFileOptions);
+		$p_file = File::upload($tmp_src, $tmp_dest, $this->use_streams, $this->allow_unsafe, $this->safeFileOptions);
 
 		// Was the package downloaded?
 		if (!$p_file)
@@ -414,12 +416,12 @@ class QuestionsanswersModelImport extends JModelLegacy
 		// Is the package file a valid file?
 		if (is_file($package))
 		{
-			JFile::delete($package);
+			File::delete($package);
 		}
 		elseif (is_file(JPath::clean($package)))
 		{
 			// It might also be just a base filename
-			JFile::delete(JPath::clean($package));
+			File::delete(JPath::clean($package));
 		}
 	}
 

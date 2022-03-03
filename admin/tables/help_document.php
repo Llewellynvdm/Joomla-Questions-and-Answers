@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			8th February, 2021
+	@build			2nd March, 2022
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		help_document.php
@@ -337,7 +337,7 @@ class QuestionsanswersTableHelp_document extends JTable
 			$this->alias = $this->title;
 		}
 
-		$this->alias = JApplication::stringURLSafe($this->alias);
+		$this->alias = JApplicationHelper::stringURLSafe($this->alias);
 
 		if (trim(str_replace('-', '', $this->alias)) == '')
 		{

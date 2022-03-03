@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			8th February, 2021
+	@build			2nd March, 2022
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		questionsanswers.php
@@ -30,6 +30,8 @@ use Joomla\CMS\Language\Language;
 use Joomla\Registry\Registry;
 use Joomla\String\StringHelper;
 use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\Filesystem\File;
+use Joomla\CMS\Filesystem\Folder;
 
 /**
  * Questionsanswers component helper
@@ -66,7 +68,96 @@ abstract class QuestionsanswersHelper
 	protected static $user;
 	protected static $locker;
 	protected static $basickey;
- 
+
+	/**
+	* 	set the session defaults if not set
+	**/
+	protected static function setSessionDefaults()
+	{
+		// noting set for now
+	}
+
+	/**
+	 * @param $ids
+	 * @param $type
+	 * @return array|null
+	 */
+	public static function getNames($ids, $type)
+	{
+		// setup the get array
+		$get = array('a.id');
+		switch($type)
+		{
+			case 'catid':
+				// set related values
+				$get[] = 'a.title';
+				$table = '#__categories';
+			break;		
+		}
+		if (!isset($table) || !self::checkArray($ids))
+		{
+			return null;
+		}
+		// check the array of ids
+		if (self::checkArray($ids))
+		{
+			foreach ($ids as $id)
+			{ 
+				if (!(is_numeric($id)))
+				{
+					return null;
+				} 
+			}
+		}
+		// now load all custom values
+		$db = JFactory::getDBO();
+		$query = $db->getQuery(true);
+		$query->select($db->quoteName($get));
+		$query->from($db->quoteName($table, 'a'));
+		$query->where('a.id IN (' . implode(', ', $ids) . ')');
+		$query->where('a.published = 1');
+		$db->setQuery($query);
+		$db->execute();
+		if ($db->getNumRows())
+		{
+			$items = $db->loadObjectList();
+			$bucket = array();
+			foreach ($items as $item)
+			{
+				switch($type)
+				{
+					case 'catid':
+						// set related values
+						$bucket[$item->id] = $item->title;
+					break;
+				}
+			}
+			return $bucket;
+		}
+		return null;
+	}
+
+	public static function hasEditAccess($recordId, $userId = null, $to = 'question_and_answer')
+	{
+		if (self::checkObject($userId) && $userId instanceof JUser)
+		{
+			$user = $userId;
+		}
+		elseif (is_numeric($userId) && $userId > 0)
+		{
+			$user = JFactory::getUser($userId);
+		}
+		else
+		{
+			$user = JFactory::getUser();
+		}
+		if ($user->authorise($to.'.edit', 'com_questionsanswers.'.$to.'.' . (int)  $recordId))
+		{
+			return true;
+		}
+		return false;
+	}
+
 	/**
 	* the Butler
 	**/
@@ -123,13 +214,6 @@ abstract class QuestionsanswersHelper
 		return self::$localSession[$key];
 	}
 
-	/**
-	* 	set the session defaults if not set
-	**/
-	protected static function setSessionDefaults()
-	{
-		// noting set for now
-	}
 
 	/**
 	 * @param $fileName
@@ -307,11 +391,10 @@ abstract class QuestionsanswersHelper
 			self::$params = JComponentHelper::getParams('com_questionsanswers');
 		}
 		$folderPath = self::$params->get($target, $default);
-		jimport('joomla.filesystem.folder');
 		// create the folder if it does not exist
-		if ($createIfNotSet && !JFolder::exists($folderPath))
+		if ($createIfNotSet && !Folder::exists($folderPath))
 		{
-			JFolder::create($folderPath);
+			Folder::create($folderPath);
 		}
 		// return the url
 		if ('url' === $type)
@@ -360,11 +443,10 @@ abstract class QuestionsanswersHelper
 		{
 			$filePath = $default;
 		}
-		jimport('joomla.filesystem.folder');
 		// create the folder if it does not exist
-		if ($createIfNotSet && !JFolder::exists($filePath))
+		if ($createIfNotSet && !Folder::exists($filePath))
 		{
-			JFolder::create($filePath);
+			Folder::create($filePath);
 		}
 		// setup the file name
 		$fileName = '';
@@ -404,66 +486,6 @@ abstract class QuestionsanswersHelper
 		return '/' . trim( $filePath, '/' ) . '/' . $fileName;
 	}
 
-
-	/**
-	 * @param $ids
-	 * @param $type
-	 * @return array|null
-	 */
-	public static function getNames($ids, $type)
-	{
-		// setup the get array
-		$get = array('a.id');
-		switch($type)
-		{
-			case 'catid':
-				// set related values
-				$get[] = 'a.title';
-				$table = '#__categories';
-			break;		
-		}
-		if (!isset($table) || !self::checkArray($ids))
-		{
-			return null;
-		}
-		// check the array of ids
-		if (self::checkArray($ids))
-		{
-			foreach ($ids as $id)
-			{ 
-				if (!(is_numeric($id)))
-				{
-					return null;
-				} 
-			}
-		}
-		// now load all custom values
-		$db = JFactory::getDBO();
-		$query = $db->getQuery(true);
-		$query->select($db->quoteName($get));
-		$query->from($db->quoteName($table, 'a'));
-		$query->where('a.id IN (' . implode(', ', $ids) . ')');
-		$query->where('a.published = 1');
-		$db->setQuery($query);
-		$db->execute();
-		if ($db->getNumRows())
-		{
-			$items = $db->loadObjectList();
-			$bucket = array();
-			foreach ($items as $item)
-			{
-				switch($type)
-				{
-					case 'catid':
-						// set related values
-						$bucket[$item->id] = $item->title;
-					break;
-				}
-			}
-			return $bucket;
-		}
-		return null;
-	}
 
 	/**
 	 * Change to nice fancy date
@@ -815,26 +837,6 @@ abstract class QuestionsanswersHelper
 		return $keep;
 	}
 
-	public static function hasEditAccess($recordId, $userId = null, $to = 'question_and_answer')
-	{
-		if (self::checkObject($userId) && $userId instanceof JUser)
-		{
-			$user = $userId;
-		}
-		elseif (is_numeric($userId) && $userId > 0)
-		{
-			$user = JFactory::getUser($userId);
-		}
-		else
-		{
-			$user = JFactory::getUser();
-		}
-		if ($user->authorise($to.'.edit', 'com_questionsanswers.'.$to.'.' . (int)  $recordId))
-		{
-			return true;
-		}
-		return false;
-	}
 
 	/**
 	 * @return array of link options
@@ -2194,12 +2196,12 @@ abstract class QuestionsanswersHelper
 			$filePath = $path . '/' . $name . '.php';
 			$fullPathModel = $fullPathModels . '/' . $name . '.php';
 			// check if it exists
-			if (JFile::exists($filePath))
+			if (File::exists($filePath))
 			{
 				// get the file
 				require_once $filePath;
 			}
-			elseif (JFile::exists($fullPathModel))
+			elseif (File::exists($fullPathModel))
 			{
 				// get the file
 				require_once $fullPathModel;

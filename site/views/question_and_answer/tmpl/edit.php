@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			8th February, 2021
+	@build			2nd March, 2022
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		edit.php
@@ -27,12 +27,9 @@
 defined('_JEXEC') or die('Restricted access');
 
 JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
-JHtml::_('behavior.tooltip');
-JHtml::_('behavior.formvalidation');
+JHtml::_('behavior.formvalidator');
 JHtml::_('formbehavior.chosen', 'select');
 JHtml::_('behavior.keepalive');
-JHtml::_('behavior.tabstate');
-JHtml::_('behavior.calendar');
 ?>
 <div class="questionsanswers-question_and_answer">
 <?php echo $this->toolbar->render(); ?>

@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			8th February, 2021
+	@build			2nd March, 2022
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		questionsanswers.php
@@ -26,7 +26,7 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
-JHtml::_('behavior.tabstate');
+
 
 // Access check.
 if (!JFactory::getUser()->authorise('core.manage', 'com_questionsanswers'))
@@ -40,10 +40,10 @@ $document->addStyleSheet('components/com_questionsanswers/assets/css/admin.css')
 $document->addScript('components/com_questionsanswers/assets/js/admin.js');
 
 // require helper files
-JLoader::register('QuestionsanswersHelper', __DIR__ . '/helpers/questionsanswers.php'); 
-JLoader::register('JHtmlBatch_', __DIR__ . '/helpers/html/batch_.php'); 
+JLoader::register('QuestionsanswersHelper', __DIR__ . '/helpers/questionsanswers.php');
+JLoader::register('JHtmlBatch_', __DIR__ . '/helpers/html/batch_.php');
 
-// Triger the Global Admin Event
+// Trigger the Global Admin Event
 QuestionsanswersHelper::globalEvent($document);
 
 // Get an instance of the controller prefixed by Questionsanswers

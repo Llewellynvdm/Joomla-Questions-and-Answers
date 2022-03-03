@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			8th February, 2021
+	@build			2nd March, 2022
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		view.html.php
@@ -163,10 +163,10 @@ class QuestionsanswersViewQuestion_and_answer extends JViewLegacy
 		}
 		JToolbarHelper::divider();
 		// set help url for this view if found
-		$help_url = QuestionsanswersHelper::getHelpUrl('question_and_answer');
-		if (QuestionsanswersHelper::checkString($help_url))
+		$this->help_url = QuestionsanswersHelper::getHelpUrl('question_and_answer');
+		if (QuestionsanswersHelper::checkString($this->help_url))
 		{
-			JToolbarHelper::help('COM_QUESTIONSANSWERS_HELP_MANAGER', false, $help_url);
+			JToolbarHelper::help('COM_QUESTIONSANSWERS_HELP_MANAGER', false, $this->help_url);
 		}
 	}
 
@@ -206,26 +206,27 @@ class QuestionsanswersViewQuestion_and_answer extends JViewLegacy
 		$this->document->addScriptDeclaration("var token = '".JSession::getFormToken()."';");
 		$this->document->addScript(JURI::root() . $this->script, (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/javascript');
 		$this->document->addScript(JURI::root() . "administrator/components/com_questionsanswers/views/question_and_answer/submitbutton.js", (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/javascript'); 
-		// add JavaScripts
-		$this->document->addScript( JURI::root(true) .'/media/com_questionsanswers/uikit/js/uikit.min.js' );
-		$this->document->addScript( JURI::root(true) .'/media/com_questionsanswers/uikit/js/components/accordion.min.js', 'text/javascript', true);
-		$this->document->addScript( JURI::root(true) .'/media/com_questionsanswers/uikit/js/components/tooltip.min.js', 'text/javascript', true);
-		$this->document->addScript( JURI::root(true) .'/media/com_questionsanswers/uikit/js/components/lightbox.min.js', 'text/javascript', true);
-		$this->document->addScript( JURI::root(true) .'/media/com_questionsanswers/uikit/js/components/notify.min.js', 'text/javascript', true);
-		$this->document->addScript( JURI::root(true) .'/media/com_questionsanswers/uikit/js/components/upload.min.js', 'text/javascript', true);
-		// add the style sheets
-		$this->document->addStyleSheet( JURI::root(true) .'/media/com_questionsanswers/uikit/css/uikit.gradient.min.css' );
-		$this->document->addStyleSheet( JURI::root(true) .'/media/com_questionsanswers/uikit/css/components/accordion.gradient.min.css' );
-		$this->document->addStyleSheet( JURI::root(true) .'/media/com_questionsanswers/uikit/css/components/tooltip.gradient.min.css' );
-		$this->document->addStyleSheet( JURI::root(true) .'/media/com_questionsanswers/uikit/css/components/notify.gradient.min.css' );
-		$this->document->addStyleSheet( JURI::root(true) .'/media/com_questionsanswers/uikit/css/components/form-file.gradient.min.css' );
-		$this->document->addStyleSheet( JURI::root(true) .'/media/com_questionsanswers/uikit/css/components/progress.gradient.min.css' );
-		$this->document->addStyleSheet( JURI::root(true) .'/media/com_questionsanswers/uikit/css/components/placeholder.gradient.min.css' );
-		$this->document->addStyleSheet( JURI::root(true) .'/media/com_questionsanswers/uikit/css/components/upload.gradient.min.css' );
 		// add var key
 		$this->document->addScriptDeclaration("var vastDevMod = '".$this->get('VDM')."';"); 
 		// load the links on the page
-		$this->document->addScriptDeclaration("var documentsLinks = " . json_encode($this->item->links) . ";"); 
+		$this->document->addScriptDeclaration("var documentsLinks = " . json_encode($this->item->links) . ";");
+
+		// add the style sheets
+		$this->document->addStyleSheet( JURI::root(true) .'/media/com_questionsanswers/uikit-v2/css/uikit.gradient.min.css' , (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css');
+		$this->document->addStyleSheet( JURI::root(true) .'/media/com_questionsanswers/uikit-v2/css/components/accordion.gradient.min.css' , (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css');
+		$this->document->addStyleSheet( JURI::root(true) .'/media/com_questionsanswers/uikit-v2/css/components/tooltip.gradient.min.css' , (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css');
+		$this->document->addStyleSheet( JURI::root(true) .'/media/com_questionsanswers/uikit-v2/css/components/notify.gradient.min.css' , (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css');
+		$this->document->addStyleSheet( JURI::root(true) .'/media/com_questionsanswers/uikit-v2/css/components/form-file.gradient.min.css' , (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css');
+		$this->document->addStyleSheet( JURI::root(true) .'/media/com_questionsanswers/uikit-v2/css/components/progress.gradient.min.css' , (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css');
+		$this->document->addStyleSheet( JURI::root(true) .'/media/com_questionsanswers/uikit-v2/css/components/placeholder.gradient.min.css' , (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css');
+		$this->document->addStyleSheet( JURI::root(true) .'/media/com_questionsanswers/uikit-v2//css/components/upload.gradient.min.css' , (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css');
+		// add JavaScripts
+		$this->document->addScript( JURI::root(true) .'/media/com_questionsanswers/uikit-v2/js/uikit.min.js', (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css');
+		$this->document->addScript( JURI::root(true) .'/media/com_questionsanswers/uikit-v2/js/components/accordion.min.js', (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css');
+		$this->document->addScript( JURI::root(true) .'/media/com_questionsanswers/uikit-v2/js/components/tooltip.min.js', (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css');
+		$this->document->addScript( JURI::root(true) .'/media/com_questionsanswers/uikit-v2/js/components/lightbox.min.js', (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css');
+		$this->document->addScript( JURI::root(true) .'/media/com_questionsanswers/uikit-v2/js/components/notify.min.js', (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css');
+		$this->document->addScript( JURI::root(true) .'/media/com_questionsanswers/uikit-v2/js/components/upload.min.js', (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css');
 		JText::script('view not acceptable. Error');
 	}
 }

@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			8th February, 2021
+	@build			2nd March, 2022
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		view.html.php
@@ -163,10 +163,10 @@ class QuestionsanswersViewHelp_document extends JViewLegacy
 		}
 		JToolbarHelper::divider();
 		// set help url for this view if found
-		$help_url = QuestionsanswersHelper::getHelpUrl('help_document');
-		if (QuestionsanswersHelper::checkString($help_url))
+		$this->help_url = QuestionsanswersHelper::getHelpUrl('help_document');
+		if (QuestionsanswersHelper::checkString($this->help_url))
 		{
-			JToolbarHelper::help('COM_QUESTIONSANSWERS_HELP_MANAGER', false, $help_url);
+			JToolbarHelper::help('COM_QUESTIONSANSWERS_HELP_MANAGER', false, $this->help_url);
 		}
 	}
 

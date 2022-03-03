@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			8th February, 2021
+	@build			2nd March, 2022
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		view.html.php
@@ -25,6 +25,8 @@
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
+
+use Joomla\CMS\Filesystem\File;
 
 /**
  * Questionsanswers View class for the Questions_and_answers
@@ -179,13 +181,13 @@ class QuestionsanswersViewQuestions_and_answers extends JViewLegacy
 					foreach (QuestionsanswersHelper::$uk_components[$class] as $name)
 					{
 						// check if the CSS file exists.
-						if (JFile::exists(JPATH_ROOT.'/media/com_questionsanswers/uikit-v2/css/components/'.$name.$style.$size.'.css'))
+						if (File::exists(JPATH_ROOT.'/media/com_questionsanswers/uikit-v2/css/components/'.$name.$style.$size.'.css'))
 						{
 							// load the css.
 							$this->document->addStyleSheet(JURI::root(true) .'/media/com_questionsanswers/uikit-v2/css/components/'.$name.$style.$size.'.css', (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css');
 						}
 						// check if the JavaScript file exists.
-						if (JFile::exists(JPATH_ROOT.'/media/com_questionsanswers/uikit-v2/js/components/'.$name.$size.'.js'))
+						if (File::exists(JPATH_ROOT.'/media/com_questionsanswers/uikit-v2/js/components/'.$name.$size.'.js'))
 						{
 							// load the js.
 							$this->document->addScript(JURI::root(true) .'/media/com_questionsanswers/uikit-v2/js/components/'.$name.$size.'.js', (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/javascript', (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('type' => 'text/javascript', 'async' => 'async') : true);
@@ -280,10 +282,10 @@ class QuestionsanswersViewQuestions_and_answers extends JViewLegacy
 	{
 		
 		// set help url for this view if found
-		$help_url = QuestionsanswersHelper::getHelpUrl('questions_and_answers');
-		if (QuestionsanswersHelper::checkString($help_url))
+		$this->help_url = QuestionsanswersHelper::getHelpUrl('questions_and_answers');
+		if (QuestionsanswersHelper::checkString($this->help_url))
 		{
-			JToolbarHelper::help('COM_QUESTIONSANSWERS_HELP_MANAGER', false, $help_url);
+			JToolbarHelper::help('COM_QUESTIONSANSWERS_HELP_MANAGER', false, $this->help_url);
 		}
 		// now initiate the toolbar
 		$this->toolbar = JToolbar::getInstance();

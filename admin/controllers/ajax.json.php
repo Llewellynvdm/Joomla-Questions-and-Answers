@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			8th February, 2021
+	@build			2nd March, 2022
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		ajax.json.php
@@ -38,8 +38,10 @@ class QuestionsanswersControllerAjax extends JControllerLegacy
 		parent::__construct($config);
 		// make sure all json stuff are set
 		JFactory::getDocument()->setMimeEncoding( 'application/json' );
-		JResponse::setHeader('Content-Disposition','attachment;filename="getajax.json"');
-		JResponse::setHeader("Access-Control-Allow-Origin", "*");
+		// get the application
+		$app = JFactory::getApplication();
+		$app->setHeader('Content-Disposition','attachment;filename="getajax.json"');
+		$app->setHeader('Access-Control-Allow-Origin', '*');
 		// load the tasks 
 		$this->registerTask('uploadfile', 'ajax');
 		$this->registerTask('removeFile', 'ajax');
@@ -47,20 +49,26 @@ class QuestionsanswersControllerAjax extends JControllerLegacy
 
 	public function ajax()
 	{
+		// get the user for later use
 		$user 		= JFactory::getUser();
+		// get the input values
 		$jinput 	= JFactory::getApplication()->input;
+		// check if we should return raw
+		$returnRaw	= $jinput->get('raw', false, 'BOOLEAN');
+		// return to a callback function
+		$callback	= $jinput->get('callback', null, 'CMD');
 		// Check Token!
 		$token 		= JSession::getFormToken();
 		$call_token	= $jinput->get('token', 0, 'ALNUM');
 		if($jinput->get($token, 0, 'ALNUM') || $token === $call_token)
 		{
+			// get the task
 			$task = $this->getTask();
 			switch($task)
 			{
 				case 'uploadfile':
 					try
 					{
-						$returnRaw = $jinput->get('raw', false, 'BOOLEAN');
 						$targetValue = $jinput->get('target', NULL, 'WORD');
 						$typeValue = $jinput->get('type', NULL, 'WORD');
 						if($targetValue && $user->id != 0 && $typeValue)
@@ -71,7 +79,7 @@ class QuestionsanswersControllerAjax extends JControllerLegacy
 						{
 							$result = false;
 						}
-						if($callback = $jinput->get('callback', null, 'CMD'))
+						if($callback)
 						{
 							echo $callback . "(".json_encode($result).");";
 						}
@@ -86,9 +94,13 @@ class QuestionsanswersControllerAjax extends JControllerLegacy
 					}
 					catch(Exception $e)
 					{
-						if($callback = $jinput->get('callback', null, 'CMD'))
+						if($callback)
 						{
 							echo $callback."(".json_encode($e).");";
+						}
+						elseif($returnRaw)
+						{
+							echo json_encode($e);
 						}
 						else
 						{
@@ -99,7 +111,6 @@ class QuestionsanswersControllerAjax extends JControllerLegacy
 				case 'removeFile':
 					try
 					{
-						$returnRaw = $jinput->get('raw', false, 'BOOLEAN');
 						$filenameValue = $jinput->get('filename', NULL, 'STRING');
 						$targetValue = $jinput->get('target', NULL, 'WORD');
 						$flushValue = $jinput->get('flush', NULL, 'INT');
@@ -112,7 +123,7 @@ class QuestionsanswersControllerAjax extends JControllerLegacy
 						{
 							$result = false;
 						}
-						if($callback = $jinput->get('callback', null, 'CMD'))
+						if($callback)
 						{
 							echo $callback . "(".json_encode($result).");";
 						}
@@ -127,9 +138,13 @@ class QuestionsanswersControllerAjax extends JControllerLegacy
 					}
 					catch(Exception $e)
 					{
-						if($callback = $jinput->get('callback', null, 'CMD'))
+						if($callback)
 						{
 							echo $callback."(".json_encode($e).");";
+						}
+						elseif($returnRaw)
+						{
+							echo json_encode($e);
 						}
 						else
 						{
@@ -141,9 +156,14 @@ class QuestionsanswersControllerAjax extends JControllerLegacy
 		}
 		else
 		{
-			if($callback = $jinput->get('callback', null, 'CMD'))
+			// return to a callback function
+			if($callback)
 			{
 				echo $callback."(".json_encode(false).");";
+			}
+			elseif($returnRaw)
+			{
+				echo json_encode(false);
 			}
 			else
 			{

@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			8th February, 2021
+	@build			2nd March, 2022
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		router.php
@@ -65,7 +65,7 @@ class QuestionsanswersRouter extends JComponentRouterBase
 		{
 			$view = $query['view'];
 
-			if (empty($query['Itemid']))
+			if (empty($query['Itemid']) && !(isset($view) && isset($query['id']) && ($view === 'question_and_answer' || $view === 'questions_and_answers' || $view === 'category' || $view === 'downloads')))
 			{
 				$segments[] = $query['view'];
 			}
@@ -128,7 +128,7 @@ class QuestionsanswersRouter extends JComponentRouterBase
 		$count = count($segments);
 		$vars = array();
 		
-		//Handle View and Identifier
+		// Handle View and Identifier
 		switch($segments[0])
 		{
 			case 'question_and_answer':

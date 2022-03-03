@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			8th February, 2021
+	@build			2nd March, 2022
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		help_document.php
@@ -134,12 +134,6 @@ class QuestionsanswersModelHelp_document extends JModelAdmin
 				// JSON Decode groups.
 				$item->groups = json_decode($item->groups,true);
 			}
-			
-			if (!empty($item->id))
-			{
-				$item->tags = new JHelperTags;
-				$item->tags->getTagIds($item->id, 'com_questionsanswers.help_document');
-			}
 		}
 
 		return $item;
@@ -261,7 +255,7 @@ class QuestionsanswersModelHelp_document extends JModelAdmin
 	 */
 	public function getScript()
 	{
-		return 'administrator/components/com_questionsanswers/models/forms/help_document.js';
+		return 'media/com_questionsanswers/js/help_document.js';
 	}
     
 	/**

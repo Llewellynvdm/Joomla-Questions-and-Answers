@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			8th February, 2021
+	@build			2nd March, 2022
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		default.php
@@ -26,7 +26,6 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
-JHtml::_('behavior.tooltip');
 JHtml::_('behavior.multiselect');
 JHtml::_('dropdown.init');
 JHtml::_('formbehavior.chosen', '.multipleCategories', null, array('placeholder_text_multiple' => '- ' . JText::_('COM_QUESTIONSANSWERS_FILTER_SELECT_QUESTIONS_AND_ANSWERS_CATEGORIES') . ' -'));

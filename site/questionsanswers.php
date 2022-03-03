@@ -11,7 +11,7 @@
 /-------------------------------------------------------------------------------------------------------------------------------/
 
 	@version		1.0.x
-	@build			8th February, 2021
+	@build			2nd March, 2022
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		questionsanswers.php
@@ -26,7 +26,7 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
-JHtml::_('behavior.tabstate');
+
 
 // Set the component css/js
 $document = JFactory::getDocument();
@@ -35,9 +35,9 @@ $document->addScript('components/com_questionsanswers/assets/js/site.js');
 
 // Require helper files
 JLoader::register('QuestionsanswersHelper', __DIR__ . '/helpers/questionsanswers.php');
-JLoader::register('QuestionsanswersHelperRoute', __DIR__ . '/helpers/route.php'); 
+JLoader::register('QuestionsanswersHelperRoute', __DIR__ . '/helpers/route.php');
 
-// Triger the Global Site Event
+// Trigger the Global Site Event
 QuestionsanswersHelper::globalEvent($document);
 
 // Get an instance of the controller prefixed by Questionsanswers

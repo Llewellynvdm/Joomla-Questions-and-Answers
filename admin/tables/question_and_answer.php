@@ -10,8 +10,8 @@
                                                         |_|
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.0.x
-	@build			2nd March, 2022
+	@version		1.1.x
+	@build			27th May, 2022
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		question_and_answer.php
@@ -26,6 +26,7 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Table\Table;
 use Joomla\Registry\Registry;
 use Joomla\String\StringHelper;
 use Joomla\Utilities\ArrayHelper;
@@ -33,7 +34,7 @@ use Joomla\Utilities\ArrayHelper;
 /**
  * Questions_and_answers Table class
  */
-class QuestionsanswersTableQuestion_and_answer extends JTable
+class QuestionsanswersTableQuestion_and_answer extends Table
 {
 	/**
 	 * Ensure the params and metadata in json encoded in the bind method

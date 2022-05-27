@@ -10,8 +10,8 @@
                                                         |_|
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.0.x
-	@build			2nd March, 2022
+	@version		1.1.x
+	@build			27th May, 2022
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		help.php
@@ -26,12 +26,13 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\Utilities\ArrayHelper;
 
 /**
- * Questionsanswers Help Controller
+ * Questionsanswers Help Base Controller
  */
-class QuestionsanswersControllerHelp extends JControllerLegacy
+class QuestionsanswersControllerHelp extends BaseController
 {
 	public function __construct($config)
 	{

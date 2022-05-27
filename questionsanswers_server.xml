@@ -7,7 +7,7 @@
 		<version>1.0.2</version>
 		<infourl title="Questions and Answers!">https://www.vdm.io/</infourl>
 		<downloads>
-			<downloadurl type="full" format="zip">https://github.com/vdm-io/Joomla-Questions-and-Answers/archive/master.zip</downloadurl>
+			<downloadurl type="full" format="zip">https://git.vdm.dev/joomla/Questions-and-Answers/archive/v1.0.4.zip</downloadurl>
 		</downloads>
 		<tags>
 			<tag>stable</tag>
@@ -24,7 +24,24 @@
 		<version>1.0.4</version>
 		<infourl title="Questions and Answers!">https://www.vdm.io/</infourl>
 		<downloads>
-			<downloadurl type="full" format="zip">https://github.com/vdm-io/Joomla-Questions-and-Answers/archive/master.zip</downloadurl>
+			<downloadurl type="full" format="zip">https://git.vdm.dev/joomla/Questions-and-Answers/archive/v1.0.4.zip</downloadurl>
+		</downloads>
+		<tags>
+			<tag>stable</tag>
+		</tags>
+		<maintainer>Llewellyn van der Merwe</maintainer>
+		<maintainerurl>https://www.vdm.io/</maintainerurl>
+		<targetplatform name="joomla" version="3.*"/>
+	</update>
+	<update>
+		<name>Questions and Answers</name>
+		<description>Questions &amp; Answers</description>
+		<element>com_questionsanswers</element>
+		<type>component</type>
+		<version>1.1.0</version>
+		<infourl title="Questions and Answers!">https://www.vdm.io/</infourl>
+		<downloads>
+			<downloadurl type="full" format="zip">https://git.vdm.dev/joomla/Questions-and-Answers/archive/v1.1.0.zip</downloadurl>
 		</downloads>
 		<tags>
 			<tag>stable</tag>

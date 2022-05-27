@@ -10,8 +10,8 @@
                                                         |_|
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.0.x
-	@build			2nd March, 2022
+	@version		1.1.x
+	@build			27th May, 2022
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		view.html.php
@@ -26,12 +26,13 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Filesystem\File;
 
 /**
- * Questionsanswers View class for the Questions_and_answers
+ * Questionsanswers Html View class for the Questions_and_answers
  */
-class QuestionsanswersViewQuestions_and_answers extends JViewLegacy
+class QuestionsanswersViewQuestions_and_answers extends HtmlView
 {
 	/**
 	 * Questions_and_answers view display method

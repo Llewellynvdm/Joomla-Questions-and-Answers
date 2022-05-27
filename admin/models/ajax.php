@@ -10,8 +10,8 @@
                                                         |_|
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.0.x
-	@build			2nd March, 2022
+	@version		1.1.x
+	@build			27th May, 2022
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		ajax.php
@@ -26,12 +26,13 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Utilities\ArrayHelper;
 
 /**
- * Questionsanswers Ajax Model
+ * Questionsanswers Ajax List Model
  */
-class QuestionsanswersModelAjax extends JModelList
+class QuestionsanswersModelAjax extends ListModel
 {
 	protected $app_params;
 	
@@ -45,8 +46,22 @@ class QuestionsanswersModelAjax extends JModelList
 
 	// Used in question_and_answer
 
+	/**
+	 * The view persistence details
+	 *
+	 * @var	array
+	 * @since 1.0.0
+	 */
 	protected $viewid = array();
 
+	/**
+	 * The view details loaded via the session
+	 *
+	 * @input	string  $call    The state key
+	 *
+	 * @return mixed
+	 * @since 1.0.0
+	 */
 	protected function getViewID($call = 'table')
 	{
 		if (!isset($this->viewid[$call]))

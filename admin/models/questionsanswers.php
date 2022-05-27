@@ -10,8 +10,8 @@
                                                         |_|
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.0.x
-	@build			2nd March, 2022
+	@version		1.1.x
+	@build			27th May, 2022
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		questionsanswers.php
@@ -26,12 +26,13 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
-
+use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\Utilities\ArrayHelper;
 
 /**
- * Questionsanswers Model
+ * Questionsanswers List Model
  */
-class QuestionsanswersModelQuestionsanswers extends JModelList
+class QuestionsanswersModelQuestionsanswers extends ListModel
 {
 	public function getIcons()
 	{
@@ -325,7 +326,7 @@ jQuery(document).ready( function($) {
 		jQuery(document).ready(function () {
 			jQuery.get(getreadme)
 			.success(function(readme) { 
-				jQuery("#readme-md").html(marked(readme));
+				jQuery("#readme-md").html(marked.parse(readme));
 			})
 			.error(function(jqXHR, textStatus, errorThrown) { 
 				jQuery("#readme-md").html("'.JText::_('COM_QUESTIONSANSWERS_PLEASE_CHECK_AGAIN_LATTER').'");

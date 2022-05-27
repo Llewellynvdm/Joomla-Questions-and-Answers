@@ -10,8 +10,8 @@
                                                         |_|
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.0.x
-	@build			2nd March, 2022
+	@version		1.1.x
+	@build			27th May, 2022
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		view.html.php
@@ -26,12 +26,13 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Filesystem\File;
 
 /**
- * Questionsanswers View class for the Questions_and_answers
+ * Questionsanswers Html View class for the Questions_and_answers
  */
-class QuestionsanswersViewQuestions_and_answers extends JViewLegacy
+class QuestionsanswersViewQuestions_and_answers extends HtmlView
 {
 	// Overwriting JView display method
 	function display($tpl = null)
@@ -154,12 +155,12 @@ class QuestionsanswersViewQuestions_and_answers extends JViewLegacy
 			// The uikit css.
 			if ((!$HeaderCheck->css_loaded('uikit.min') || $uikit == 1) && $uikit != 2 && $uikit != 3)
 			{
-				$this->document->addStyleSheet(JURI::root(true) .'/media/com_questionsanswers/uikit-v2/css/uikit'.$style.$size.'.css', (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css');
+				JHtml::_('stylesheet', 'media/com_questionsanswers/uikit-v2/css/uikit'.$style.$size.'.css', ['version' => 'auto']);
 			}
 			// The uikit js.
 			if ((!$HeaderCheck->js_loaded('uikit.min') || $uikit == 1) && $uikit != 2 && $uikit != 3)
 			{
-				$this->document->addScript(JURI::root(true) .'/media/com_questionsanswers/uikit-v2/js/uikit'.$size.'.js', (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/javascript');
+				JHtml::_('script', 'media/com_questionsanswers/uikit-v2/js/uikit'.$size.'.js', ['version' => 'auto']);
 			}
 
 			// Load the script to find all uikit components needed.
@@ -184,13 +185,13 @@ class QuestionsanswersViewQuestions_and_answers extends JViewLegacy
 						if (File::exists(JPATH_ROOT.'/media/com_questionsanswers/uikit-v2/css/components/'.$name.$style.$size.'.css'))
 						{
 							// load the css.
-							$this->document->addStyleSheet(JURI::root(true) .'/media/com_questionsanswers/uikit-v2/css/components/'.$name.$style.$size.'.css', (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css');
+							JHtml::_('stylesheet', 'media/com_questionsanswers/uikit-v2/css/components/'.$name.$style.$size.'.css', ['version' => 'auto']);
 						}
 						// check if the JavaScript file exists.
 						if (File::exists(JPATH_ROOT.'/media/com_questionsanswers/uikit-v2/js/components/'.$name.$size.'.js'))
 						{
 							// load the js.
-							$this->document->addScript(JURI::root(true) .'/media/com_questionsanswers/uikit-v2/js/components/'.$name.$size.'.js', (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/javascript', (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('type' => 'text/javascript', 'async' => 'async') : true);
+							JHtml::_('script', 'media/com_questionsanswers/uikit-v2/js/components/'.$name.$size.'.js', ['version' => 'auto'], ['type' => 'text/javascript', 'async' => 'async']);
 						}
 					}
 				}
@@ -202,21 +203,21 @@ class QuestionsanswersViewQuestions_and_answers extends JViewLegacy
 			// The uikit css.
 			if ((!$HeaderCheck->css_loaded('uikit.min') || $uikit == 1) && $uikit != 2 && $uikit != 3)
 			{
-				$this->document->addStyleSheet(JURI::root(true) .'/media/com_questionsanswers/uikit-v3/css/uikit'.$size.'.css', (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css');
+				JHtml::_('stylesheet', 'media/com_questionsanswers/uikit-v3/css/uikit'.$size.'.css', ['version' => 'auto']);
 			}
 			// The uikit js.
 			if ((!$HeaderCheck->js_loaded('uikit.min') || $uikit == 1) && $uikit != 2 && $uikit != 3)
 			{
-				$this->document->addScript(JURI::root(true) .'/media/com_questionsanswers/uikit-v3/js/uikit'.$size.'.js', (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/javascript');
-				$this->document->addScript(JURI::root(true) .'/media/com_questionsanswers/uikit-v3/js/uikit-icons'.$size.'.js', (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/javascript');
+				JHtml::_('script', 'media/com_questionsanswers/uikit-v3/js/uikit'.$size.'.js', ['version' => 'auto']);
+				JHtml::_('script', 'media/com_questionsanswers/uikit-v3/js/uikit-icons'.$size.'.js', ['version' => 'auto']);
 			}
 		}
 
 		// Add the CSS for Footable
 		$this->document->addStyleSheet('https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css');
-		$this->document->addStyleSheet(JURI::root() .'media/com_questionsanswers/footable-v3/css/footable.standalone.min.css', (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/css');
-		// Add the JavaScript for Footable (adding all funtions)
-		$this->document->addScript(JURI::root() .'media/com_questionsanswers/footable-v3/js/footable.min.js', (QuestionsanswersHelper::jVersion()->isCompatible('3.8.0')) ? array('version' => 'auto') : 'text/javascript');
+		JHtml::_('stylesheet', 'media/com_questionsanswers/footable-v3/css/footable.standalone.min.css', ['version' => 'auto']);
+		// Add the JavaScript for Footable (adding all functions)
+		JHtml::_('script', 'media/com_questionsanswers/footable-v3/js/footable.min.js', ['version' => 'auto']);
 		// load the meta description
 		if ($this->params->get('menu-meta_description'))
 		{

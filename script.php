@@ -10,8 +10,8 @@
                                                         |_|
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.0.x
-	@build			2nd March, 2022
+	@version		1.1.x
+	@build			27th May, 2022
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		script.php
@@ -812,7 +812,7 @@ class com_questionsanswersInstallerScript
 			echo '<a target="_blank" href="https://www.vdm.io/" title="Questions and Answers">
 				<img src="components/com_questionsanswers/assets/images/vdm-component.jpg"/>
 				</a>
-				<h3>Upgrade to Version 1.0.4 Was Successful! Let us know if anything is not working as expected.</h3>';
+				<h3>Upgrade to Version 1.1.0 Was Successful! Let us know if anything is not working as expected.</h3>';
 
 			// Set db if not set already.
 			if (!isset($db))

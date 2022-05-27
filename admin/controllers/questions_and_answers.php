@@ -10,8 +10,8 @@
                                                         |_|
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.0.x
-	@build			2nd March, 2022
+	@version		1.1.x
+	@build			27th May, 2022
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		questions_and_answers.php
@@ -26,12 +26,13 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\MVC\Controller\AdminController;
 use Joomla\Utilities\ArrayHelper;
 
 /**
- * Questions_and_answers Controller
+ * Questions_and_answers Admin Controller
  */
-class QuestionsanswersControllerQuestions_and_answers extends JControllerAdmin
+class QuestionsanswersControllerQuestions_and_answers extends AdminController
 {
 	/**
 	 * The prefix to use with controller messages.

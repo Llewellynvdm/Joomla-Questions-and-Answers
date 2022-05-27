@@ -1,4 +1,4 @@
-# Questions and Answers (1.0.x)
+# Questions and Answers (1.1.x)
 
 This is a [Joomla 3.x](http://www.joomla.org/) component.
 
@@ -12,15 +12,15 @@ Just a basic Questions & Answers.
 + *Author*: [Llewellyn van der Merwe](mailto:joomla@vdm.io)
 + *Name*: [Questions and Answers](https://www.vdm.io/)
 + *First Build*: 30th January, 2017
-+ *Last Build*: 2nd March, 2022
-+ *Version*: 1.0.x
++ *Last Build*: 27th May, 2022
++ *Version*: 1.1.x
 + *Copyright*: Copyright (C) 2015. All Rights Reserved
 + *License*: GNU/GPL Version 2 or later - http://www.gnu.org/licenses/gpl-2.0.html
 
 # Component Number
 
-+ *Line count*: **31397**
-+ *File count*: **207**
++ *Line count*: **31488**
++ *File count*: **208**
 + *Folder count*: **63**
 
 > This **component** was build with a Joomla [Automated Component Builder](http://vdm.bz/component-builder).

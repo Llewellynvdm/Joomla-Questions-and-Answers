@@ -10,8 +10,8 @@
                                                         |_|
 /-------------------------------------------------------------------------------------------------------------------------------/
 
-	@version		1.0.x
-	@build			2nd March, 2022
+	@version		1.1.x
+	@build			27th May, 2022
 	@created		30th January, 2017
 	@package		Questions and Answers
 	@subpackage		question_and_answer.php
@@ -26,14 +26,15 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\Registry\Registry;
 use Joomla\String\StringHelper;
 use Joomla\Utilities\ArrayHelper;
 
 /**
- * Questionsanswers Question_and_answer Model
+ * Questionsanswers Question_and_answer Admin Model
  */
-class QuestionsanswersModelQuestion_and_answer extends JModelAdmin
+class QuestionsanswersModelQuestion_and_answer extends AdminModel
 {
 	/**
 	 * The tab layout fields array.
